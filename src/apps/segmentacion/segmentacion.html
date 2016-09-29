@@ -6,44 +6,37 @@
                 <div class="form-group">
                     <label for="lDepartamento"><h5> DEPARTAMENTO</h5></label>
                     <select class="form-control" name="departamentos" id="departamentos" (change)="cargarProvincias($event.target.value)">
-            <option value="0">TODOS</option>
-            <option *ngFor="let el of departamentos" value="{{ el.ccdd }}">{{ el.departamento }}</option>
-        </select>
+                        <option value="0">TODOS</option>
+                        <option *ngFor="let el of departamentos" value="{{ el.ccdd }}">{{ el.departamento }}</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="lProvincia"><h5> PROVINCIA</h5></label>
                     <select class="form-control" name="provincias" (change)="cargarDistritos($event.target.value)">
-            <option value="0">TODOS</option>
-            <option *ngFor="let e of provincias" value="{{ e.ccpp }}">{{ e.provincia }}</option>
-        </select>
+                        <option value="0">TODOS</option>
+                        <option *ngFor="let e of provincias" value="{{ e.ccpp }}">{{ e.provincia }}</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="lDistrito"><h5> DISTRITO</h5></label>
                     <select class="form-control" name="distritos" (change)="cargarZonas($event.target.value)">
-            <option value="0">TODOS</option>
-            <option *ngFor="let e of distritos" value="{{ e.ccdi }}">{{ e.distrito }}</option>
-        </select>
+                        <option value="0">TODOS</option>
+                        <option *ngFor="let e of distritos" value="{{ e.ccdi }}">{{ e.distrito }}</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="lArea"><h5> ÁREA</h5></label>
                     <select class="form-control" name="areas">
-            <option value="0"> Urbana</option>
-            <option value="1"> Rural</option>
-        </select>
+                        <option value="0"> Urbana</option>
+                        <option value="1"> Rural</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="lZona"><h5> ZONA / AER</h5></label>
                     <select class="form-control" name="zonas" (change)="cargarAeu($event.target.value)">
-            <option value="0">TODOS</option>
-            <option *ngFor="let er of zonas" value="{{ er.zona }}">{{ er.zona }}</option>
-        </select>
-                </div>
-                <div class="form-group">
-                    <label for="lArea"><h5> ÁREA</h5></label>
-                    <select class="form-control" name="areas">
-            <option value="0"> Urbana</option>
-            <option value="1"> Rural</option>
-        </select>
+                        <option value="0">TODOS</option>
+                        <option *ngFor="let er of zonas" value="{{ er.zona }}">{{ er.zona }}</option>
+                    </select>
                 </div>
             </form>
 
@@ -51,18 +44,14 @@
                 <div *ngIf="distrito" class="col-md-2">
                     <button type="button" class="btn btn-primary">Procesar</button>
                 </div>
-
                 <div class="col-md-12" align="left">
                     <hr style="color: black; background-color: black; width:100%;" />
-
                     <a class="btn btn-default" onclick="descargarSegExcel()">EXCEL <i class="fa fa-download"></i></a>
                 </div>
             </form>
         </section>
     </div>
 </div>
-
-
 
 <div class="row">
     <div class="col-lg-12">
@@ -89,7 +78,7 @@
                         <td>{{re.NUM_AEU}}</td>
                         <td>
                             <span [ngSwitch]="re.EST_SEG">
-                        <span *ngSwitchCase="0"> - </span>
+                            <span *ngSwitchCase="0"> - </span>
                             <span *ngSwitchCase="3" class="btn btn-warning">PENDIENTE</span>
                             <span *ngSwitchCase="4" class="btn btn-success">EXITOSO</span>
                             <span *ngSwitchCase="9" class="btn btn-danger">FALLIDO</span>

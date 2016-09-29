@@ -8,7 +8,11 @@ import {
     SistemasInterface
 } from './sistemas.interface';
 
-import {Helpers} from './../../app/helper';
+import {
+    Helpers
+} from './../../app/helper';
+import 'datatables.net';
+declare var jQuery: any;
 
 @Component({
     templateUrl: 'gestion-de-sistemas.html',
@@ -23,7 +27,11 @@ export class GestiondeSistemas {
     submitted = false;
 
     constructor(private sistemasservice: GestionSistemasService) {
+        
+    }
+    ngAfterViewChecked() {
         this.cargarSistemas();
+        jQuery('#tabla_sistemas').DataTable();
     }
 
     onSubmit() {
@@ -35,11 +43,11 @@ export class GestiondeSistemas {
             this.sistemas_list = res;
         });
     }
-    
-    editorsave(){
-        if(this.model_sistema.id_sistema===''){
-            this.addSistema();    
-        }else{
+
+    editorsave() {
+        if (this.model_sistema.id_sistema === '') {
+            this.addSistema();
+        } else {
             this.editarSistema();
         }
     }
@@ -49,30 +57,31 @@ export class GestiondeSistemas {
         this.sistemasservice.addSistema(this.model_sistema).subscribe(res => {
             console.log(res);
             this.cargarSistemas();
-        });   
+        });
     }
 
     editarSistema() {
         this.model_sistema.usr_creacion = this.usr_creacion;
-        this.sistemasservice.editSistema(this.model_sistema.id_sistema,this.model_sistema).subscribe(res => {
+        this.sistemasservice.editSistema(this.model_sistema.id_sistema, this.model_sistema).
+        subscribe(res => {
             console.log(res);
             this.cargarSistemas();
-        });   
+        });
     }
 
-    setModelData(id_sistema){
+    setModelData(id_sistema) {
         this.sistemasservice.getSistemasDetail(id_sistema).subscribe(res => {
-            this.model_sistema = <SistemasInterface>res
+            this.model_sistema = < SistemasInterface > res;
             console.log(this.model_sistema);
         })
     }
 
-    emptyModel(){
+    emptyModel() {
         this.model_sistema.des_sist = ''
         this.model_sistema.flag_activo = ''
         this.model_sistema.id_sistema = ''
         this.model_sistema.nom_sist = ''
         this.model_sistema.usr_creacion = this.usr_creacion;
     }
-    
+
 }
