@@ -1,7 +1,8 @@
 export class SistemasInterface {
-    id_sistema : string = '';
-    des_sist: string = '';
-    nom_sist: string = '';
-    flag_activo : string = '';
-    usr_creacion : string = '';
+        public id_sistema: string = '';
+        public des_sist: string = '';
+        public nom_sist: string = '';
+        public flag_activo: string = '';
+        public usr_creacion: string = '';
+        
 }
