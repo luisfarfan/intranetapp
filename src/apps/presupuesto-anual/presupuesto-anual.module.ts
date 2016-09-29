@@ -12,7 +12,7 @@ import {
   RouterModule
 } from '@angular/router';
 import { PresupuestoService } from './presupuesto_service';
-
+declare var jQuery: any;
 
 @Component({
   templateUrl: 'presupuesto.html',
@@ -25,7 +25,12 @@ class PresupuestoAnual {
             this.actividad = res;
         });
     }
+    ngOnInit(){
+        console.log(jQuery('#chio_actividad2').select2());
+    }
 }
+
+
 
 const routes: Routes = [{
   path: '',

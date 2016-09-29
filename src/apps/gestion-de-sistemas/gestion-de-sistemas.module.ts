@@ -1,10 +1,7 @@
 import {
-  Component
-} from '@angular/core';
-import {
   NgModule
 } from '@angular/core';
-import {CommonModule} from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
   Routes,
   RouterModule
@@ -12,15 +9,8 @@ import {
 import {
   FormsModule
 } from '@angular/forms';
+import { GestiondeSistemas } from './gestion-de-sistemas.component';
 
-
-@Component({
-  templateUrl: 'gestion-de-sistemas.html',
-})
-
-class GestiondeSistemas {
-
-}
 
 const routes: Routes = [{
   path: '',

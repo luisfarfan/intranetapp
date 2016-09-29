@@ -1,3 +1,5 @@
+import 'select2/select2.js';
+//import 'bootstrap-select/dist/js/bootstrap-select.js';
 /*
  * Angular bootstraping
  */

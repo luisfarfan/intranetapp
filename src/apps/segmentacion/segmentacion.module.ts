@@ -70,7 +70,8 @@ class Segmentacion{
     let tabla = $('#tabla');
     tabla.DataTable()
   }*/
-   hola() {
+   hola(event) {
+     console.log(event)
     }
   constructor(private segmentacionservice: SegmentacionService, private elementRef: ElementRef, private router:Router) {
     this.cargarTabla("0","0","0","0","0")

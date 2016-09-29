@@ -29,40 +29,28 @@ import {
 import {Helpers} from './../../app/helper';
 
 @Injectable()
-export class GestionProyectosService {
+export class GestionSistemasService {
     constructor(private http: Http) {}
-    private proyectos_url: string = `${Settings.HOST()}api/v1/proyectos/`;
-    private proyectossiga_url: string = `${Settings.HOST()}proyectos_siga/`;
+    private sistemas_url: string = `${Settings.HOST()}api/v1/sistemas/`;
 
-    getProyectos_list(): Observable < Object > {
-        return this.http.get(this.proyectos_url)
-            .map(Helpers.extractData)
-            .catch(Helpers.handleError);
-    }
-    getProyectos_detail(pk): Observable < Object > {
-        return this.http.get(this.proyectos_url + pk)
-            .map(Helpers.extractData)
-            .catch(Helpers.handleError)
-    }
-
-    getProyectosSiga(): Observable < Object >{
-        return this.http.get(this.proyectossiga_url)
+    getSistemas(): Observable < Object > {
+        return this.http.get(this.sistemas_url)
             .map(Helpers.extractData)
             .catch(Helpers.handleError);
     }
 
-    getProyectosSigaDetail(idproyecto): Observable < Object >{
-        return this.http.get(this.proyectossiga_url+idproyecto)
+    getSistemasDetail(pk): Observable < Object >{
+        return this.http.get(this.sistemas_url + pk)
             .map(Helpers.extractData)
             .catch(Helpers.handleError);
     }
 
-    addProyecto(data):Observable<Object>{
+    addSistema(data):Observable<Object>{
         let body = JSON.stringify(data);
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
 
-        return this.http.post(this.proyectos_url, body, options)
+        return this.http.post(this.sistemas_url, body, options)
                     .map(Helpers.extractData)
                     .catch(Helpers.handleError);
     }
