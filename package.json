@@ -1,7 +1,7 @@
 {
-  "name": "Sing",
-  "version": "3.2.0",
-  "description": "Sing Dashboard App with Angular 2.0 Final Release support by Flatlogic",
+  "name": "INEI",
+  "version": "1.0",
+  "description": "Intranet de Aplicaciones version",
   "scripts": {
     "install": "napa",
     "build:dev": "webpack --config config/webpack.dev.js --progress --profile",

@@ -25,7 +25,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 
 @Injectable()
-export class CroquisylistadoService {
+export class LegajoService {
     constructor(private http: Http) {}
 
     /*private depaUrl: string = 'http://192.168.200.123:8081/segrecargaDepa/';

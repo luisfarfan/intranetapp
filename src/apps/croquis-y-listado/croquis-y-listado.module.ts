@@ -8,9 +8,9 @@ import {
   Routes,
   RouterModule
 } from '@angular/router';
-/*import {
+import {
   CommonModule
-} from '@angular/common';*/
+} from '@angular/common';
 import {
   CroquisylistadoService
 } from './croquis-y-listado.service';
@@ -38,13 +38,13 @@ import {
   RegistroInterface
 } from './registro.interface';
 
-
+import {DomSanitizer} from "@angular/platform-browser";
 @Component({
   templateUrl: 'croquis-y-listado.html',
-  providers: [CroquisylistadoService]
+  providers: [CroquisylistadoService]  
 })
 
-class Croquisylistado{ //implements AfterViewInit{
+class Croquisylistado{
 
   private ccdd :any;
   private ccpp :any;
@@ -52,6 +52,7 @@ class Croquisylistado{ //implements AfterViewInit{
   private zona :any;
   private verZona=false;
   private url :string='';
+  private urlCroquis :any;
   private tabledata:boolean = false;
   private seccionAux:boolean = false;
   private aeuAux:boolean = false;
@@ -63,15 +64,9 @@ class Croquisylistado{ //implements AfterViewInit{
   private provincias:ProvinciaInterface;
   private distritos:DistritoInterface;
   private zonas:ZonaInterface;
-
   private contador :number;
 
-  /*ngAfterViewInit() {
-    let tabla = $('#tabla');
-    tabla.DataTable()
-  }*/
-
-  constructor(private segmentacionservice: CroquisylistadoService, private elementRef: ElementRef) {
+  constructor(private segmentacionservice: CroquisylistadoService, private elementRef: ElementRef,private domSanitizer:DomSanitizer) {
     this.cargarDepa()
     this.cargarTabla("0","0","0","0","0")
     this.registro = this.model
@@ -95,8 +90,11 @@ class Croquisylistado{ //implements AfterViewInit{
       })
       this.cargarTabla("1",ccdd,"0","0","0")
     }else{
+      this.provincias=null;
+      this.distritos=null;
+      this.zonas=null;
       this.cargarTabla("0","0","0","0","0")
-    }
+    }    
   }
 
   cargarDistritos(ccpp: string) {
@@ -109,6 +107,8 @@ class Croquisylistado{ //implements AfterViewInit{
       })
       this.cargarTabla("2",this.ccdd,ccpp,"0","0")
     }else{
+      this.distritos=null;
+      this.zonas=null;
       this.cargarTabla("1",this.ccdd,"0","0","0")
     }
   }
@@ -122,8 +122,10 @@ class Croquisylistado{ //implements AfterViewInit{
       this.segmentacionservice.getZonas(ubigeo).subscribe(res => {
         this.zonas = < ZonaInterface > res;
       })
-      this.cargarTabla("3",this.ccdd,this.ccpp,this.ccdi,"0")
-    }else{
+      this.cargarTabla("3",this.ccdd,this.ccpp,this.ccdi,"0")      
+    }else{      
+      this.zonas=null;
+      this.distrito = false;
       this.cargarTabla("2",this.ccdd,this.ccpp,"0","0")
     }
   }
@@ -132,6 +134,7 @@ class Croquisylistado{ //implements AfterViewInit{
     this.verZona=true;
     this.zona=zona;
     if(zona!="0"){
+      this.getRuta();
       this.cargarTabla("4",this.ccdd,this.ccpp,this.ccdi,this.zona)
     }else{
       this.verZona=false;
@@ -161,10 +164,19 @@ class Croquisylistado{ //implements AfterViewInit{
     }
     this.url = tipo_cro +'/' + this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/' + this.zona + '/';
     this.segmentacionservice.getRegistro(this.url).subscribe((data) => {
-      this.registros2 = < RegistroInterface > data;            
+      this.registros2 = < RegistroInterface > data;
+      console.log(this.registros2);            
     })
   }
 
+  getRuta(){
+    let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona;
+    this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/${urlCroquisAux}.pdf`);
+  }
+
+  getUrlaaa(){
+    console.log(this.urlCroquis)
+  }
 }
 
 const routes: Routes = [{
@@ -173,7 +185,7 @@ const routes: Routes = [{
 }];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes), BrowserModule, FormsModule],
+  imports: [CommonModule,RouterModule.forChild(routes), FormsModule],
   declarations: [Croquisylistado]
 })
 export default class SegmentacionModule {}

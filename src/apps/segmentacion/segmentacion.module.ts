@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import {
   Routes,
-  RouterModule,Router
+  RouterModule
 } from '@angular/router';
 import {
   CommonModule
@@ -50,47 +50,43 @@ class Segmentacion{
   private ccpp :any;
   private ccdi :any;
   private zona :any;
+  private contador :number=0;
   private verZona=false;
   private url :string='';
   private urlProcesar :string='';
   private tabledata:boolean = false;
   private distrito:boolean = false;
   private registros:Object;
+  private regTabla:Object;
   private registro:RegistroInterface;
   private departamentos:DepartamentoInterface;
   private provincias:ProvinciaInterface;
   private distritos:DistritoInterface;
   private zonas:ZonaInterface;
+  private abc: boolean=true;
+  private tablaaa:any;
+  private tablaaa1:any;
   
-  private tabla :any;
-  private tablaAux :any;
-  private contador :number=0;
-  private rows = []
-  /*ngAfterViewInit() {
-    let tabla = $('#tabla');
-    tabla.DataTable()
-  }*/
-   hola(event) {
-     console.log(event)
-    }
-  constructor(private segmentacionservice: SegmentacionService, private elementRef: ElementRef, private router:Router) {
+  constructor(private segmentacionservice: SegmentacionService, private elementRef: ElementRef) {
+    this.cargarDepaInicial()
     this.cargarTabla("0","0","0","0","0")
-    this.cargarDepa()
     this.registro = this.model
   }
-   /*hola1(){
-    this.router.navigate(['gestion-de-recursos']);
-  }*/
 
   model = new RegistroInterface();
-
+  
+  cargarDepaInicial() {
+    this.segmentacionservice.getDepartamentos().subscribe(res => {
+        this.departamentos = <DepartamentoInterface>res;
+    })    
+  }
 
   cargarDepa() {
-    this.segmentacionservice.getDepartamentos().subscribe(res => {
-      this.departamentos = <DepartamentoInterface>res;
-      console.log(this.departamentos)
-      this.rows.push()
-    })
+    if(this.ccdd!=0){
+      this.segmentacionservice.getDepartamentos().subscribe(res => {
+          this.departamentos = <DepartamentoInterface>res;
+      })
+    }    
   }
 
   cargarProvincias(ccdd: string, ccpp: string = "0") {
@@ -103,9 +99,12 @@ class Segmentacion{
       })
       this.cargarTabla("1",ccdd,"0","0","0")
     }else{
+      //this.cargarDepaInicial()
+      this.provincias=null;
+      this.distritos=null;
+      this.zonas=null;
       this.cargarTabla("0","0","0","0","0")
-    }
-    this.hola()
+    }     
   }
 
   cargarDistritos(ccpp: string) {
@@ -118,6 +117,8 @@ class Segmentacion{
       })
       this.cargarTabla("2",this.ccdd,ccpp,"0","0")
     }else{
+      this.distritos=null;
+      this.zonas=null;
       this.cargarTabla("1",this.ccdd,"0","0","0")
     }
     
@@ -134,6 +135,7 @@ class Segmentacion{
       })
       this.cargarTabla("3",this.ccdd,this.ccpp,this.ccdi,"0")
     }else{
+      this.zonas=null;
       this.distrito=false;
       this.cargarTabla("2",this.ccdd,this.ccpp,"0","0")
     }
@@ -152,15 +154,21 @@ class Segmentacion{
 
   cargarTabla(tipo: string, ccdd: string, ccpp: string, ccdi: string, zona: string){
     this.segmentacionservice.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
-      this.registros= < RegistroInterface > res;
+      this.registros= < RegistroInterface > res;      
     })
-    this.segmentacionservice.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
-    })
+    /*this.segmentacionservice.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
+      if(this.contador==0){
+        this.tablaaa = $('#tablaSeg').DataTable();
+        this.contador=2;
+      }else{
+        this.tablaaa.destroy();
+        this.tablaaa = $('#tablaSeg').DataTable();                    
+      }      
+    })*/
   }
 
   getRegistro() {
-    //no he validado si es necesaria esta línea
-    this.url='';
+    this.url=''; //no he validado si es necesaria esta línea
     this.url = '4/' + this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/' + this.zona + '/';
     this.segmentacionservice.getRegistro(this.url).subscribe((data) => {
       this.registro = < RegistroInterface > data
@@ -181,9 +189,7 @@ class Segmentacion{
     }else{
       this.urlProcesar = this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/0/';
     }
-    /*this.segmentacionservice.getRegistro(this.url).subscribe((data) => {
-      
-    })*/
+    console.log(this.urlProcesar);
   }
 
 }
