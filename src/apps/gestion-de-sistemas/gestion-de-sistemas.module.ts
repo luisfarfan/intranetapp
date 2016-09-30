@@ -10,7 +10,7 @@ import {
   FormsModule
 } from '@angular/forms';
 import { GestiondeSistemas } from './gestion-de-sistemas.component';
-
+declare var jQuery: any;
 
 const routes: Routes = [{
   path: '',

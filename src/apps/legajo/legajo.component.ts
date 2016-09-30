@@ -2,14 +2,14 @@ import {
     Component
 } from '@angular/core';
 import {
-    CroquisylistadoService
-} from './croquis-y-listado.service';
+    LegajoService
+} from './legajo.service';
 import {
     Router
 } from '@angular/router';
 import {
     DepartamentoInterface
-} from './departamento.interface'
+} from './departamento.interface';
 import {
     ProvinciaInterface
 } 
@@ -27,10 +27,10 @@ import {
 
 @Component({
     selector: 'my-app',
-    templateUrl: 'app/apps/croquis-y-listado/croquis-y-listado.component.html',
-    providers: [CroquisylistadoService]
+    templateUrl: 'app/apps/legajo/legajo.component.html',
+    providers: [LegajoService]
 })
-export class CroquisylistadoComponent {
+export class LegajoComponent {
 
     private departamento = new DepartamentoInterface();
     private provincia = new ProvinciaInterface();
@@ -40,9 +40,9 @@ export class CroquisylistadoComponent {
     //private validLogin = this.loginservice.isValidSession();
     //private errorLogin = false;
 
-    constructor(private croquisylistadoservice: CroquisylistadoService, private router: Router) {
+    constructor(private legajoservice: LegajoService, private router: Router) {
         //if (this.validLogin) {
-            this.router.navigate(['croquisylistado'])
+            this.router.navigate(['legajo'])
         //}
     }
 }

@@ -72,14 +72,14 @@ class GestiondeProyectos {
   }
 
   addProyectosSigatoSeguridad() {
-    console.log(this.proyecto_seguridad_post);
-    console.log(this.proyectosdetail);
+    //console.log(this.proyecto_seguridad_post);
+    //console.log(this.proyectosdetail);
     this.proyecto_seguridad_post.anio_proy=this.proyectosdetail.annio_meta;
     this.proyecto_seguridad_post.des_proy=this.proyectosdetail.desc_proyecto;
     this.proyectosservice.addProyecto(this.proyecto_seguridad_post).subscribe(res => {
       console.log(res);
       this.cargarProyectosSeguridad();
-    })
+    });
   }
 }
 
