@@ -37,49 +37,71 @@ import {Helpers} from './../../app/helper';
 import {
   RegistroInterface
 } from './registro.interface';
-
+import 'jszip';
 import {DomSanitizer} from "@angular/platform-browser";
+
+
+
+
 @Component({
   templateUrl: 'croquis-y-listado.html',
   providers: [CroquisylistadoService]  
 })
 
-class Croquisylistado{
+class Croquisylistado implements AfterViewInit {
 
   private ccdd :any;
   private ccpp :any;
   private ccdi :any;
-  private zona :any;
+  private zona :any=0;
+  private seccion:any=0;
+  private aeu:any=0;
   private verZona=false;
   private url :string='';
   private urlCroquis :any;
+  private urlProcesar :any;
+  private tipo_cro :number=0;
   private tabledata:boolean = false;
   private seccionAux:boolean = false;
   private aeuAux:boolean = false;
   private distrito:boolean = false;
   private registros:Object;
-  private registros2:Object;
-  private registro:RegistroInterface;
-  private departamentos:DepartamentoInterface;
-  private provincias:ProvinciaInterface;
-  private distritos:DistritoInterface;
-  private zonas:ZonaInterface;
+  private registros2: Object;
+  private registro: RegistroInterface;
+  private departamentos: DepartamentoInterface;
+  private provincias: ProvinciaInterface;
+  private distritos: DistritoInterface;
+  private zonas: ZonaInterface;
   private contador :number;
 
-  constructor(private segmentacionservice: CroquisylistadoService, private elementRef: ElementRef,private domSanitizer:DomSanitizer) {
+  constructor(private croquisylistado: CroquisylistadoService, private elementRef: ElementRef,private domSanitizer:DomSanitizer) {
     this.cargarDepa()
     this.cargarTabla("0","0","0","0","0")
     this.registro = this.model
   }
 
-  model = new RegistroInterface();
+  ngAfterViewInit(){
+        var s = document.createElement("script");
+        s.type = "text/javascript";
+        s.src = "http://webinei.inei.gob.pe/jszip.js";
+        this.elementRef.nativeElement.appendChild(s);
 
-  descargar(){
-    Helpers.descargarCroExcel();
+        var sa1 = document.createElement("script");
+        sa1.type = "text/javascript";
+        sa1.src = "http://webinei.inei.gob.pe/FileSaver.js";
+        this.elementRef.nativeElement.appendChild(sa1);
+
+        var sa = document.createElement("script");
+        sa.type = "text/javascript";
+        sa.src = "http://webinei.inei.gob.pe/brian.js";
+        this.elementRef.nativeElement.appendChild(sa);
+
   }
 
+  model = new RegistroInterface();
+
   cargarDepa() {
-    this.segmentacionservice.getDepartamentos().subscribe(res => {
+    this.croquisylistado.getDepartamentos().subscribe(res => {
       this.departamentos = <DepartamentoInterface>res;
     })
   }
@@ -89,7 +111,7 @@ class Croquisylistado{
     this.distrito=false;
     this.verZona=false;
     if(this.ccdd!=0){
-      this.segmentacionservice.getProvincias(ccdd, ccpp).subscribe(res => {
+      this.croquisylistado.getProvincias(ccdd, ccpp).subscribe(res => {
         this.provincias = < ProvinciaInterface > res;
       })
       this.cargarTabla("1",ccdd,"0","0","0")
@@ -106,7 +128,7 @@ class Croquisylistado{
     this.distrito=false;
     this.verZona=false;
     if(this.ccpp!=0){
-      this.segmentacionservice.getDistritos(this.ccdd, ccpp,"0").subscribe(res => {
+      this.croquisylistado.getDistritos(this.ccdd, ccpp,"0").subscribe(res => {
         this.distritos = < DistritoInterface > res;
       })
       this.cargarTabla("2",this.ccdd,ccpp,"0","0")
@@ -123,7 +145,7 @@ class Croquisylistado{
     let ubigeo = this.ccdd + this.ccpp + ccdi;
     this.distrito = true;
     if(this.ccdi!=0){
-      this.segmentacionservice.getZonas(ubigeo).subscribe(res => {
+      this.croquisylistado.getZonas(ubigeo).subscribe(res => {
         this.zonas = < ZonaInterface > res;
       })
       this.cargarTabla("3",this.ccdd,this.ccpp,this.ccdi,"0")      
@@ -147,40 +169,85 @@ class Croquisylistado{
   }
 
   cargarTabla(tipo: string, ccdd: string, ccpp: string, ccdi: string, zona: string){
-    this.segmentacionservice.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
+    this.croquisylistado.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
       this.tabledata = true;
       this.registros= < RegistroInterface > res;
     })
   }
 
   getRegistro(tipo_cro) {
-    if(tipo_cro==0){
+    this.tipo_cro=tipo_cro;
+    if(this.tipo_cro==0){
       this.seccionAux=false;
       this.aeuAux=false;
     }
-    if(tipo_cro==1){
+    if(this.tipo_cro==1){
       this.seccionAux=true;
       this.aeuAux=false;
     }
-    if(tipo_cro==2){
+    if(this.tipo_cro==2){
       this.seccionAux=true;
       this.aeuAux=true;
     }
-    this.url = tipo_cro +'/' + this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/' + this.zona + '/';
-    this.segmentacionservice.getRegistro(this.url).subscribe((data) => {
+    this.url = this.tipo_cro +'/' + this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/' + this.zona + '/';
+    if(this.tipo_cro==0){
+      this.getRuta();
+    }
+    if(this.tipo_cro==1){
+      this.cambiarPdfSeccion(1);
+    }
+    if(this.tipo_cro==2){
+      this.cambiarPdfAeu(100,1);
+    }
+    this.croquisylistado.getRegistro(this.url).subscribe((data) => {
       this.registros2 = < RegistroInterface > data;
-      console.log(this.registros2);            
+      console.log(this.registros2);
+
     })
   }
 
-  getRuta(){
-    let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona;
+  cambiarPdfSeccion(seccion){
+    this.seccion=seccion;
+    let urlCroquisAux;
+    urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona + ('00' + this.seccion).slice(-3);
+    // 02 06 01 00100  
+    // 02 06 01 00100 001 1
     this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/${urlCroquisAux}.pdf`);
   }
 
-  getUrlaaa(){
-    console.log(this.urlCroquis)
+  cambiarPdfAeu(seccion,aeu){
+    this.seccion=seccion;
+    this.aeu=aeu;
+    console.log(this.seccion)
+    let urlCroquisAux;
+    
+    urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona + ('00' + this.seccion).slice(-3)+this.aeu;
+    console.log(urlCroquisAux);
+    ('00' + this.seccion).substring(-1,3)+this.aeu
+    this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/${urlCroquisAux}.pdf`);
+    console.log(this.urlCroquis);
   }
+
+  getRuta(){
+    let urlCroquisAux = '02060100100';//this.ccdd + this.ccpp + this.ccdi + this.zona;
+    this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/${urlCroquisAux}.pdf`);
+    console.log(this.urlCroquis);
+  }
+
+  descargarExcel(id, nom){
+    Helpers.descargarExcel(id, nom);
+  }
+
+  procesarCro(){
+    this.urlProcesar = '';
+    if(this.zona!='0'){
+      this.urlProcesar = this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/' + this.zona + '/';
+    }else{
+      this.urlProcesar = this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/0/';
+    }
+    alert("PROCESANDO GENERACION DE CROQUIS Y LISTADO: "+this.urlProcesar)
+  }
+  
 }
 
 const routes: Routes = [{
@@ -192,4 +259,4 @@ const routes: Routes = [{
   imports: [CommonModule,RouterModule.forChild(routes), FormsModule],
   declarations: [Croquisylistado]
 })
-export default class SegmentacionModule {}
+export default class CroquisylistadoModule {}
