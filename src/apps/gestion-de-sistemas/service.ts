@@ -32,6 +32,7 @@ import {Helpers} from './../../app/helper';
 export class GestionSistemasService {
     constructor(private http: Http) {}
     private sistemas_url: string = `${Settings.HOST()}api/v1/sistemas/`;
+    private algo : number;
 
     getSistemas(): Observable < Object > {
         return this.http.get(this.sistemas_url)

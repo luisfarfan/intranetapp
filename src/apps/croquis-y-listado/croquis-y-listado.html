@@ -1,3 +1,4 @@
+<h1 class="page-title">SISTEMA INTEGRADO DE SEGMENTACIÓN - <span class="fw-semi-bold">CROQUIS Y LISTADOS</span></h1>
 <!-- Content area -->
 <div class="row">
     <div class="col-lg-12">
@@ -42,17 +43,21 @@
 
             <form action="" class="inline">
                 <div *ngIf="distrito" class="col-md-2">
-                    <button type="button" (click)="procesar()" class="btn btn-primary">Procesar</button>
+                    <button type="button" (click)="procesarCro()" class="btn btn-primary">Procesar</button>
                 </div>
 
                 <div class="col-md-12" align="left">
                     <hr style="color: black; background-color: black; width:100%;" />
-                    <a class="btn btn-default" (click)="descargar()">EXCEL <i class="fa fa-download"></i></a>
+                    <a class="btn btn-default" (click)="descargarExcel('tablaCro', 'CROQUIS_Y_LISTADO')">EXCEL <i class="fa fa-download"></i></a>
                 </div>
             </form>
         </section>
     </div>
 </div>
+
+<!--<div>
+    <button onclick="descargarZip()" value="DESCARGARRRRRRRRR"> </button>
+</div>-->
 
 <div class="row">
     <div class="col-lg-12">
@@ -88,7 +93,7 @@
                             </span>
                         </td>
                         <td *ngIf="verZona">
-                            <button (click)="getRegistro(0)" (click)="getRuta()" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fa fa-pencil"></i></button>
+                            <button (click)="getRegistro(0)" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fa fa-pencil"></i></button>
                         </td>
                         <td *ngIf="verZona">
                             <div class="btn-group">
@@ -127,20 +132,20 @@
                                     <label for="lSeccion"><h5> SECCIÓN</h5></label>
                                     <th width="12%"><a class="btn btn-default" [href]=urlCroquis download>PDF  <i class="fa fa-download"> </i></a></th>
                                     <select class="form-control" name="seccion" (change)="getRegistro($event.target.value)">
-                                                <option value="0">ZONA</option>
-                                                <option value="1">SECCIÓN</option>
-                                                <option value="2">EMPADRONADOR</option>                        
-                                            </select>
-                                    <hr style="color: black; background-color: black; width:100%;" />
+                                        <option value="0">ZONA</option>
+                                        <option value="1">SECCIÓN</option>
+                                        <option value="2">EMPADRONADOR</option>                        
+                                    </select>
                                 </div>
+                                <hr style="color: black; background-color: black; width:100%;" />
                             </form>
                         </section>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-4">
+                <div class="row" style="height: 700px;">
+                    <div class="col-md-2"  style="overflow-y:scroll;">
                         <section class="widget">
-                            <table class="table table-bordered table-lg mt-lg mb-0" id="tablaSeg">
+                            <table class="table table-bordered table-lg mt-lg mb-0" id="tablaSeg" class="scroll">
                                 <thead>
                                     <tr>
                                         <th width="11%">Zona</th>
@@ -149,27 +154,29 @@
                                         <th width="11%">Estado</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody  max-height="500px">
                                     <tr *ngFor="let re1 of registros2">
                                         <td>{{re1.ZONA}}</td>
-                                        <td *ngIf="seccionAux">{{re1.SECCION}}</td>
-                                        <td *ngIf="aeuAux">{{re1.AEU_FINAL}}</td>
-                                        <td>
+                                        <td *ngIf="seccionAux" (click)="cambiarPdfSeccion(re1.SECCION)">{{re1.SECCION}}</td>
+                                        <td *ngIf="aeuAux" (click)="cambiarPdfAeu(re1.SECCION,re1.AEU_FINAL)">{{re1.AEU_FINAL}}</td>
+                                        <td class="btn btn-success">
+                                            EXITOSO
+                                        </td>
+                                        <!--<td>
                                             <span [ngSwitch]="re1.EST_CROQUIS">
-                                        <span *ngSwitchCase="1"> - </span>
+                                            <span *ngSwitchCase="1"> - </span>
                                             <span *ngSwitchCase="2" class="btn btn-warning">PENDIENTE</span>
                                             <span *ngSwitchCase="3" class="btn btn-primary">EN PROCESO</span>
                                             <span *ngSwitchCase="4" class="btn btn-success">EXITOSO</span>
                                             <span *ngSwitchCase="9" class="btn btn-danger">FALLIDO</span>
-                                            </span>
-                                        </td>
+                                            </span>                                            
+                                        </td>-->
                                     </tr>
                                 </tbody>
                             </table>
                         </section>
                     </div>
-                    <div class="col-md-8">
-                        <!--<object id="object" [data]=urlCroquis type="application/pdf" width="1240" height="700">-->
+                    <div class="col-md-10">
                         <object id="object" [data]=urlCroquis type="application/pdf" width="100%" height="100%">
                                 alt : <a [href]=urlCroquis>test.pdf</a>
                         </object>
@@ -178,7 +185,5 @@
             </div>
 
         </div>
-
-
     </div>
 </div>
