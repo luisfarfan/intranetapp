@@ -17,7 +17,7 @@
                     </fieldset>
                 </form>
                 <button *ngIf="ifhay" (click)="addProyectosSigatoSeguridad()" class="btn btn-success width-100 mb-xs" role="button">Agregar</button>
-                 <table class="table table-bordered table-lg mt-lg mb-0">
+                <table class="table table-bordered table-lg mt-lg mb-0">
                     <thead>
                         <tr>
                             <th class="hidden-xs-down">#</th>
@@ -27,6 +27,7 @@
                             <th class="hidden-xs-down">CODI_DEPE_TDE</th>
                             <th class="hidden-xs-down">Año Meta</th>
                             <th>Objetivo</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody *ngIf="ifhay">
@@ -38,6 +39,7 @@
                             <td>{{ proyectosdetail.CODI_DEPE_TDE }}</td>
                             <td>{{ proyectosdetail.annio_meta }}</td>
                             <td>{{ proyectosdetail.objetivo }}</td>
+                            <td><button (click)="asignarProyecto(proyectosdetail.id_proyecto)" data-toggle="modal" data-target="#modal_add_sistema" class="btn btn-danger width-100 mb-xs" role="button"><i class="glyphicon glyphicon-plus"></i>Asignar Proyectos</button></td>
                         </tr>
                     </tbody>
 

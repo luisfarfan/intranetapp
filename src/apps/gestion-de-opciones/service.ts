@@ -29,39 +29,39 @@ import {
 import {Helpers} from './../../app/helper';
 
 @Injectable()
-export class GestionSistemasService {
+export class GestionOpcionesService {
     constructor(private http: Http) {}
-    private sistemas_url: string = `${Settings.HOST()}api/v1/sistemas/`;
-    private algo : number;
+    private opciones_url: string = `${Settings.HOST()}api/v1/permisos/`;
 
-    getSistemas(): Observable < Object > {
-        return this.http.get(this.sistemas_url)
+    getOpciones(): Observable < Object > {
+        return this.http.get(this.opciones_url)
             .map(Helpers.extractData)
             .catch(Helpers.handleError);
     }
-
-    getSistemasDetail(pk): Observable < Object >{
-        return this.http.get(this.sistemas_url + pk+'/')
+    getOpciones_detail(pk): Observable < Object > {
+        return this.http.get(this.opciones_url + pk)
             .map(Helpers.extractData)
-            .catch(Helpers.handleError);
+            .catch(Helpers.handleError)
     }
 
-    addSistema(data):Observable<Object>{
+    addOpcion(data):Observable<Object>{
         let body = JSON.stringify(data);
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
 
-        return this.http.post(this.sistemas_url, body, options)
+        return this.http.post(this.opciones_url, body, options)
                     .map(Helpers.extractData)
                     .catch(Helpers.handleError);
     }
-    editSistema(pk,data):Observable<Object>{
+
+    editOpcion(pk,data):Observable<Object>{
         let body = JSON.stringify(data);
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
 
-        return this.http.put(this.sistemas_url+pk+'/', body, options)
+        return this.http.put(this.opciones_url+pk+'/', body, options)
                     .map(Helpers.extractData)
                     .catch(Helpers.handleError);
     }
+    
 }

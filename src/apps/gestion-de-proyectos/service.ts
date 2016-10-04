@@ -66,4 +66,14 @@ export class GestionProyectosService {
                     .map(Helpers.extractData)
                     .catch(Helpers.handleError);
     }
+    
+    getSistemasbyProyecto(id_sistema){
+        return this.http.get(this.proyectossiga_url+id_sistema)
+            .map(Helpers.extractData)
+            .catch(Helpers.handleError);
+    }
+
+    addProyectotoSistema(){
+
+    }
 }

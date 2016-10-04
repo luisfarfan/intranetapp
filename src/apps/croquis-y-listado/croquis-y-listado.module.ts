@@ -37,11 +37,9 @@ import {Helpers} from './../../app/helper';
 import {
   RegistroInterface
 } from './registro.interface';
-import 'jszip';
 import {DomSanitizer} from "@angular/platform-browser";
 
 declare var JSZip;
-
 
 @Component({
   templateUrl: 'croquis-y-listado.html',
@@ -49,6 +47,7 @@ declare var JSZip;
 })
 
 class Croquisylistado implements AfterViewInit {
+
 
   private ccdd: any;
   private ccpp: any;
@@ -73,13 +72,18 @@ class Croquisylistado implements AfterViewInit {
   private provincias: ProvinciaInterface;
   private distritos: DistritoInterface;
   private zonas: ZonaInterface;
+
   private contador: number;
+
+  private pintar:string="#ffffff";
+
 
   constructor(private croquisylistado: CroquisylistadoService, private elementRef: ElementRef, private domSanitizer: DomSanitizer) {
     this.cargarDepa()
     this.cargarTabla("0", "0", "0", "0", "0")
     this.registro = this.model
   }
+
 
   ngAfterViewInit() {
     var s = document.createElement("script");
@@ -166,6 +170,7 @@ class Croquisylistado implements AfterViewInit {
       this.verZona = false;
       this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
     }
+    this.getRuta()
   }
 
   cargarTabla(tipo: string, ccdd: string, ccpp: string, ccdi: string, zona: string) {
@@ -207,6 +212,17 @@ class Croquisylistado implements AfterViewInit {
     this.seccion = seccion;
     let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona + ('00' + this.seccion).slice(-3);
     this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/${urlCroquisAux}.pdf`);
+
+    if(this.contador!==1){
+      console.log("ya");
+      if(seccion===this.seccion){
+        console.log("yaaa");  
+        this.pintar = "#000000";
+      }
+    }
+    this.contador=2;
+    console.log(seccion)
+
   }
 
   cambiarPdfAeu(seccion, aeu) {
@@ -228,6 +244,7 @@ class Croquisylistado implements AfterViewInit {
       this.urlProcesar = this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/0/';
     }
     alert("PROCESANDO GENERACION DE CROQUIS Y LISTADO: " + this.urlProcesar)
+
   }
 
   descargarZip(tipo) {
@@ -265,6 +282,8 @@ class Croquisylistado implements AfterViewInit {
         console.log("ya")
 
   }
+
+
 
 }
 
