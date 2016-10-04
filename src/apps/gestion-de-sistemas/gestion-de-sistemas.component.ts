@@ -11,7 +11,6 @@ import {
 import {
     Helpers
 } from './../../app/helper';
-import 'datatables.net';
 declare var jQuery: any;
 
 @Component({
@@ -27,11 +26,7 @@ export class GestiondeSistemas {
     submitted = false;
 
     constructor(private sistemasservice: GestionSistemasService) {
-        
-    }
-    ngAfterViewChecked() {
         this.cargarSistemas();
-        jQuery('#tabla_sistemas').DataTable();
     }
 
     onSubmit() {
