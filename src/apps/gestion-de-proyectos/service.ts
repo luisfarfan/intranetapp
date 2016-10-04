@@ -32,32 +32,34 @@ import {Helpers} from './../../app/helper';
 export class GestionProyectosService {
     constructor(private http: Http) {}
     private proyectos_url: string = `${Settings.HOST()}api/v1/proyectos/`;
+    private proyectosbysistema_url: string = `${Settings.HOST()}api/v1/proyectos-by-sistemas/`;
     private proyectossiga_url: string = `${Settings.HOST()}proyectos_siga/`;
 
     getProyectos_list(): Observable < Object > {
-        return this.http.get(this.proyectos_url)
+        return this.http.get(this.proyectosbysistema_url)
             .map(Helpers.extractData)
             .catch(Helpers.handleError);
     }
+
     getProyectos_detail(pk): Observable < Object > {
-        return this.http.get(this.proyectos_url + pk)
+        return this.http.get(this.proyectosbysistema_url + pk)
             .map(Helpers.extractData)
-            .catch(Helpers.handleError)
+            .catch(Helpers.handleError);
     }
 
-    getProyectosSiga(): Observable < Object >{
+    getProyectosSiga(): Observable < Object > {
         return this.http.get(this.proyectossiga_url)
             .map(Helpers.extractData)
             .catch(Helpers.handleError);
     }
 
     getProyectosSigaDetail(idproyecto): Observable < Object >{
-        return this.http.get(this.proyectossiga_url+idproyecto)
+        return this.http.get(this.proyectossiga_url + idproyecto)
             .map(Helpers.extractData)
             .catch(Helpers.handleError);
     }
 
-    addProyecto(data):Observable<Object>{
+    addProyecto(data): Observable<Object>{
         let body = JSON.stringify(data);
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
@@ -66,14 +68,11 @@ export class GestionProyectosService {
                     .map(Helpers.extractData)
                     .catch(Helpers.handleError);
     }
-    
-    getSistemasbyProyecto(id_sistema){
-        return this.http.get(this.proyectossiga_url+id_sistema)
+
+    getSistemasbyProyecto(idsistema: any) {
+        return this.http.get(this.proyectossiga_url + idsistema + '/')
             .map(Helpers.extractData)
             .catch(Helpers.handleError);
     }
 
-    addProyectotoSistema(){
-
-    }
 }

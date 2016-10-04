@@ -26,8 +26,10 @@ import {
 import {
   Angular2DataTableModule
 } from 'angular2-data-table';
-import { ProyectosSeguridad } from './proyectos_seguridad.interface';
+
 import { ProyectosSiga } from './proyectos_siga.interface';
+import { GestionSistemasService } from './../gestion-de-sistemas/service';
+import { ProyectoInterface } from './proyectos_seguridad.interface';
 
 
 
@@ -39,7 +41,7 @@ import { ProyectosSiga } from './proyectos_siga.interface';
 class GestiondeProyectos {
   private response: Object;
   private proyectos_seguridad: Object;
-  private proyecto_seguridad_post=new ProyectosSeguridad();
+  private projseguridadInterface = new ProyectoInterface;
   private proyectossiga: Object;
   private ifhay: boolean = false;
   private proyectosdetail: ProyectosSiga;
@@ -55,13 +57,26 @@ class GestiondeProyectos {
     });
   }
 
+  showModalProjSegDetail(pk) {
+    this.getProyectosSeguridad_detail(pk);
+  }
+
+  getProyectosSeguridad_detail(pk) {
+    this.proyectosservice.getProyectos_detail(pk).subscribe(res => {
+      console.log(res);
+      this.projseguridadInterface = <ProyectoInterface>res;
+      console.log(this.projseguridadInterface);
+    });
+  }
+
   cargarProyectosSiga() {
     this.proyectosservice.getProyectosSiga().subscribe(res => {
       this.proyectossiga = res;
     });
   }
+
   cargarProyectosSigaDetail(idproyecto) {
-    if (idproyecto == '0') {
+    if (idproyecto === '0') {
       this.ifhay = false;
     } else {
       this.proyectosservice.getProyectosSigaDetail(idproyecto).subscribe(res => {
@@ -72,11 +87,9 @@ class GestiondeProyectos {
   }
 
   addProyectosSigatoSeguridad() {
-    //console.log(this.proyecto_seguridad_post);
-    //console.log(this.proyectosdetail);
-    this.proyecto_seguridad_post.anio_proy=this.proyectosdetail.annio_meta;
-    this.proyecto_seguridad_post.des_proy=this.proyectosdetail.desc_proyecto;
-    this.proyectosservice.addProyecto(this.proyecto_seguridad_post).subscribe(res => {
+    this.projseguridadInterface.anio_proy = this.proyectosdetail.annio_meta;
+    this.projseguridadInterface.des_proy = this.proyectosdetail.desc_proyecto;
+    this.proyectosservice.addProyecto(this.projseguridadInterface).subscribe(res => {
       console.log(res);
       this.cargarProyectosSeguridad();
     });

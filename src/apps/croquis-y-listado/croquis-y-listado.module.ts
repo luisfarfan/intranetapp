@@ -1,5 +1,7 @@
 import {
-  AfterViewInit, ElementRef, Component
+  AfterViewInit,
+  ElementRef,
+  Component
 } from '@angular/core';
 import {
   NgModule
@@ -33,12 +35,18 @@ import {
 import {
   DepartamentoInterface
 } from './departamento.interface';
-import {Helpers} from './../../app/helper';
+import {
+  Helpers
+} from './../../app/helper';
 import {
   RegistroInterface
 } from './registro.interface';
-import {DomSanitizer} from "@angular/platform-browser";
+import {
+  DomSanitizer
+} from "@angular/platform-browser";
 
+
+declare var jQuery;
 declare var JSZip;
 
 @Component({
@@ -75,7 +83,7 @@ class Croquisylistado implements AfterViewInit {
 
   private contador: number;
 
-  private pintar:string="#ffffff";
+  private pintar: string = "#ffffff";
 
 
   constructor(private croquisylistado: CroquisylistadoService, private elementRef: ElementRef, private domSanitizer: DomSanitizer) {
@@ -107,7 +115,7 @@ class Croquisylistado implements AfterViewInit {
 
   cargarDepa() {
     this.croquisylistado.getDepartamentos().subscribe(res => {
-      this.departamentos = <DepartamentoInterface>res;
+      this.departamentos = < DepartamentoInterface > res;
     })
   }
 
@@ -117,7 +125,7 @@ class Croquisylistado implements AfterViewInit {
     this.verZona = false;
     if (this.ccdd != 0) {
       this.croquisylistado.getProvincias(ccdd, ccpp).subscribe(res => {
-        this.provincias = <ProvinciaInterface>res;
+        this.provincias = < ProvinciaInterface > res;
       })
       this.cargarTabla("1", ccdd, "0", "0", "0")
     } else {
@@ -134,7 +142,7 @@ class Croquisylistado implements AfterViewInit {
     this.verZona = false;
     if (this.ccpp != 0) {
       this.croquisylistado.getDistritos(this.ccdd, ccpp, "0").subscribe(res => {
-        this.distritos = <DistritoInterface>res;
+        this.distritos = < DistritoInterface > res;
       })
       this.cargarTabla("2", this.ccdd, ccpp, "0", "0")
     } else {
@@ -151,7 +159,7 @@ class Croquisylistado implements AfterViewInit {
     this.distrito = true;
     if (this.ccdi != 0) {
       this.croquisylistado.getZonas(ubigeo).subscribe(res => {
-        this.zonas = <ZonaInterface>res;
+        this.zonas = < ZonaInterface > res;
       })
       this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
     } else {
@@ -176,7 +184,7 @@ class Croquisylistado implements AfterViewInit {
   cargarTabla(tipo: string, ccdd: string, ccpp: string, ccdi: string, zona: string) {
     this.croquisylistado.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
       this.tabledata = true;
-      this.registros = <RegistroInterface>res;
+      this.registros = < RegistroInterface > res;
     })
   }
 
@@ -199,7 +207,7 @@ class Croquisylistado implements AfterViewInit {
     }
     this.url = this.tipo_cro + '/' + this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/' + this.zona + '/';
     this.croquisylistado.getRegistro(this.url).subscribe((data) => {
-      this.registros2 = <RegistroInterface>data;
+      this.registros2 = < RegistroInterface > data;
     })
   }
 
@@ -209,18 +217,22 @@ class Croquisylistado implements AfterViewInit {
   }
 
   cambiarPdfSeccion(seccion) {
+
     this.seccion = seccion;
     let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona + ('00' + this.seccion).slice(-3);
     this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/${urlCroquisAux}.pdf`);
 
-    if(this.contador!==1){
-      console.log("ya");
-      if(seccion===this.seccion){
-        console.log("yaaa");  
+    if (this.contador !== 1) {
+      if (seccion === this.seccion) {
+        console.log("yaaa");
         this.pintar = "#000000";
       }
+      jQuery('#tablaSeg td').click(function () {
+        console.log(this)
+        jQuery(this).css('background-color', 'yellow');
+      });
     }
-    this.contador=2;
+    this.contador = 2;
     console.log(seccion)
 
   }
@@ -253,33 +265,35 @@ class Croquisylistado implements AfterViewInit {
       this.descarga = <RegistroInterface>data;
       console.log(this.descarga);
     })*/
-      
-      
-      var jszip = new JSZip();
-      var i: number = 0;
-      let urlDescarga = "";
-      /*if(tipo==1){
-        for (i=0 ; i<Object.keys(this.descarga).length ; i++){
-          urlDescarga = this.ccdd + this.ccpp + this.ccdi + this.descarga.ZONA + this.descarga.seccion; 
-          jsZip.file(urlDescarga);
-        }      
-      }*/
-      if (tipo == 2) {
-        //for (i=0 ; i<Object.keys(this.descarga).length; i++ ){
-        urlDescarga = "http://192.168.221.123/desarrollo/020601001000011.pdf"; //+this.ccdd + this.ccpp + this.ccdi + '00100' + '001.pdf';//this.descarga.ZONA + this.descarga.seccion; 
-        console.log("http://192.168.221.123/desarrollo/020601001000011.pdf");
-        //jszip.file(urlDescarga,'abc');
-        jszip.file('a.txt','abc');
-        //}
-      }
-      //var img = zip.folder("images");
-      //img.file("smile.gif", imgData, {base64: true});
-      jszip.generateAsync({ type: "blob" })
-        .then(function (content) {
-          // see FileSaver.js
-          saveAs(content, "AEU.zip");
-        });
-        console.log("ya")
+
+
+    var jszip = new JSZip();
+    var i: number = 0;
+    let urlDescarga = "";
+    /*if(tipo==1){
+      for (i=0 ; i<Object.keys(this.descarga).length ; i++){
+        urlDescarga = this.ccdd + this.ccpp + this.ccdi + this.descarga.ZONA + this.descarga.seccion; 
+        jsZip.file(urlDescarga);
+      }      
+    }*/
+    if (tipo == 2) {
+      //for (i=0 ; i<Object.keys(this.descarga).length; i++ ){
+      urlDescarga = "http://192.168.221.123/desarrollo/020601001000011.pdf"; //+this.ccdd + this.ccpp + this.ccdi + '00100' + '001.pdf';//this.descarga.ZONA + this.descarga.seccion; 
+      console.log("http://192.168.221.123/desarrollo/020601001000011.pdf");
+      //jszip.file(urlDescarga,'abc');
+      jszip.file('a.txt', 'abc');
+      //}
+    }
+    //var img = zip.folder("images");
+    //img.file("smile.gif", imgData, {base64: true});
+    jszip.generateAsync({
+        type: "blob"
+      })
+      .then(function (content) {
+        // see FileSaver.js
+        saveAs(content, "AEU.zip");
+      });
+    console.log("ya")
 
   }
 
@@ -296,4 +310,4 @@ const routes: Routes = [{
   imports: [CommonModule, RouterModule.forChild(routes), FormsModule],
   declarations: [Croquisylistado]
 })
-export default class CroquisylistadoModule { }
+export default class CroquisylistadoModule {}

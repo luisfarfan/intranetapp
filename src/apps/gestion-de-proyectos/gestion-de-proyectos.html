@@ -27,7 +27,6 @@
                             <th class="hidden-xs-down">CODI_DEPE_TDE</th>
                             <th class="hidden-xs-down">Año Meta</th>
                             <th>Objetivo</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody *ngIf="ifhay">
@@ -39,7 +38,6 @@
                             <td>{{ proyectosdetail.CODI_DEPE_TDE }}</td>
                             <td>{{ proyectosdetail.annio_meta }}</td>
                             <td>{{ proyectosdetail.objetivo }}</td>
-                            <td><button (click)="asignarProyecto(proyectosdetail.id_proyecto)" data-toggle="modal" data-target="#modal_add_sistema" class="btn btn-danger width-100 mb-xs" role="button"><i class="glyphicon glyphicon-plus"></i>Asignar Proyectos</button></td>
                         </tr>
                     </tbody>
 
@@ -65,6 +63,7 @@
                             <th>Descripcion</th>
                             <th class="hidden-xs-down">Año</th>
                             <th class="hidden-xs-down">Fecha Final</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -74,6 +73,21 @@
                             <td>{{ i.des_proy || ''}}</td>
                             <td>{{ i.anio_proy }}</td>
                             <td>{{ i.fec_final }}</td>
+                            <td>
+                                <div class="btn-group" data-dropdown>
+                                    <button class="btn btn-sm btn-inverse dropdown-toggle" data-toggle="dropdown">
+                &nbsp; Opciones &nbsp;
+                <i class="fa fa-caret-down"></i>
+              </button>
+                                    <ul class="dropdown-menu dropdown-menu-right">
+                                        <li><a data-toggle="modal" (click)="showModalProjSegDetail(i.id_proyecto)" data-target="#modal_add_sistema" class="dropdown-item" href="#">Asignar Sistema</a></li>
+                                        <li><a class="dropdown-item" href="#">Eliminar</a></li>
+                                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                        <li class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                    </ul>
+                                </div>
+                            </td>
                         </tr>
                     </tbody>
 
@@ -81,5 +95,43 @@
 
             </div>
         </section>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_add_sistema">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title text-xs-center fw-bold mt" id="myModalLabel18">Agregar Opcion</h4>
+                <p class="text-xs-center fs-mini text-muted mt-sm">
+
+                </p>
+            </div>
+            <section class="widget" widget>
+                <div class="widget-body">
+                    <form  #opcionesForm="ngForm" id="opcionesForm" class="form-horizontal form-label-left parsleyjs">
+                        <div class="form-group row">
+                            <label class="form-control-label col-md-3 col-xs-12" for="basic">Detalle</label>
+                            <div class="col-md-9 col-xs-12">
+                                <input type="text" name="nom_permiso" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="form-control-label col-md-3 col-xs-12" for="email">Código</label>
+                            <div class="col-md-9 col-xs-12">
+                                <input type="text" id="des_sist"  name="cod_permiso" class="form-control" required="required">
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-success" (click)="addOpcion()">Save changes</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+        </div>
     </div>
 </div>
