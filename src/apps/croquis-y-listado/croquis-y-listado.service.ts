@@ -89,9 +89,9 @@ export class CroquisylistadoService {
             return this.http.get(tablaUrlAux3).map(this.extractData)
         }else{
             return this.http.get(this.tablaUrlAux).map(this.extractData)
-        }        
+        }
     }
-    
+
     private extractData(res: Response) {
         let body = res.json();
         return body || {};

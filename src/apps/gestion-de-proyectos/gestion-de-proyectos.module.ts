@@ -27,15 +27,24 @@ import {
   Angular2DataTableModule
 } from 'angular2-data-table';
 
-import { ProyectosSiga } from './proyectos_siga.interface';
-import { GestionSistemasService } from './../gestion-de-sistemas/service';
-import { ProyectoInterface } from './proyectos_seguridad.interface';
-
+import {
+  ProyectosSiga
+} from './proyectos_siga.interface';
+import {
+  GestionSistemasService
+} from './../gestion-de-sistemas/service';
+import {
+  ProyectoInterface
+} from './proyectos_seguridad.interface';
+import { SistemasInterface } from './../gestion-de-sistemas/sistemas.interface';
+import {
+    Helpers
+} from './../../app/helper';
 
 
 @Component({
   templateUrl: 'gestion-de-proyectos.html',
-  providers: [GestionProyectosService]
+  providers: [GestionProyectosService, GestionSistemasService]
 })
 
 class GestiondeProyectos {
@@ -46,9 +55,18 @@ class GestiondeProyectos {
   private ifhay: boolean = false;
   private proyectosdetail: ProyectosSiga;
 
-  constructor(private router: Router, private proyectosservice: GestionProyectosService) {
+  constructor(
+    private router: Router,
+    private proyectosservice: GestionProyectosService,
+    private sistemasservice: GestionSistemasService) {
     this.cargarProyectosSiga();
     this.cargarProyectosSeguridad();
+  }
+
+  getDiffSistemas() {
+    this.sistemasservice.getSistemas().subscribe(res => {
+      console.log(Helpers.diffObjects(this.projseguridadInterface.sistemas, res));
+    });
   }
 
   cargarProyectosSeguridad() {
@@ -63,9 +81,9 @@ class GestiondeProyectos {
 
   getProyectosSeguridad_detail(pk) {
     this.proyectosservice.getProyectos_detail(pk).subscribe(res => {
-      console.log(res);
-      this.projseguridadInterface = <ProyectoInterface>res;
-      console.log(this.projseguridadInterface);
+      this.projseguridadInterface = < ProyectoInterface > res;
+      //console.log(this.projseguridadInterface);
+      console.log(this.getDiffSistemas());
     });
   }
 
@@ -81,7 +99,7 @@ class GestiondeProyectos {
     } else {
       this.proyectosservice.getProyectosSigaDetail(idproyecto).subscribe(res => {
         this.ifhay = true;
-        this.proyectosdetail = <ProyectosSiga>res;
+        this.proyectosdetail = < ProyectosSiga > res;
       });
     }
   }
