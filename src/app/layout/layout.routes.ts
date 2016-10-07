@@ -40,16 +40,16 @@ function getRoutes() {
   results.push({
     path: 'welcome',
     loadChildren: () => System.import('../dashboard/dashboard.module')
-  })
+  });
 
-  if(validsession){
+  if (validsession) {
     let modules: Array < string > = < Array < string >> session[0]['routes'];
-        modules.map(module => results.push({
-            path: module,
-            loadChildren: () => System.import(`./../../apps/${module}/${module}.module`)
-        }))
+    modules.map(module => results.push({
+      path: module,
+      loadChildren: () => System.import(`./../../apps/${module}/${module}.module`)
+    }));
   }
-  console.log(results)
-  return results
+  console.log(results);
+  return results;
 
 }

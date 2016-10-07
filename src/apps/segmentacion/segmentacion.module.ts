@@ -66,7 +66,7 @@ class Segmentacion{
   private abc: boolean=true;
   private tablaaa:any;
   private tablaaa1:any;
-  
+
   constructor(private segmentacionservice: SegmentacionService, private elementRef: ElementRef) {
     this.cargarDepaInicial()
     this.cargarTabla("0","0","0","0","0")
@@ -77,7 +77,7 @@ class Segmentacion{
   
   cargarDepaInicial() {
     this.segmentacionservice.getDepartamentos().subscribe(res => {
-        this.departamentos = <DepartamentoInterface>res;
+        this.departamentos = <DepartamentoInterface>res;        
     })    
   }
 
@@ -99,7 +99,6 @@ class Segmentacion{
       })
       this.cargarTabla("1",ccdd,"0","0","0")
     }else{
-      //this.cargarDepaInicial()
       this.provincias=null;
       this.distritos=null;
       this.zonas=null;
@@ -120,8 +119,7 @@ class Segmentacion{
       this.distritos=null;
       this.zonas=null;
       this.cargarTabla("1",this.ccdd,"0","0","0")
-    }
-    
+    }    
   }
 
   cargarZonas(ccdi: string) {

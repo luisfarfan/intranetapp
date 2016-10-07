@@ -8,21 +8,21 @@
                     <label for="lDepartamento"><h5> DEPARTAMENTO</h5></label>
                     <select class="form-control" name="departamentos" id="departamentos" (change)="cargarProvincias($event.target.value)">
                         <option value="0">TODOS</option>
-                        <option *ngFor="let el of departamentos" value="{{ el.ccdd }}">{{ el.departamento }}</option>
+                        <option *ngFor="let el of departamentos" value="{{ el.CCDD }}">{{ el.DEPARTAMENTO }}</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="lProvincia"><h5> PROVINCIA</h5></label>
                     <select class="form-control" name="provincias" (change)="cargarDistritos($event.target.value)">
                         <option value="0">TODOS</option>
-                        <option *ngFor="let e of provincias" value="{{ e.ccpp }}">{{ e.provincia }}</option>
+                        <option *ngFor="let e of provincias" value="{{ e.CCPP }}">{{ e.PROVINCIA }}</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="lDistrito"><h5> DISTRITO</h5></label>
                     <select class="form-control" name="distritos" (change)="cargarZonas($event.target.value)">
                         <option value="0">TODOS</option>
-                        <option *ngFor="let e of distritos" value="{{ e.ccdi }}">{{ e.distrito }}</option>
+                        <option *ngFor="let e1 of distritos" value="{{ e1.CCDI }}">{{ e1.DISTRITO }}</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -33,7 +33,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="lZona"><h5> ZONA / AER</h5></label>
+                    <label for="lZona"><h5> ZONA</h5></label>
                     <select class="form-control" name="zonas" (change)="cargarAeu($event.target.value)">
                         <option value="0">TODOS</option>
                         <option *ngFor="let er of zonas" value="{{ er.zona }}">{{ er.zona }}</option>

@@ -4,135 +4,135 @@
 <!-- Content area -->
 
 
+
+
 <div class="row">
     <div class="col-lg-12">
         <section class="widget">
 
-<form class="form-inline">
-<div class="form-group">
-        <label for="lIngreso"><h5>TIPO DE INGRESO</h5></label>      
-		<select class="browser-default" name="tipoingreso" (change)="cargartipoIng($event.target.value)">
-  			<option value="A">INGRESO DE ARTICULOS DE ESCRITORIO</option>
-			<option value="E">INGRESO DE ARTICULOS ELECTRONICOS</option>
-			<option value="L">INGRESO DE LEGAJOS</option>
-			<!--<option value="D">DEVOLUCION DE EMBALAJE</option>-->
-    	</select>
-</div>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-<!--
-<div class="form-group">
-        <label for="lAnio"><h5> AÑO</h5></label>      
-		<select #anio class="browser-default" name="anios" (change)="cargaPecosas($event.target.value,'documento')">
-            <option value="2016">2016</option>
-			<option value="2015">2015</option>
-			<option value="2014">2014</option>
-         <!--    <option *ngFor="let e of provincias" value="{{ e.ccpp }}">{{ e.provincia }}</option>
-    	</select>
-</div> -->
-
-<div class="form-group">
-        <label for="lAlmacen2"><h5> AÑO</h5></label>      
-	        <select #anio id="selectanio" ng-options="e.ano_eje for e in anios | orderBy:'ano_eje'" class="browser-default" name="anios" >
-           <option *ngFor="let e of anios" >{{ e.ano_eje }}</option>          
-    	    </select>
-</div>
+        <form class="form-inline" role="form">
+                <div class="form-group">
+                        <label for="lIngreso"><h5>TIPO DE INGRESO</h5></label>      
+                        <select class="browser-default" name="tipoingreso" (change)="cargartipoIng($event.target.value)">
+                            <option value="A">INGRESO DE ARTICULOS DE ESCRITORIO</option>
+                            <option value="E">INGRESO DE ARTICULOS ELECTRONICOS</option>
+                            <option value="L">INGRESO DE LEGAJOS</option>
+                            <!--<option value="D">DEVOLUCION DE EMBALAJE</option>-->
+                        </select>
+                </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
+                <div class="form-group">
+                        <label for="lAlmacen2"><h5> AÑO</h5></label>      
+                            <select #anio id="selectanio" class="browser-default" name="anios" >
+                        <option *ngFor="let e of anios" >{{ e.ano_eje }}</option>          
+                            </select>
+                </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="form-group">
+                    <label><h5>NRO DOCUMENTO</h5></label>
+                    <!--<input type="text" value="{{dato}}" list="documento" />-->
 
+               <!--     <input  #numpecosa id="input1"  (keyup.enter)="capturaEvento($event,anio.value)" placeholder="NRO. PECOSA" type="text" list="documento" autocomplete="off"/> -->
 
-<div class="form-group">
-<label><h5>NRO DOCUMENTO</h5></label>
-<!--<input type="text" value="{{dato}}" list="documento" />-->
-<input  #numpecosa id="input1"  (keyup.enter)="capturaEvento($event,anio.value)" placeholder="NRO. PECOSA" type="text" list="documento" autocomplete="off"/>
+ 
+                <!-- <input  type="text"  #numpecosa name="numpecosa" maxlength="6"  id="pin" pattern="^0[1-9]|[1-9]\d$" required  (keyup.enter)="capturaEvento($event,anio.value)" placeholder="NRO. PECOSA" />-->
+                <input type="text"  #numpecosa name="numpecosa" maxlength="6" pattern="[0-9.]+" type="text"  placeholder="NRO. PECOSA">
+                <!-- 
+                <input type="number" min="1" max="999999" />
+                <input type="tel" maxlength="3" />     -->     
+                        <!--
+                                    <datalist id="documento" >
+                
+                        <option *ngFor="let e of pecosasxanio"  value="{{ e.nro_pedido}}"> {{ e.ano_eje}} - {{e.nro_pecosa}}</option>	
+                
+                    </datalist>-->
+                </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="form-group">
+                <!--     <button type="button" class="btn btn-primary">BUSCAR</button>-->
+                    <button (click)="cargaCabPecosa(numpecosa.value,anio.value)" class="btn btn-primary"  >BUSCAR</button>
+                <!--<button (click)="cargaCabPecosa(anio.value,numpecosa.value)" class="btn btn-primary">BUSCAR</button>-->
+                    <!--	<button (click)="clicked()">PRUEBA</button>-->
 
-
-<datalist id="documento" >
-	<!--	<option value=""></option>-->
-	  <option *ngFor="let e of pecosasxanio"  value="{{ e.nro_pedido}}"> {{ e.ano_eje}} - {{e.nro_pecosa}}</option>	
-<!--	<option value="01771">2016</option>
-	<option value="01772">2015</option>
-	<option value="01772">2014</option>-->
-</datalist>
-</div>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<div class="form-group">
-   <!--     <button type="button" class="btn btn-primary">BUSCAR</button>-->
-    <button (click)="cargaCabPecosa(anio.value,numpecosa.value,numpecosa.value)" class="btn btn-primary"  >BUSCAR</button>
- <!--<button (click)="cargaCabPecosa(anio.value,numpecosa.value)" class="btn btn-primary">BUSCAR</button>-->
-	<!--	<button (click)="clicked()">PRUEBA</button>-->
-
-</div>
-</form>
+                </div>
+        </form>
 
 
 
 
-<hr>
-<h5>DOCUMENTO</h5>
+                <hr>
+                <h5>DOCUMENTO</h5>
+                <br>
+                <br>
+            <form class="form-inline" role="form">
+            
+                    <div class="form-group">
+                        <label id="lbldato2">NRO. PECOSA: </label>
+                        <input class="form-control" disabled value="{{numpecosa_value}}"/>
+                        <!--<label id="lblNropecosa" >{{cabpecosa.idpecosa}}</label>-->
+                    </div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-<form action="" class="inline">
-  
-    <div class="form-group">
-        <label id="lbldato2">NRO. PECOSA: </label>
-        <input disabled value="{{numpecosa_value}}"/>
-        <!--<label id="lblNropecosa" >{{cabpecosa.idpecosa}}</label>-->
-    </div>
+                    <div class="form-group">
+                        <label id="lbldato2">NRO. PEDIDO: </label>
+                        <input class="form-control" disabled value="{{cabpeco.nro_pedido}}"/>
+                        <!--<label id="lblNropecosa" >{{cabpecosa.idpecosa}}</label>-->
+                    </div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div class="form-group">
+                        <label id="lbldato3">FECHA PEDIDO: </label>
+                        <input class="form-control" disabled value="{{cabpeco.fecha_pedido}}"/>
+                        <!--<label id="lblNropecosa" >{{cabpecosa.idpecosa}}</label>-->
+                    </div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <div class="form-group">
+                        <label id="lbldato4">MOTIVO PEDIDO: </label>
+                        <input class="form-control" size="70" disabled value="{{cabpeco.motivo_pedido}}"/>
+                        <!--<label id="lblNropecosa" >{{cabpecosa.idpecosa}}</label>-->
+                    </div>
+
+            <br><br>
+          
+                         <div class="form-group">
+                        <label id="lbldato5">EMPLEADO: </label>
+                        <input class="form-control"  size="70" disabled value="{{cabpeco.empleado}}"/>
+                        <!--<label id="lblNropecosa" >{{cabpecosa.idpecosa}}</label>-->
+                    </div>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                    <div class="form-group">
+                        <label id="lbldato6">FECHA PEDIDO: </label>
+                        <input class="form-control" disabled value="{{cabpeco.fecha_pedido}}"/>
+                        <!--<label id="lblNropecosa" >{{cabpecosa.idpecosa}}</label>-->
+                    </div>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <div class="form-group">
+                        <label id="lbldato6">FECHA REGISTRO: </label>
+                        <input class="form-control" disabled value="{{cabpeco.fecha_reg}}"/>
+                        <!--<label id="lblNropecosa" >{{cabpecosa.idpecosa}}</label>-->
+                    </div>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <div class="form-group">
+                        <label id="lbldato7">AÑO: </label>
+                    <!--  <input disabled value="{{cabpeco.anio}}"/>-->
+                        <input class="form-control" disabled value="{{cabpeco.ano_eje}}"/>
+                    </div>
+             
+            </form>
 
 
-    <div class="form-group">
-        <label id="lbldato2">NRO. PEDIDO: </label>
-        <input disabled value="{{cabpeco.nro_pedido}}"/>
-        <!--<label id="lblNropecosa" >{{cabpecosa.idpecosa}}</label>-->
-    </div>
 
-    <div class="form-group">
-        <label id="lbldato3">FECHA PEDIDO: </label>
-        <input disabled value="{{cabpeco.fecha_pedido}}"/>
-        <!--<label id="lblNropecosa" >{{cabpecosa.idpecosa}}</label>-->
-    </div>
+            <div class="col-md-12" align="left">
+                    <hr style="color: black; background-color: black; width:100%;" />
 
-    <div class="form-group">
-        <label id="lbldato4">MOTIVO PEDIDO: </label>
-        <input disabled value="{{cabpeco.motivo_pedido}}"/>
-        <!--<label id="lblNropecosa" >{{cabpecosa.idpecosa}}</label>-->
-    </div>
-    <div class="form-group">
-        <label id="lbldato5">EMPLEADO: </label>
-        <input disabled value="{{cabpeco.empleado}}"/>
-        <!--<label id="lblNropecosa" >{{cabpecosa.idpecosa}}</label>-->
-    </div>
+                    <a class="btn btn-default" (click)="descargarExcel('tabla1','prueba')">EXCEL <i class="fa fa-download"></i></a>
+                </div>
 
-
-    <div class="form-group">
-        <label id="lbldato6">FECHA PEDIDO: </label>
-        <input disabled value="{{cabpeco.fecha_pedido}}"/>
-        <!--<label id="lblNropecosa" >{{cabpecosa.idpecosa}}</label>-->
-    </div>
-
-    <div class="form-group">
-        <label id="lbldato6">FECHA REGISTRO: </label>
-        <input disabled value="{{cabpeco.fecha_reg}}"/>
-        <!--<label id="lblNropecosa" >{{cabpecosa.idpecosa}}</label>-->
-    </div>
-
-    <div class="form-group">
-        <label id="lbldato7">AÑO: </label>
-      <!--  <input disabled value="{{cabpeco.anio}}"/>-->
-        <input disabled value="{{cabpeco.ano_eje}}"/>
-    </div>
- </form>
-
- <div class="col-md-12" align="left">
-        <hr style="color: black; background-color: black; width:100%;" />
-
-        <a class="btn btn-default" (click)="descargarExcel('tabla1','prueba')">EXCEL <i class="fa fa-download"></i></a>
-    </div>
-
-<br>
+            <br>
 
 </section>
 </div>
@@ -175,59 +175,13 @@
 					<td>{{re.bien}}</td>  
                     <td>{{re.unidad_de_medida}}</td>                    
 					<td>{{re.marca}}</td> 
-                    <td>{{re.cant_atendida}}</td>   
+                    <td >{{re.cant_atendida}}</td>   
                     <td><input type="number" min="0" class="form-control"> </td>
                     <td><input type="checkbox" ></td>
-                   <!-- <td>{{re.precio_unit}}</td>      
-                    <td>{{re.valor_total}}</td> -->    
-<!--
-                    <td>{{re.detallepecosa__idarticulo}}</td>
-					<td>{{re.detallepecosa__cantidadsol}}</td>    
-                    <td>{{re.detallepecosa__idarticulo__nombreart}}</td>
-					<td>{{re.detallepecosa__idarticulo__idunidad__descripcion}}</td>  
-                    <td>{{re.detallepecosa__idarticulo__idmarca__descripcion}}</td>                    
-					<td>{{re.detallepecosa__cantidadapro}}</td>  -->               
-                   
+                  
                 </tr>
 
-   <!-- 
-       public secuencia : number = 0,
-       public item_bien :string='',
-       public cant_solicitada : string='',
-       public unidad_medida:string='',
-       public marca : string='',
-       // public fechapedido : string = '',
-       // public fechaaprob : string = '',
-      
-       public cant_atendida : string='',
-       public precio_unit : string='',
-       public valor_total : string=''   
-       
-       
-       
-       public idpecosa : number = 0,
-        public detallepecosa__idarticulo : string='',
-       public detallepecosa__idarticulo__idmarca__descripcion : string='',
-       public detallepecosa__idarticulo__nombreart : string='',
-       public detallepecosa__idarticulo__idunidad__descripcion : string='',
-       public detallepecosa__cantidadsol : number = 0,
-       public detallepecosa__cantidadapro : number = 0,
-
-
--->
-
-				
-	<!--		<tr> 
-					<td>1</td>
-					<td>710600010012</td>
-					<td>10.0000</td>
-					<td>ARCHIVADOR DE CARTON</td> 
-					<td>UNIDAD</td>  
-					<td>SIN MARCA</td>
-					<td>10.0000</td>     
-			
-			</tr>
-        -->
+  
 		
 		    </tbody>
         </table>
@@ -240,20 +194,9 @@
 <BR>
 <BR>
 <div class="col-md-2">
-   <!--     <button type="button" class="btn btn-primary">BUSCAR</button>-->
-<button (click)="CargaAlmacen(anio.value,numpecosa.value,numpedido.value)" class="btn btn-primary">TRANSFERIR</button>
-	<!--	<button (click)="clicked()">PRUEBA</button>-->
 
+<button class="btn btn-primary">TRANSFERIR</button>
+	
 
-<!--
-<div class="col-md-2">
-        <label for="lAlmacen"><h5> ALMACEN</h5></label>      
-		<select #almacen class="browser-default" name="almacen" >
-           <option *ngFor="let e of almacenes" value="{{ e.idalmacen }}">{{ e.nombre }}</option>
-			
-          <option *ngFor="let e of provincias" value="{{ e.ccpp }}">{{ e.provincia }}</option>
-    	</select>
-</div>
--->
 
 </div>

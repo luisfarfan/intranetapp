@@ -65,7 +65,7 @@ import {
 declare var jQuery: any;
 
 @Component({
-  templateUrl: 'ingreso-de-articulos.html',
+  templateUrl: 'ingreso-de-legajos.html',
   providers: [IngresoService]
 })
 
@@ -120,7 +120,7 @@ class IngresodeArticulos {
     console.log(anio);
     this.cargaAnios();
 
-    //this.cabpecosa = this.cabpeco;
+    this.cabpecosa = this.cabpeco;
     //this.seteaControl('selectanio',anio); 
 
     //(<HTMLInputElement>document.getElementById('input1')).value = anio.toString();
@@ -148,7 +148,7 @@ class IngresodeArticulos {
 
     if (idcontrol != '') {
       // console.log('jhola');  
-      //this.seteaControl(idcontrol, '');
+     // this.seteaControl(idcontrol, '');
       //this.seteaControl('documento','');
     }
 
@@ -180,7 +180,12 @@ class IngresodeArticulos {
     })
   }
 
- 
+  seteaControl(idcontrol: any, valor: string) {
+    // console.log('hola2');
+    //console.log('mas: ' +valor);
+    // console.log(valor);
+    //Helpers.seteaControl(idcontrol, valor);
+  }
 
 
   muestra(muestra: string) {
@@ -213,69 +218,46 @@ class IngresodeArticulos {
 
   cabpeco = new CabPecosasInterface();
 
-
-
-  cargaCabPecosa(pecosa: string,anio: number) {
+  cargaCabPecosa(anio: number, pedido: string, pecosa: number) {
 
     //if (event.key == "Enter" || event.key == "Click") {
-    console.log('cargapecosa'+ pecosa);
-    console.log('length:'+pecosa.length);
+    console.log('cargapecosa');
 
     this.numpecosa_value = ''
-    //this.peco = pecosa;
-    if (pecosa.length>0) {
-      console.log('prueba: ' + anio + '-' + pecosa);
-      this.ingresoservice.getCabPecosa(anio, pecosa).subscribe(res => {
+    this.peco = pecosa;
+    if (this.peco >= 0) {
+      console.log('prueba: ' + anio + '-' + pedido);
+      this.ingresoservice.getCabPecosa(anio, pedido).subscribe(res => {
         console.log(res);
         this.cabpecosa = < CabPecosasInterface > res;
-        //console.log(this.cabpecosas);
+        console.log(res);
 
+        if (Object.keys(res).length === 0) {
+          this.numpecosa_value = null;
+          this.cabpecosa = null;
+          Object.keys(this.cabpeco).forEach(function (key) {
+            console.log(this.cabpeco);
+            this.cabpeco.key = '';
+          });
+          this.detpecosas = null;
+
+          //alert('Carga cab No se encontraron pecosas con el número ingresado');
+        }
+
+        //else if (Object.keys(res).length === 1) {
 
         console.log('asigna pecosas: ' + pecosa);
+        this.numpecosa_value = pecosa.toString();
+        // this.cabpeco.id = this.cabpecosa[0].id;
+        this.cabpeco.ano_eje = this.cabpecosa[0].ano_eje;
+        this.cabpeco.motivo_pedido = this.cabpecosa[0].motivo_pedido;
+        this.cabpeco.empleado = this.cabpecosa[0].empleado;
+        this.cabpeco.nro_pedido = this.cabpecosa[0].nro_pedido;
+        this.cabpeco.fecha_pedido = this.cabpecosa[0].fecha_pedido;
+        this.cabpeco.fecha_reg = this.cabpecosa[0].fecha_reg;
 
-        this.cabpeco.nro_pedido = this.cabpecosa.nro_pedido;
-
-       console.log('X:' + this.cabpeco.nro_pedido); 
-     // console.log(this.cabpeco.nro_pedido);
-        if(this.cabpeco.nro_pedido !='')
-        {
-          /*
-            this.numpecosa_value = pecosa.toString();
-            // this.cabpeco.id = this.cabpecosa[0].id;
-            this.cabpeco.ano_eje = this.cabpecosa[0].ano_eje;
-            this.cabpeco.motivo_pedido = this.cabpecosa[0].motivo_pedido;
-            this.cabpeco.empleado = this.cabpecosa[0].empleado;
-            
-            this.cabpeco.fecha_pedido = this.cabpecosa[0].fecha_pedido;
-            this.cabpeco.fecha_reg = this.cabpecosa[0].fecha_reg;
-*/
-             this.numpecosa_value = pecosa.toString();
-            // this.cabpeco.id = this.cabpecosa[0].id;
-            this.cabpeco.ano_eje = this.cabpecosa.ano_eje;
-            this.cabpeco.motivo_pedido = this.cabpecosa.motivo_pedido;
-            this.cabpeco.empleado = this.cabpecosa.empleado;            
-            this.cabpeco.fecha_pedido = this.cabpecosa.fecha_pedido;
-            this.cabpeco.fecha_reg = this.cabpecosa.fecha_reg;
-
-            this.cargaReporte(anio, this.cabpeco.nro_pedido);
-
-        }
-        else
-        {   
-          this.numpecosa_value =null;
-
-
-      //var.document
-
-          //this.cabpeco=null;
-          this.detpecosas=null;
-            alert("No se encontró ninguna pecosa con ese número");
-          
-
-        }
-
-
-      
+        this.cargaReporte(anio, pedido);
+        // }
 
       })
     } else {
@@ -286,9 +268,6 @@ class IngresodeArticulos {
 
 
 
-
-
-/*
   capturaEvento(event, anio) {
 
     var pecosa = event.target.value;
@@ -324,7 +303,7 @@ class IngresodeArticulos {
     })
 
   }
-*/
+
 
   cargaReporte(anio: number, pecosa: string) {
 

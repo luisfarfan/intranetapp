@@ -48,7 +48,6 @@ export class IngresoService {
 
     private cabpecosaUrl: string = 'http://192.168.202.194/siga/pedidos/';
     //   private categoriaUrl: string = 'http://192.168.34.36:8000/api/v1/categoria/';
-   // http://192.168.202.194/siga/pedidos/2016/1771/
 
 
 
@@ -83,7 +82,7 @@ export class IngresoService {
     getAnios(): Observable < Object > {
         //let queryparameters:string = `${anio}/`;
         let url: string = this.aniosUrl;
-        return this.http.get(url).map(this.extractData).catch(this.handleError);
+        return this.http.get(url).map(this.extractData1).catch(this.handleError);
 
         // return this.http.get(url).map(this.extractData)
 
@@ -96,7 +95,6 @@ export class IngresoService {
         console.log('url:' + url);
         console.log(this.http.get(url).map(this.extractData1));
 
-        //return this.http.get(url).map(this.extractData).catch(this.handleError);
         return this.http.get(url).map(this.extractData1).catch(this.handleError);
     }
 
@@ -110,18 +108,13 @@ export class IngresoService {
 
 
     getCabPecosa(anio: number, pecosa: string): Observable < Object > {
-        
-        //let queryparameters: string = `?ano_eje=${anio}&sec_ejec=&tipo_pedido=&nro_pedido=${pecosa}`;
-       // http://192.168.202.194/siga/pedidos/2016/1771/
-       
-        let queryparameters: string = `${anio}/${pecosa}/`;
-
+        let queryparameters: string = `?ano_eje=${anio}&sec_ejec=&tipo_pedido=&nro_pedido=${pecosa}`;
 
         //  let queryparameters:string = `${anio}/${pecosa}/`;
         let url: string = this.cabpecosaUrl + queryparameters;
         console.log('urlcabpecosa:' + url);
-        return this.http.get(url).map(this.extractData).catch(this.handleError)
-       // return this.http.get(url).map(this.extractData1).catch(this.handleError)
+        //return this.http.get(url).map(this.extractData).catch(this.handleError)
+        return this.http.get(url).map(this.extractData1).catch(this.handleError)
     }
 
     getDetallePecosa(anio: number, pedido: string): Observable < Object > {
@@ -136,7 +129,6 @@ export class IngresoService {
 
         let url: string = this.detpecosaUrl + queryparameters;
         return this.http.get(url).map(this.extractData1).catch(this.handleError)
-        //return this.http.get(url).map(this.extractData1).catch(this.handleError)
     }
 
 
