@@ -21,6 +21,8 @@ import 'jquery';
 import 'tether';
 import 'bootstrap';
 import 'widgster'
+import 'primeng/primeng';
+import 'rxjs/Rx';
 
 if ('production' === ENV) {
   // Production

@@ -10,7 +10,7 @@
                             <div class="col-md-8 col-xs-12">
                                 <select (change)="cargarProyectosSigaDetail($event.target.value)" class="select2 form-control" id="default-select">
                                     <option value="0">Seleccione Proyecto</option>
-                                    <option *ngFor="let proyecto of proyectossiga"  value="{{proyecto.id_proyecto}}" >{{ proyecto.desc_proyecto }}</option>
+                                    <option *ngFor="let proyecto of sigaInterface"  value="{{proyecto.id_proyecto}}" >{{ proyecto.desc_proyecto }}</option>
                                 </select>
                             </div>
                         </div>
@@ -55,45 +55,39 @@
                 </h5>
             </header>
             <div class="widget-body">
-                <table class="table table-bordered table-lg mt-lg mb-0">
-                    <thead>
-                        <tr>
-                            <th class="hidden-xs-down">#</th>
-                            <th>Sigla</th>
-                            <th>Descripcion</th>
-                            <th class="hidden-xs-down">Año</th>
-                            <th class="hidden-xs-down">Fecha Final</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let i of proyectos_seguridad; let c = index">
-                            <td>{{ c }}</td>
-                            <td>{{ i.sigla_proy }}</td>
-                            <td>{{ i.des_proy || ''}}</td>
-                            <td>{{ i.anio_proy }}</td>
-                            <td>{{ i.fec_final }}</td>
-                            <td>
-                                <div class="btn-group" data-dropdown>
-                                    <button class="btn btn-sm btn-inverse dropdown-toggle" data-toggle="dropdown">
-                &nbsp; Opciones &nbsp;
-                <i class="fa fa-caret-down"></i>
-              </button>
-                                    <ul class="dropdown-menu dropdown-menu-right">
-                                        <li><a data-toggle="modal" (click)="showModalProjSegDetail(i.id_proyecto)" data-target="#modal_add_sistema"
-                                                class="dropdown-item" href="#">Asignar Sistema</a></li>
-                                        <li><a class="dropdown-item" href="#">Eliminar</a></li>
-                                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                        <li class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" href="#">Separated link</a></li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
 
-                </table>
-
+                <form class="navbar-form pull-xs-left" role="search">
+                    <div class="form-group">
+                        <div class="input-group input-group-no-border">
+                            <span class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </span>
+                            <input #gb type="text" pInputText size="50" class="form-control" placeholder="Buscador Global">
+                        </div>
+                    </div>
+                </form>
+                <p-dataTable [value]="proyectos_seguridad" [(selection)]="selectedSeguridad" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" [rows]="10" [paginator]="true" [globalFilter]="gb" class="table table-bordered table-lg">
+                    <footer>
+                        <div class="row">
+                            <p class="text-align-center">
+                                <button class="btn btn-success" [disabled]="disabled>1" data-toggle="modal" data-target="#modal_add_sistema" (click)="getDiffSistemas()" role="button">
+                           Asignar Sistemas
+                        </button>
+                                <button class="btn btn-warning" role="button" [disabled]="disabled>1"> 
+                            Editar
+                        </button>
+                                <button class="btn btn-danger" (click)="deleteProyectos()" role="button">
+                            Eliminar
+                        </button>
+                            </p>
+                        </div>
+                    </footer>
+                    <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
+                    <p-column field="sigla_proy" header="Sigla (startsWith)" [filter]="true"></p-column>
+                    <p-column field="des_proy" header="Descripcion (contains)" [filter]="true" filterMatchMode="contains"></p-column>
+                    <p-column field="anio_proy" header="Año (startsWith)" [filter]="true"></p-column>
+                    <p-column field="fec_final" header="FechaFin (endsWith)" [filter]="true" filterMatchMode="endsWith"></p-column>
+                </p-dataTable>
             </div>
         </section>
     </div>
@@ -112,53 +106,34 @@
                 <div class="widget-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <table class="table table-bordered">
+                            <table *ngIf="disabled>0" class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>Nombre Sistema</th>
-                                        <th>Fecha inicial</th>
+                                        <th>Codigo Sistema</th>
+                                        <th>Descripcion</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
+                                    <tr *ngFor="let sistema of selectedSeguridad[0].sistemas">
+                                        <td>{{ sistema.id_sistema }}</td>
+                                        <td>{{ sistema.des_sist }}</td>
                                     </tr>
                                 </tbody>
 
                             </table>
                         </div>
                         <div class="col-md-6">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            <div class="checkbox"><input id="checkbox10" type="checkbox" data-check-all=""> <label for="checkbox10"></label></div>
-                                        </th>
-                                        <th>Product</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <div class="checkbox"><input id="checkbox11" type="checkbox"> <label for="checkbox11"></label></div>
-                                        </td>
-                                        <td>On the Road</td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <div class="checkbox"><input id="checkbox12" type="checkbox"> <label for="checkbox12"></label></div>
-                                        </td>
-                                        <td>HP Core i7</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <p-dataTable [value]="diffsistemas" [(selection)]="selectedSistemas">
+                                <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
+                                <p-column field="id_sistema" [filter]="true"></p-column>
+                                <p-column field="des_sist" [filter]="true"></p-column>
+                            </p-dataTable>
                         </div>
                     </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-success">Guardar</button>
+                        <button type="button" (click)="addSistemas()" class="btn btn-success">Guardar</button>
                     </div>
                 </div>
             </section>

@@ -60,6 +60,7 @@ export class Helpers {
     }
 
     public static lengthobj(obj: Object): number {
+        console.log(obj);
         return Object.keys(obj).length;
     }
 

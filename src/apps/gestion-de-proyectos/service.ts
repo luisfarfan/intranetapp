@@ -26,51 +26,69 @@ import 'rxjs/add/operator/toPromise';
 import {
     Settings
 } from './../../app/app.settings';
-import {Helpers} from './../../app/helper';
+import { Helpers } from './../../app/helper';
 
 @Injectable()
 export class GestionProyectosService {
-    constructor(private http: Http) {}
+    constructor(private http: Http) { }
     private proyectos_url: string = `${Settings.HOST()}api/v1/proyectos/`;
     private proyectosbysistema_url: string = `${Settings.HOST()}api/v1/proyectos-by-sistemas/`;
     private proyectossiga_url: string = `${Settings.HOST()}proyectos_siga/`;
+    private proyecto_sistema_POST: string = `${Settings.HOST()}api/v1/proyectos_sistemas/`;
 
-    getProyectos_list(): Observable < Object > {
+    getProyectos_list(): Observable<Object> {
         return this.http.get(this.proyectosbysistema_url)
             .map(Helpers.extractData)
             .catch(Helpers.handleError);
     }
 
-    getProyectos_detail(pk): Observable < Object > {
+    getProyectos_detail(pk): Observable<Object> {
         return this.http.get(this.proyectosbysistema_url + pk)
             .map(Helpers.extractData)
             .catch(Helpers.handleError);
     }
 
-    getProyectosSiga(): Observable < Object > {
+    getProyectosSiga(): Observable<Object> {
         return this.http.get(this.proyectossiga_url)
             .map(Helpers.extractData)
             .catch(Helpers.handleError);
     }
 
-    getProyectosSigaDetail(idproyecto): Observable < Object >{
+    getProyectosSigaDetail(idproyecto): Observable<Object> {
         return this.http.get(this.proyectossiga_url + idproyecto)
             .map(Helpers.extractData)
             .catch(Helpers.handleError);
     }
 
-    addProyecto(data): Observable<Object>{
+    addProyecto(data): Observable<Object> {
         let body = JSON.stringify(data);
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
 
         return this.http.post(this.proyectos_url, body, options)
-                    .map(Helpers.extractData)
-                    .catch(Helpers.handleError);
+            .map(Helpers.extractData)
+            .catch(Helpers.handleError);
     }
 
     getSistemasbyProyecto(idsistema: any) {
         return this.http.get(this.proyectossiga_url + idsistema + '/')
+            .map(Helpers.extractData)
+            .catch(Helpers.handleError);
+    }
+
+    deleteProyectosSeguridad(pk: any) {
+        return this.http.delete(this.proyectosbysistema_url + pk + '/')
+            .map(res => {
+                return res;
+            })
+            .catch(Helpers.handleError);
+    }
+    addSistemastoProyecto(data) {
+        let body = JSON.stringify(data);
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.post(this.proyecto_sistema_POST, body, options)
             .map(Helpers.extractData)
             .catch(Helpers.handleError);
     }
