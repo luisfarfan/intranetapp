@@ -15,8 +15,8 @@ import {
 import {
   FormsModule
 } from '@angular/forms';
-import {GestiondeProyectos} from './gestion-de-proyectos.component';
-import {DataTableModule,SharedModule} from 'primeng/primeng';
+import { GestiondeProyectos } from './gestion-de-proyectos.component';
+import { DataTableModule, SharedModule } from 'primeng/primeng';
 import { TypeaheadModule } from 'ng2-bootstrap/ng2-bootstrap';
 
 const routes: Routes = [{
@@ -25,7 +25,7 @@ const routes: Routes = [{
 }];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes), CommonModule, FormsModule,DataTableModule,SharedModule],
+  imports: [RouterModule.forChild(routes), CommonModule, FormsModule, DataTableModule, SharedModule],
   declarations: [GestiondeProyectos]
 })
-export default class GestiondeProyectosModule {}
+export default class GestiondeProyectosModule { }

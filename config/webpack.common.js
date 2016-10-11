@@ -27,7 +27,7 @@ const METADATA = {
  *
  * See: http://webpack.github.io/docs/configuration.html#cli
  */
-module.exports = function(options) {
+module.exports = function (options) {
     isProd = options.env === 'production';
     return {
 
@@ -73,7 +73,7 @@ module.exports = function(options) {
              *
              * See: http://webpack.github.io/docs/configuration.html#resolve-extensions
              */
-            extensions: ['', '.ts', '.js', '.json'],
+            extensions: ['.ts','.js','.json','.css','.html'],
 
             // An array of directory names to be resolved to the current directory
             modules: [helpers.root('src'), 'node_modules'],
@@ -131,6 +131,10 @@ module.exports = function(options) {
                     ],
                     exclude: [/\.(spec|e2e)\.ts$/]
                 },
+                {
+                    test: /\.css$/,
+                    loader: 'raw-loader'
+                },
 
                 /*
                  * Json loader support for *.json files.
@@ -142,12 +146,21 @@ module.exports = function(options) {
                     loader: 'json-loader'
                 },
 
-                { test: /\.scss$/, loaders: ['raw-loader', 'sass-loader'] },
+                {
+                    test: /\.scss$/,
+                    loaders: ['raw-loader', 'sass-loader']
+                },
 
-                { test: /\.(woff2?|ttf|eot|svg)$/, loader: 'url?limit=10000&name=[name].[ext]' },
+                {
+                    test: /\.(woff2?|ttf|eot|svg)$/,
+                    loader: 'url?limit=10000&name=[name].[ext]'
+                },
 
                 // Bootstrap 4
-                { test: /bootstrap\/dist\/js\/umd\//, loader: 'imports?jQuery=jquery' },
+                {
+                    test: /bootstrap\/dist\/js\/umd\//,
+                    loader: 'imports?jQuery=jquery'
+                },
 
                 /*
                  * to string and css loader support for *.css files

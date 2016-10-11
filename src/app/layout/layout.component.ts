@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, ElementRef } from '@angular/core';
+import { Component, ViewEncapsulation, ElementRef, AfterViewInit,OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppConfig } from '../app.config';
 declare var jQuery: any;
@@ -9,13 +9,13 @@ declare var Hammer: any;
   encapsulation: ViewEncapsulation.None,
   templateUrl: './layout.template.html',
   host: {
-    '[class.nav-static]' : 'config.state["nav-static"]',
-    '[class.chat-sidebar-opened]' : 'chatOpened',
-    '[class.app]' : 'true',
+    '[class.nav-static]': 'config.state["nav-static"]',
+    '[class.chat-sidebar-opened]': 'chatOpened',
+    '[class.app]': 'true',
     id: 'app'
   }
 })
-export class Layout {
+export class Layout implements AfterViewInit {
   config: any;
   configFn: any;
   $sidebar: any;
@@ -24,12 +24,24 @@ export class Layout {
   chatOpened: boolean = false;
 
   constructor(config: AppConfig,
-              el: ElementRef,
-              router: Router) {
+    el: ElementRef,
+    router: Router,
+    private elementRef: ElementRef) {
     this.el = el;
     this.config = config.getConfig();
     this.configFn = config;
     this.router = router;
+  }
+  ngAfterViewInit() {
+    var sa = document.createElement("script");
+    sa.type = "text/javascript";
+    sa.src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js";
+    this.elementRef.nativeElement.appendChild(sa);
+    var s = document.createElement("script");
+    s.type = "text/javascript";
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.1.1/js/mdb.min.js";
+    this.elementRef.nativeElement.appendChild(s);
+
   }
 
   toggleSidebarListener(state): void {
@@ -52,7 +64,7 @@ export class Layout {
         .addClass('active js-notification-added')
         .find('.fa-circle')
         .after('<span class="badge tag-danger ' +
-          'pull-right animated bounceInDown">3</span>');
+        'pull-right animated bounceInDown">3</span>');
     }, 1000);
   }
 
@@ -191,7 +203,7 @@ export class Layout {
       this.enableSwipeCollapsing();
     }
 
-    this.$sidebar.find('.collapse').on('show.bs.collapse', function(e): void {
+    this.$sidebar.find('.collapse').on('show.bs.collapse', function (e): void {
       // execute only if we're actually the .collapse element initiated event
       // return for bubbled events
       if (e.target !== e.currentTarget) { return; }
@@ -200,20 +212,20 @@ export class Layout {
       jQuery($triggerLink.data('parent'))
         .find('.collapse.in').not(jQuery(this)).collapse('hide');
     })
-    /* adding additional classes to navigation link li-parent
-     for several purposes. see navigation styles */
-      .on('show.bs.collapse', function(e): void {
+      /* adding additional classes to navigation link li-parent
+       for several purposes. see navigation styles */
+      .on('show.bs.collapse', function (e): void {
         // execute only if we're actually the .collapse element initiated event
         // return for bubbled events
         if (e.target !== e.currentTarget) { return; }
 
         jQuery(this).closest('li').addClass('open');
-      }).on('hide.bs.collapse', function(e): void {
-      // execute only if we're actually the .collapse element initiated event
-      // return for bubbled events
-      if (e.target !== e.currentTarget) { return; }
+      }).on('hide.bs.collapse', function (e): void {
+        // execute only if we're actually the .collapse element initiated event
+        // return for bubbled events
+        if (e.target !== e.currentTarget) { return; }
 
-      jQuery(this).closest('li').removeClass('open');
-    });
+        jQuery(this).closest('li').removeClass('open');
+      });
   }
 }
