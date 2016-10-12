@@ -8,9 +8,10 @@
                         <legend>Proyectos Disponibles</legend>
                         <div class="form-group row">
                             <div class="col-md-8 col-xs-12">
+                                
                                 <select (change)="cargarProyectosSigaDetail($event.target.value)" class="select2 form-control" id="default-select">
                                     <option value="0">Seleccione Proyecto</option>
-                                    <option *ngFor="let proyecto of sigaInterface"  value="{{proyecto.id_proyecto}}" >{{ proyecto.desc_proyecto }}</option>
+                                    <option *ngFor="let proyecto of sigaInterface"  value="{{proyecto.id}}" >{{ proyecto.desc_proyecto }}</option>
                                 </select>
                             </div>
                         </div>
@@ -21,23 +22,23 @@
                     <thead>
                         <tr>
                             <th class="hidden-xs-down">#</th>
-                            <th>Descripcion</th>
+                            <th>Año Meta</th>
                             <th>Codigo Meta</th>
-                            <th>Modalidad</th>
-                            <th class="hidden-xs-down">CODI_DEPE_TDE</th>
-                            <th class="hidden-xs-down">Año Meta</th>
-                            <th>Objetivo</th>
+                            <th>Sigla</th>
+                            <th>Descripción Proyecto</th>
+                            <th>CODI_DEPE_TDE</th>
+                            <th>codi_depe_apro</th>
                         </tr>
                     </thead>
                     <tbody *ngIf="ifhay">
                         <tr>
-                            <td>{{ proyectosdetail.id_proyecto }}</td>
-                            <td>{{ proyectosdetail.desc_proyecto }}</td>
-                            <td>{{ proyectosdetail.codi_Meta}}</td>
-                            <td>{{ proyectosdetail.modalidad }}</td>
-                            <td>{{ proyectosdetail.CODI_DEPE_TDE }}</td>
+                            <td>{{ proyectosdetail.id }}</td>
                             <td>{{ proyectosdetail.annio_meta }}</td>
-                            <td>{{ proyectosdetail.objetivo }}</td>
+                            <td>{{ proyectosdetail.codi_meta}}</td>
+                            <td>{{ proyectosdetail.sigla}}</td>
+                            <td>{{ proyectosdetail.desc_proyecto }}</td>
+                            <td>{{ proyectosdetail.CODI_DEPE_TDE }}</td>
+                            <td>{{ proyectosdetail.codi_depe_apro }}</td>
                         </tr>
                     </tbody>
 
@@ -70,7 +71,7 @@
                     <footer>
                         <div class="row">
                             <p class="text-align-center">
-                                <button class="btn btn-success" [disabled]="disabled>1" data-toggle="modal" data-target="#modal_add_sistema" (click)="getDiffSistemas()" role="button">
+                                <button class="btn btn-success" [disabled]="disabled!==1" data-toggle="modal" data-target="#modal_add_sistema" (click)="getDiffSistemas()" role="button">
                            Asignar Sistemas
                         </button>
                                 <button class="btn btn-warning" role="button" [disabled]="disabled>1"> 

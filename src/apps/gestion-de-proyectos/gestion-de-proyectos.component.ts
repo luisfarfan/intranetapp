@@ -6,9 +6,10 @@ import { ProyectosSiga } from './proyectos_siga.interface';
 import { GestionSistemasService } from './../gestion-de-sistemas/service';
 import { ProyectoInterface } from './proyectos_seguridad.interface';
 import { SistemasInterface } from './../gestion-de-sistemas/sistemas.interface';
-import {
-    Helpers
-} from './../../app/helper';
+import { Helpers } from './../../app/helper';
+import { FormControl, FormGroup } from '@angular/forms'; 
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/of';
 declare var jQuery: any;
 
 @Component({
@@ -51,7 +52,8 @@ export class GestiondeProyectos implements OnInit {
     getDiffSistemas() {
         console.log(this.selectedSeguridad);
         this.sistemasservice.getSistemas().subscribe(res => {
-            this.diffsistemas = Helpers.diffObjects(this.selectedSeguridad[0].sistemas, res);
+            this.diffsistemas = Helpers.diffObjects(this.selectedSeguridad[0].sistemas, <Array<Object>>res);
+            console.log(this.diffsistemas)
         });
     }
 

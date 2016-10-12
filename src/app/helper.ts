@@ -68,7 +68,7 @@ export class Helpers {
         let BreakException = {};
         let mayor: Object;
         let menor: Object;
-        let resultado: Array < any > = [];
+        let resultado: Array<any> = [];
         if (this.lengthobj(obj) > this.lengthobj(obj2)) {
             mayor = obj;
             menor = obj2;
@@ -84,7 +84,10 @@ export class Helpers {
                 }
             }
         }
-        return mayor;
+        for (let i in mayor) {
+            mayor[i] != undefined ? resultado.push(mayor[i]) : '';
+        }
+        return resultado;
     }
 
     public static isEquivalent(a, b) {
