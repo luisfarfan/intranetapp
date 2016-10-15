@@ -66,9 +66,7 @@ export class ReportesService {
 
     getDistritos(ccdd: string, ccpp:string, ccdi:string): Observable < Object > {
         let queryparameters:string = `${ccdd}/${ccpp}/${ccdi}/`;
-        console.log(queryparameters);
         let url: string = this.distUrl + queryparameters;
-        console.log(url);
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
 
@@ -81,8 +79,6 @@ export class ReportesService {
     getTabla(tipo: string="0", ccdd: string="0", ccpp: string="0", ccdi: string="0"): Observable < Object > {
         let queryparameters:string = `${tipo}/${ccdd}${ccpp}${ccdi}/`;
         let url:string = this.tablaReporte + queryparameters;
-        console.log("asadasdasdasdadasdasd!");
-        console.log(url);
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
 

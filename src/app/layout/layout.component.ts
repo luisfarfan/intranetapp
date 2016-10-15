@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, ElementRef, AfterViewInit,OnInit } from '@angular/core';
+import { Component, ViewEncapsulation, ElementRef, AfterViewInit, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppConfig } from '../app.config';
 declare var jQuery: any;
@@ -15,7 +15,7 @@ declare var Hammer: any;
     id: 'app'
   }
 })
-export class Layout implements AfterViewInit {
+export class Layout {
   config: any;
   configFn: any;
   $sidebar: any;
@@ -31,17 +31,6 @@ export class Layout implements AfterViewInit {
     this.config = config.getConfig();
     this.configFn = config;
     this.router = router;
-  }
-  ngAfterViewInit() {
-    var sa = document.createElement("script");
-    sa.type = "text/javascript";
-    sa.src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.js";
-    this.elementRef.nativeElement.appendChild(sa);
-    var s = document.createElement("script");
-    s.type = "text/javascript";
-    s.src = "https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.1.1/js/mdb.min.js";
-    this.elementRef.nativeElement.appendChild(s);
-
   }
 
   toggleSidebarListener(state): void {

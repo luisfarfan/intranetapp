@@ -115,4 +115,11 @@ export class Helpers {
         // are considered equivalent
         return true;
     }
+
+    public static generateCokie(name) {
+        let value = "; " + document.cookie;
+        let parts = value.split("; " + name + "=");
+        if (parts.length == 2)
+            return parts.pop().split(";").shift();
+    }
 }

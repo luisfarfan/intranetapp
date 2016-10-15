@@ -34,6 +34,7 @@ import {
   DepartamentoInterface
 } from './departamento.interface';
 import {Helpers} from './../../app/helper';
+import {DataTableModule,SharedModule,ButtonModule} from 'primeng/primeng';
 import {
   RegistroInterface
 } from './registro.interface';
@@ -202,7 +203,7 @@ const routes: Routes = [{
 }];
 
 @NgModule({
-  imports: [CommonModule,RouterModule.forChild(routes), FormsModule],
+  imports: [CommonModule,RouterModule.forChild(routes), FormsModule, DataTableModule,SharedModule,ButtonModule],
   declarations: [Segmentacion]
 })
 export default class SegmentacionModule {}

@@ -93,7 +93,8 @@ export class GestiondeProyectos implements OnInit {
     }
 
     addProyectosSigatoSeguridad() {
-        let seguridaditf: Object = { 'anio_proy': this.proyectosdetail.annio_meta, 'des_proy': this.proyectosdetail.desc_proyecto }
+        console.log(this.proyectosdetail);
+        let seguridaditf: Object = { anio_proy: this.proyectosdetail.annio_meta, des_proy: this.proyectosdetail.desc_proyecto,sigla_proy:this.proyectosdetail.sigla }
         this.seguridadInterface = <ProyectoInterface[]>seguridaditf;
         this.proyectosservice.addProyecto(this.seguridadInterface).subscribe(res => {
             this.cargarProyectosSeguridad();
@@ -105,17 +106,16 @@ export class GestiondeProyectos implements OnInit {
             for (let i in this.selectedSeguridad) {
                 this.proyectosservice.deleteProyectosSeguridad(this.selectedSeguridad[i].id_proyecto).subscribe(res => {
                     console.log(res);
-
                 })
             }
         } else {
             this.proyectosservice.deleteProyectosSeguridad(this.selectedSeguridad.id_proyecto).subscribe(res => {
                 console.log(res);
-
+                this.cargarProyectosSeguridad();
             })
         }
         this.selectedSeguridad = <ProyectoInterface>{}
-        this.cargarProyectosSeguridad();
+        
     }
     addSistemas() {
         let proyecto_sistema: Object = {}
