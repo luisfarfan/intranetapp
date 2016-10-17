@@ -3,14 +3,14 @@ import { Router } from '@angular/router';
 import { TableOptions, TableColumn, ColumnMode } from 'angular2-data-table';
 import { FormControl, FormGroup } from '@angular/forms';
 import {
-    Helpers
+  Helpers
 } from './../../app/helper';
 import { RegistroService } from './modulo-de-registro.service'
 
 @Component({
-    templateUrl: 'modulo-de-registro.html',
-    providers: [RegistroService],
-    styles: [`
+  templateUrl: 'modulo-de-registro.html',
+  providers: [RegistroService],
+  styles: [`
     body {
   font-family: 'Roboto', sans-serif;
   background-color: #f5f9fb;
@@ -631,34 +631,45 @@ pre {
     `]
 })
 export class RegistroComponent implements OnInit {
-    public stateCtrl: FormControl = new FormControl();
+  departamentos: Array<Object> = []
+  provincias: Array<Object> = []
+  distritos: Array<Object> = []
+  selectedDepartamento: any;
+  selectedProvincia: any;
+  public groupSelected: string = '';
+  public selected: string = '';
+  public asyncSelected: string = '';
+  public typeaheadLoading: boolean = false;
+  public typeaheadNoResults: boolean = false;
+  constructor(private registroservice: RegistroService) { }
+  ngOnInit() {
+    this.getDepartamentos();
+  }
+  getDepartamentos() {
+    this.registroservice.getDepartamentos().subscribe(departamentos => {
+      this.departamentos = <Array<Object>>departamentos;
+    })
+  }
+  getProvincias() {
+    this.registroservice.getProvincias(this.selectedDepartamento).subscribe(provincias => {
+      this.provincias = <Array<Object>>provincias;
+      console.log(this.selectedDepartamento);
+    })
+  }
+  getDistritos() {
+    this.registroservice.getDistritos(this.selectedDepartamento, this.selectedProvincia).subscribe(distritos => {
+      this.distritos = <Array<Object>>distritos;
+    })
+  }
+  public changeTypeaheadLoading(e: boolean): void {
+    this.typeaheadLoading = e;
+  }
 
-    public myForm: FormGroup = new FormGroup({
-        state: this.stateCtrl
-    });
-    customSelected: string = '';
-    departamentos: Array<Object> = []
+  public changeTypeaheadNoResults(e: boolean): void {
+    this.typeaheadNoResults = e;
+  }
 
-    public groupSelected: string = '';
-    public selected: string = '';
-    public asyncSelected: string = '';
-    public typeaheadLoading: boolean = false;
-    public typeaheadNoResults: boolean = false;
-    constructor(private registroservice: RegistroService) { }
-    ngOnInit() {
-        this.registroservice.getDepartamentos().subscribe(departamentos => {
-            this.departamentos = <Array<Object>>departamentos
-        })
-    }
-    public changeTypeaheadLoading(e: boolean): void {
-        this.typeaheadLoading = e;
-    }
-
-    public changeTypeaheadNoResults(e: boolean): void {
-        this.typeaheadNoResults = e;
-    }
-
-    public typeaheadOnSelect(event): void {
-        console.log('Selected value: ', event);
-    }
+  public typeaheadOnSelect(event): void {
+    console.log('Selected value: ', event);
+  }
 }

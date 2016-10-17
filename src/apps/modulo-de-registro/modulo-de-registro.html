@@ -1,10 +1,5 @@
 <h5 class="page-title">Modulo de <span class="fw-semi-bold">Registro</span></h5>
 
- <input [(ngModel)]="customSelected"
-         [typeahead]="departamentos"
-         [typeaheadOptionField]="'departamento'"
-         (typeaheadOnSelect)="typeaheadOnSelect($event)"
-         class="form-control">
 <md-card class="demo-card demo-basic">
     <md-toolbar color="primary">Filtro</md-toolbar>
     <md-card-content>
@@ -12,30 +7,30 @@
             <tr>
                 <td>
                     <div class="form-group">
-                        <label for="email">Provincia</label>
-                        <select class="form-control" name="" id="">
+                        <label for="departamento">Departamento</label>
+                        <select class="form-control"  [(ngModel)]="selectedDepartamento" (ngModelChange)="getProvincias()" name="departamento" #departamento>
                             <option value="">Seleccione</option>
-                            <option value=""></option>
+                            <option *ngFor="let dep of departamentos" [value]="dep.ccdd">{{ dep.departamento }}</option>
                         </select>
                     </div>
                 </td>
 
                 <td>
                     <div class="form-group">
-                        <label for="email">Provincia</label>
-                        <select class="form-control" name="" id="">
+                        <label for="provincia">Provincia</label>
+                        <select class="form-control" [(ngModel)]="selectedProvincia" (ngModelChange)="getDistritos()" name="provincia" id="provincia">
                             <option value="">Seleccione</option>
-                            <option value=""></option>
+                            <option *ngFor="let prov of provincias" [value]="prov.ccpp">{{ prov.provincia }}</option>
                         </select>
                     </div>
                 </td>
 
                 <td>
                     <div class="form-group">
-                        <label for="email">Provincia</label>
-                        <select class="form-control" name="" id="">
+                        <label for="distrito">Distrito</label>
+                        <select class="form-control" name="distritos" id="distritos">
                             <option value="">Seleccione</option>
-                            <option value=""></option>
+                            <option *ngFor="let dis of distritos" [value]="dis.ccdi">{{ dis.distrito }}</option>
                         </select>
                     </div>
                 </td>

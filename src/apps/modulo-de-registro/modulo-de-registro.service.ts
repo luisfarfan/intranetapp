@@ -33,6 +33,7 @@ export class RegistroService {
     dpto_url: string = `${Settings.HOST_LOCAL()}departamentos/`;
     prov_url: string = `${Settings.HOST_LOCAL()}provincias/`;
     dist_url: string = `${Settings.HOST_LOCAL()}distritos/`;
+    local_url: string = `${Settings.HOST_LOCAL()}api/local/`;
 
     constructor(private http: Http) { }
 
@@ -43,15 +44,40 @@ export class RegistroService {
     }
 
     getProvincias(ccdd: string): Observable<Object> {
-        return this.http.get(this.prov_url)
+        return this.http.get(`${this.prov_url}${ccdd}`)
             .map(Helpers.extractData)
             .catch(Helpers.handleError)
     }
 
     getDistritos(ccdd: string, ccpp: string): Observable<Object> {
-        return this.http.get(this.dist_url)
+        return this.http.get(`${this.dist_url}${ccdd}/${ccpp}`)
             .map(Helpers.extractData)
             .catch(Helpers.handleError)
+    }
+
+    getLocal(): Observable<Object> {
+        return this.http.get(this.local_url)
+            .map(Helpers.extractData)
+            .catch(Helpers.handleError)
+    }
+
+    editLocal(pk, data): Observable<Object> {
+        let body = JSON.stringify(data);
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        let url: string = `${this.local_url}${pk}/`;
+        return this.http.put(url, body, options)
+            .map(Helpers.extractData)
+            .catch(Helpers.handleError);
+    }
+
+    addLocal(data): Observable<Object> {
+        let body = JSON.stringify(data);
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post(this.local_url, body, options)
+            .map(Helpers.extractData)
+            .catch(Helpers.handleError);
     }
 
 

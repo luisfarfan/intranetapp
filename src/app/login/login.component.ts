@@ -46,7 +46,10 @@ export class Login {
         this.errorLogin = true;
       } else {
         this.errorLogin = false;
-        this.router.navigate(['app']);
+        setTimeout(() => {
+          this.router.navigate(['app']);
+        }, 1000)
+
         localStorage.setItem('usuario', JSON.stringify(res));
       }
     });
