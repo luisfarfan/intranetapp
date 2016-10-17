@@ -122,4 +122,19 @@ export class Helpers {
         if (parts.length == 2)
             return parts.pop().split(";").shift();
     }
+
+    public static getSerialized<T>(arg: any): T {
+        return <T>JSON.parse(JSON.stringify(arg));
+    }
+
+    public static booleanToNumber(object: Object) {
+        for (let key in object) {
+            if (!object.hasOwnProperty(key)) continue;
+            if (typeof object[key] == "boolean") {
+                object[key] == true ? object[key] = "1" : object[key] = "0";
+            }
+        }
+
+        return object
+    }
 }

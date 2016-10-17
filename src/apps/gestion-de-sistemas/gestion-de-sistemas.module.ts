@@ -10,15 +10,19 @@ import {
   FormsModule
 } from '@angular/forms';
 import { GestiondeSistemas } from './gestion-de-sistemas.component';
-declare var jQuery: any;
-
+import { DataTableModule, SharedModule } from 'primeng/primeng';
+import { MaterialModule } from '@angular/material';
+import { TypeaheadModule } from 'ng2-bootstrap/components/typeahead';
+import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
+import { ToastyModule } from 'ng2-toasty';
+import { ConfirmDialogModule } from 'primeng/primeng';
 const routes: Routes = [{
   path: '',
   component: GestiondeSistemas
 }];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes), CommonModule, FormsModule],
+  imports: [RouterModule.forChild(routes), CommonModule, FormsModule, MaterialModule.forRoot(), ToastyModule.forRoot(), ConfirmDialogModule],
   declarations: [GestiondeSistemas]
 })
-export default class GestiondeSistemasModule {}
+export default class GestiondeSistemasModule { }

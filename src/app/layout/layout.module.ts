@@ -18,7 +18,7 @@ import { Notifications } from './notifications/notifications.component';
 import { MaterialModule } from '@angular/material';
 
 @NgModule({
-  imports: [CommonModule, TooltipModule, ROUTES, FormsModule, MaterialModule.forRoot()],
+  imports: [CommonModule, TooltipModule, ROUTES, FormsModule,MaterialModule.forRoot()],
   declarations: [Layout, Sidebar, Navbar, ChatSidebar, SearchPipe, Notifications, NotificationLoad, ChatMessage]
 })
 export default class LayoutModule {

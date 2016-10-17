@@ -12,7 +12,7 @@ import {
   LoginInterface
 } from './login.interface';
 
-import {Helpers} from './../helper';
+import { Helpers } from './../helper';
 
 @Component({
   selector: 'login',
@@ -33,7 +33,9 @@ export class Login {
   constructor(private loginservice: LoginService, private router: Router) {
     this.validLogin = Helpers.isValidSession();
     if (this.validLogin) {
-      this.router.navigate(['app']);
+      setTimeout(() => {
+        this.router.navigate(['app']);
+      }, 1000)
     }
   }
 

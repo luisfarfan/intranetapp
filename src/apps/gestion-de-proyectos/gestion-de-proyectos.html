@@ -1,144 +1,125 @@
-<h1 class="page-title">SEGURIDAD - <span class="fw-semi-bold">Gestion de Proyectos</span></h1>
-<div class="row">
-    <div class="col-lg-12">
-        <section class="widget">
-            <div class="widget-body">
-                <form class="form-horizontal form-label-left" role="form">
-                    <fieldset>
-                        <legend>Proyectos Disponibles</legend>
-                        <div class="form-group row">
-                            <div class="col-md-8 col-xs-12">
-                                
-                                <select (change)="cargarProyectosSigaDetail($event.target.value)" class="select2 form-control" id="default-select">
-                                    <option value="0">Seleccione Proyecto</option>
-                                    <option *ngFor="let proyecto of sigaInterface"  value="{{proyecto.id}}" >{{ proyecto.desc_proyecto }}</option>
-                                </select>
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
-                <button *ngIf="ifhay" (click)="addProyectosSigatoSeguridad()" class="btn btn-success width-100 mb-xs" role="button">Agregar</button>
-                <table class="table table-bordered table-lg mt-lg mb-0">
-                    <thead>
-                        <tr>
-                            <th class="hidden-xs-down">#</th>
-                            <th>Año Meta</th>
-                            <th>Codigo Meta</th>
-                            <th>Sigla</th>
-                            <th>Descripción Proyecto</th>
-                            <th>CODI_DEPE_TDE</th>
-                            <th>codi_depe_apro</th>
-                        </tr>
-                    </thead>
-                    <tbody *ngIf="ifhay">
-                        <tr>
-                            <td>{{ proyectosdetail.id }}</td>
-                            <td>{{ proyectosdetail.annio_meta }}</td>
-                            <td>{{ proyectosdetail.codi_meta}}</td>
-                            <td>{{ proyectosdetail.sigla}}</td>
-                            <td>{{ proyectosdetail.desc_proyecto }}</td>
-                            <td>{{ proyectosdetail.CODI_DEPE_TDE }}</td>
-                            <td>{{ proyectosdetail.codi_depe_apro }}</td>
-                        </tr>
-                    </tbody>
+<h5 class="page-title">SEGURIDAD - <span class="fw-semi-bold">GESTION DE PROYECTOS</span></h5>
+<md-card>
+    <input [(ngModel)]="customSelected" [typeaheadMinLength]="0" placeholder="Escriba el Proyecto" [typeahead]="siga" [typeaheadOptionField]="'desc_proyecto'" (typeaheadOnSelect)="typeaheadOnSelect($event)" [typeaheadOptionsLimit]="10" class="form-control">
+</md-card>
 
-                </table>
-
-            </div>
-        </section>
-    </div>
-</div>
-<div class="row">
-    <div class="col-lg-12">
-        <section class="widget">
-            <header>
-                <h5>Lista de <span class="fw-semi-bold">Proyectos</span>
-                </h5>
-            </header>
-            <div class="widget-body">
-
-                <form class="navbar-form pull-xs-left" role="search">
-                    <div class="form-group">
-                        <div class="input-group input-group-no-border">
-                            <span class="input-group-addon">
-                        <i class="fa fa-search"></i>
-                    </span>
-                            <input #gb type="text" pInputText size="50" class="form-control" placeholder="Buscador Global">
-                        </div>
-                    </div>
-                </form>
-                <p-dataTable [value]="proyectos_seguridad" [(selection)]="selectedSeguridad" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" [rows]="10" [paginator]="true" [globalFilter]="gb" class="table table-bordered table-lg">
-                    <footer>
-                        <div class="row">
-                            <p class="text-align-center">
-                                <button class="btn btn-success" [disabled]="disabled!==1" data-toggle="modal" data-target="#modal_add_sistema" (click)="getDiffSistemas()" role="button">
-                           Asignar Sistemas
-                        </button>
-                                <button class="btn btn-warning" role="button" [disabled]="disabled>1"> 
-                            Editar
-                        </button>
-                                <button class="btn btn-danger" (click)="deleteProyectos()" role="button">
-                            Eliminar
-                        </button>
-                            </p>
-                        </div>
-                    </footer>
-                    <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
-                    <p-column field="sigla_proy" header="Sigla (startsWith)" [filter]="true"></p-column>
-                    <p-column field="des_proy" header="Descripcion (contains)" [filter]="true" filterMatchMode="contains"></p-column>
-                    <p-column field="anio_proy" header="Año (startsWith)" [filter]="true"></p-column>
-                    <p-column field="fec_final" header="FechaFin (endsWith)" [filter]="true" filterMatchMode="endsWith"></p-column>
-                </p-dataTable>
-            </div>
-        </section>
-    </div>
+<button [hidden]="!sigaSelected" data-toggle="modal" (click)="addProyectoModal()" md-fab color="warn">
+        <md-icon class="md-24">add</md-icon>
+    </button>
+<div class="table-responsive-vertical shadow-z-1">
+    <!-- Table starts here -->
+    <table id="table" class="table table-hover table-mc-light-blue">
+        <thead>
+            <tr>
+                <th>ID PROYECTO</th>
+                <th>Descripcion</th>
+                <th>Codigo Meta</th>
+                <th>Modalidad</th>
+                <th>CODI_DEPE_TDE</th>
+                <th>Año Meta</th>
+                <th>Objetivo</th>
+            </tr>
+        </thead>
+        <tbody *ngIf="sigaSelected">
+            <tr>
+                <td data-title="ID PROYECTO">{{ sigaSelected.id_proyecto }}</td>
+                <td data-title="Descripcion">{{ sigaSelected.desc_proyecto }}</td>
+                <td data-title="Codigo Meta">{{ sigaSelected.codi_Meta }}</td>
+                <td data-title="Modalidad">{{ sigaSelected.modalidad }}</td>
+                <td data-title="CODI_DEPE_TDE">{{ sigaSelected.CODI_DEPE_TDE }}</td>
+                <td data-title="Año Meta">{{ sigaSelected.annio_meta }}</td>
+                <td data-title="Objetivo">{{ sigaSelected.objetivo }}</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
-<div class="modal fade" id="modal_add_sistema">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title text-xs-center fw-bold mt" id="myModalLabel18">Sistemas</h4>
-                <p class="text-xs-center fs-mini text-muted mt-sm">
-                </p>
-            </div>
-            <section class="widget" widget>
-                <div class="widget-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <table *ngIf="disabled>0" class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Codigo Sistema</th>
-                                        <th>Descripcion</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let sistema of selectedSeguridad[0].sistemas">
-                                        <td>{{ sistema.id_sistema }}</td>
-                                        <td>{{ sistema.des_sist }}</td>
-                                    </tr>
-                                </tbody>
 
-                            </table>
-                        </div>
+<md-card>
+    <div class="table-responsive-vertical shadow-z-1">
+        <p-dataTable class="table table-hover table-mc-light-blue" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" [value]="seguridad" selectionMode="single" [(selection)]="selectedSeguridad">
+            <header>Seguridad Proyectos</header>
+            <p-column field="sigla_proy" header="Sigla"></p-column>
+            <p-column field="anio_proy" header="Año"></p-column>
+            <p-column field="des_proy" header="Descripción"></p-column>
+            <p-column field="cod_meta" header="Codigo Meta"></p-column>
+            <p-column>
+                <template let-proj="rowData" pTemplate type="body">
+					<span [ngSwitch]="proj.flag_activo">
+                        <span *ngSwitchCase="'1'" class="label label-success">Activo</span>
+					<span *ngSwitchCase="'0'" class="label label-danger">Inactivo</span>
+					<span *ngSwitchDefault class="label label-danger">Inactivo</span>
+					</span>
+				</template>
+            </p-column>
+        </p-dataTable>
+    </div>
+    <button type="button" [disabled]="!selectedSeguridad" (click)="editProyectoModal()" md-raised-button color="primary">Editar y/o Eliminar</button>
+    <button type="button" [disabled]="!selectedSeguridad" (click)="asignarProyectoModal()" md-raised-button color="warn">Asignar Sistemas</button>
+</md-card>
+
+<div id="add_edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <md-card class="demo-card demo-basic">
+            <md-toolbar color="primary">{{ titulo_modal }}</md-toolbar>
+            <md-card-content>
+                <div *ngIf="insert">
+                    <form #form="ngForm" (ngSubmit)="addProyecto(form)">
+                        <table style="width: 100%" cellspacing="0">
+                            <tr>
+                                <td>
+                                    <md-input placeholder="Sigla Proyecto" [ngModel]="newproyecto.sigla_proy" name="sigla_proy" required style="width: 100%"></md-input>
+                                    <md-input placeholder="Año Proyecto" [ngModel]="newproyecto.anio_proy" name="anio_proy" required [value]="newproyecto.anio_proy" style="width: 100%"></md-input>
+                                    <md-input placeholder="Descripción" [ngModel]="newproyecto.des_proy" name="des_proy" required [value]="newproyecto.des_proy" style="width: 100%"></md-input>
+                                    <md-input placeholder="Código Meta" [ngModel]="newproyecto.cod_meta" name="cod_meta" required [value]="newproyecto.cod_meta" style="width: 100%"></md-input>
+                                    <md-checkbox name="flag_activo" [checked]="flag_activo" [ngModel]="flag_activo">Activar?</md-checkbox>
+                                </td>
+                            </tr>
+                        </table>
+                        <button md-raised-button color="accent">Agregar</button>
+                    </form>
+                </div>
+                <div *ngIf="update">
+                    <form #f="ngForm" (ngSubmit)="editProyecto(f)">
+                        <table style="width: 100%" cellspacing="0">
+                            <tr>
+                                <td>
+                                    <md-input name="sigla_proy" [ngModel]="selectedSeguridad.sigla_proy" [value]="selectedSeguridad.sigla_proy" required placeholder="Nombre" style="width: 100%"></md-input>
+                                    <md-input name="anio_proy" [ngModel]="selectedSeguridad.anio_proy" [value]="selectedSeguridad.anio_proy" required placeholder="Codigo" style="width: 100%"></md-input>
+                                    <md-input name="des_proy" [ngModel]="selectedSeguridad.des_proy" [value]="selectedSeguridad.des_proy" required placeholder="Descripcion" style="width: 100%"></md-input>
+                                    <md-input name="cod_meta" [ngModel]="selectedSeguridad.cod_meta" [value]="selectedSeguridad.cod_meta" required placeholder="Meta" style="width: 100%"></md-input>
+                                    <md-checkbox name="flag_activo" [ngModel]="flag_activo2" [checked]="flag_activo2">Activar?</md-checkbox>
+                                </td>
+                            </tr>
+                        </table>
+                        <button type="button" (click)="deleteProyecto()" md-raised-button color="primary">Eliminar</button>
+                        <button md-raised-button color="warn">Editar</button>
+                    </form>
+                </div>
+                <div *ngIf="asignar">
+                    <div class="row" *ngIf="selectedSeguridad">
                         <div class="col-md-6">
-                            <p-dataTable [value]="diffsistemas" [(selection)]="selectedSistemas">
+                            <p-dataTable class="table table-hover table-mc-light-blue" [value]="selectedSeguridad.sistemas" [(selection)]="sistemasSelected">
                                 <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
-                                <p-column field="id_sistema" [filter]="true"></p-column>
-                                <p-column field="des_sist" [filter]="true"></p-column>
+                                <p-column field="nom_sist"></p-column>
+                            </p-dataTable>
+                        </div>
+                        <div class="col-md-6">
+                            <p-dataTable class="table table-hover table-mc-light-blue" [value]="sistemas_por_asignar" [(selection)]="sistemas_por_asignar_selected">
+                                <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
+                                <p-column field="nom_sist"></p-column>
+                                <p-column field="codigo_sist"></p-column>
                             </p-dataTable>
                         </div>
                     </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-gray" data-dismiss="modal">Close</button>
-                        <button type="button" (click)="addSistemas()" class="btn btn-success">Guardar</button>
+                    <div class="row">
+                        <button (click)="eliminarSistemas()" md-raised-button color="warn">Eliminar</button>
+                        <button (click)="asignarProyectos()" md-raised-button color="warn">Asignar</button>
                     </div>
                 </div>
-            </section>
-
-        </div>
+            </md-card-content>
+        </md-card>
     </div>
 </div>
+<ng2-toasty></ng2-toasty>
+<p-confirmDialog header="Confirmation" style="z-index: 9999;position: fixed;" icon="fa fa-question-circle" width="425"></p-confirmDialog>

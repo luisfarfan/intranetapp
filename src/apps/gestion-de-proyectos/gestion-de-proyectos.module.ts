@@ -17,7 +17,10 @@ import {
 } from '@angular/forms';
 import { GestiondeProyectos } from './gestion-de-proyectos.component';
 import { DataTableModule, SharedModule } from 'primeng/primeng';
-
+import { ModalModule } from 'ng2-bootstrap/ng2-bootstrap';
+import { MaterialModule } from '@angular/material';
+import { ToastyModule } from 'ng2-toasty';
+import { ConfirmDialogModule } from 'primeng/primeng';
 import { TypeaheadModule } from 'ng2-bootstrap/components/typeahead';
 const routes: Routes = [{
   path: '',
@@ -25,7 +28,11 @@ const routes: Routes = [{
 }];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes), CommonModule, FormsModule, DataTableModule, SharedModule,TypeaheadModule],
+  imports: [RouterModule.forChild(routes), 
+  CommonModule, 
+  ToastyModule.forRoot(), 
+  FormsModule, MaterialModule, 
+  DataTableModule, SharedModule,ConfirmDialogModule, TypeaheadModule],
   declarations: [GestiondeProyectos]
 })
 export default class GestiondeProyectosModule { }

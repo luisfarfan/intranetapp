@@ -1,8 +1,23 @@
-export class SistemasInterface {
-        public id_sistema: string = '';
-        public des_sist: string = '';
-        public nom_sist: string = '';
-        public flag_activo: string = '';
-        public usr_creacion: string = '';
-        
+export interface ISistemas {
+        id_sistema: string,
+        des_sist: string,
+        nom_sist: string,
+        codigo_sist: string,
+        flag_activo: string,
+        flag_eliminado: string,
+        usr_creacion: string,
+        fec_creacion: string,
+        fec_edicion: string
+}
+
+export class Sistema {
+        id_sistema: string = '';
+        des_sist: string = '';
+        nom_sist: string = '';
+        codigo_sist: string = '';
+        flag_activo: string = '';
+        flag_eliminado: string = '';
+        usr_creacion: string = '';
+        fec_creacion: string = '';
+        fec_edicion: string = ''
 }

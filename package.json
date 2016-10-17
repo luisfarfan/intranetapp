@@ -75,6 +75,7 @@
     "mdbootstrap": "^4.1.1",
     "ng2-bootstrap": "^1.1.2",
     "ng2-material-select": "^0.1.0",
+    "ng2-toasty": "^2.1.0",
     "ng2-typeahead": "^1.0.0",
     "primeng": "^1.0.0-beta.17",
     "rxjs": "5.0.0-beta.12",
