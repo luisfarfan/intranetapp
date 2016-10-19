@@ -53,7 +53,6 @@ export class ControldecalidadService {
     }
 
     getDepartamentos(): Observable < Object > {
-        console.log(this.depaUrl);
         return this.http.get(this.depaUrl).map(this.extractData).catch(this.handleError)
     }
 
@@ -95,7 +94,6 @@ export class ControldecalidadService {
     
     getRegistro(url:string=''): Observable < Object > {
         let tablaUrlAux2 = this.tablaUrlAux + url;
-        console.log(tablaUrlAux2);
         if(url!=''){
             return this.http.get(tablaUrlAux2).map(this.extractData)
         }else{

@@ -28,14 +28,6 @@ import 'rxjs/add/operator/toPromise';
 export class CroquisylistadoService {
     constructor(private http: Http) {}
 
-    /*private depaUrl: string = 'http://192.168.200.123:8081/segrecargaDepa/';
-    private provUrl: string = 'http://192.168.200.123:8081/segrecargaProv/';
-    private distUrl: string = 'http://192.168.200.123:8081/segrecargaDis/';
-    private zonaUrl: string = 'http://192.168.200.123:8081/segrecargaZona/';
-    //private tablaUrl: string = 'http://192.168.200.123:8081/segrecargaTabla/';
-    private tablaUrlAux: string = 'http://192.168.200.123:8081/crorecargaTabla01/';
-    private tablaUrlAux2: string = 'http://192.168.200.123:8081/crorecargaTabla02/';*/
-
     private depaUrl: string = 'http://bromero.inei.com.pe:8000/recargaDepa/';
     private provUrl: string = 'http://bromero.inei.com.pe:8000/recargaProv/';
     private distUrl: string = 'http://bromero.inei.com.pe:8000/recargaDis/';

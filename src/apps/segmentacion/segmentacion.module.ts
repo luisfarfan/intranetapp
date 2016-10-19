@@ -69,18 +69,12 @@ class Segmentacion{
   private tablaaa1:any;
 
   constructor(private segmentacionservice: SegmentacionService, private elementRef: ElementRef) {
-    this.cargarDepaInicial()
+    this.cargarDepa()
     this.cargarTabla("0","0","0","0","0")
     this.registro = this.model
   }
 
   model = new RegistroInterface();
-  
-  cargarDepaInicial() {
-    this.segmentacionservice.getDepartamentos().subscribe(res => {
-        this.departamentos = <DepartamentoInterface>res;        
-    })    
-  }
 
   cargarDepa() {
     if(this.ccdd!=0){

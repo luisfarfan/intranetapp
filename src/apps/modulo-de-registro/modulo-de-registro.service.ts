@@ -34,6 +34,7 @@ export class RegistroService {
     prov_url: string = `${Settings.HOST_LOCAL()}provincias/`;
     dist_url: string = `${Settings.HOST_LOCAL()}distritos/`;
     local_url: string = `${Settings.HOST_LOCAL()}api/local/`;
+    infra_url: string = `${Settings.HOST_LOCAL()}api/infraestructura/`;
 
     constructor(private http: Http) { }
 
@@ -78,6 +79,12 @@ export class RegistroService {
         return this.http.post(this.local_url, body, options)
             .map(Helpers.extractData)
             .catch(Helpers.handleError);
+    }
+
+    getInfraestructura():Observable<Object>{
+        return this.http.get(this.infra_url)
+            .map(Helpers.extractData)
+            .catch(Helpers.handleError)
     }
 
 

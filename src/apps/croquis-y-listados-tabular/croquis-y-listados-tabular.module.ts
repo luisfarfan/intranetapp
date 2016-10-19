@@ -60,6 +60,7 @@ class Croquisylistadostabular {
   private zona: any = 0;
   private seccion: any = 0;
   private aeu: any = 0;
+  private area: string="0";
   private verZona = false;
   private url: string = '';
   private urlCroquis: any;
@@ -78,10 +79,8 @@ class Croquisylistadostabular {
   private distritos: DistritoInterface;
   private zonas: ZonaInterface;
   private thisAux: any;
-  
-
-  private urlSeccion:any="http://172.16.2.205:8000/descargarPdf/021806/00100/1/";
-  private urlEmpadronador:any="http://172.16.2.205:8000/descargarPdf/021806/00100/2/";
+  private urlSeccion:any="";
+  private urlEmpadronador:any="";
   
   constructor(private croquisylistadostabular: CroquisylistadostabularService, private elementRef: ElementRef, private domSanitizer: DomSanitizer) {
     this.cargarDepa()
@@ -147,6 +146,10 @@ class Croquisylistadostabular {
     }
   }
 
+  cambiarArea(area: string){
+    this.area=area;
+  }
+
   cargarAeu(zona: string) {
     this.verZona = true;
     this.zona = zona;
@@ -192,17 +195,26 @@ class Croquisylistadostabular {
   getRuta() {
     let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona;
     let ubigeo = this.ccdd + this.ccpp + this.ccdi;
-    this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/${urlCroquisAux}.pdf`);
-    this.urlSeccion = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://172.16.2.205:8000/descargarPdf/${ubigeo}/${this.zona}/1/`);
-    this.urlEmpadronador = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://172.16.2.205:8000/descargarPdf/${ubigeo}/${this.zona}/2/`);
+    if(this.area=="0"){
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_tab/urbano/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    }else{
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_tab/rural/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    } 
+    this.urlSeccion = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://172.16.2.205:8000/descargarPdftab/${ubigeo}/${this.zona}/1/${this.area}/`);
+    this.urlEmpadronador = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://172.16.2.205:8000/descargarPdftab/${ubigeo}/${this.zona}/2/${this.area}/`);
   }
 
   cambiarPdfSeccion(seccion) {
     this.seccion = seccion;
     let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona + ('00' + this.seccion).slice(-3);
-    this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/${urlCroquisAux}.pdf`);
-    jQuery('#tablaCroAux tr').click(function () {
-        jQuery('#tablaCroAux tr').each(function(){
+    let ubigeo = this.ccdd + this.ccpp + this.ccdi;
+    if(this.area=="0"){
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_tab/urbano/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    }else{
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_tab/rural/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    }
+    jQuery('#tablaCroTabAux tr').click(function () {
+        jQuery('#tablaCroTabAux tr').each(function(){
           jQuery(this).removeClass('intro')
         })
         jQuery(this).addClass('intro');
@@ -213,9 +225,14 @@ class Croquisylistadostabular {
     this.seccion = seccion;
     this.aeu = aeu;
     let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona + ('00' + this.seccion).slice(-3) + this.aeu;
-    this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/${urlCroquisAux}.pdf`);
-    jQuery('#tablaCroAux tr').click(function () {
-        jQuery('#tablaCroAux tr').each(function(){
+    let ubigeo = this.ccdd + this.ccpp + this.ccdi;
+    if(this.area=="0"){
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_tab/urbano/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    }else{
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_tab/rural/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    }    
+    jQuery('#tablaCroTabAux tr').click(function () {
+        jQuery('#tablaCroTabAux tr').each(function(){
           jQuery(this).removeClass('intro')
         })
         jQuery(this).addClass('intro');

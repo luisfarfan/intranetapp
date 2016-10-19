@@ -134,7 +134,6 @@ export class Helpers {
                 object[key] == true ? object[key] = "1" : object[key] = "0";
             }
         }
-
         return object
     }
 }

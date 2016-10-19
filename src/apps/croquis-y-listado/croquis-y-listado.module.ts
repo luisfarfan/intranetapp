@@ -60,6 +60,7 @@ class Croquisylistado {
   private zona: any = 0;
   private seccion: any = 0;
   private aeu: any = 0;
+  private area: string="0";
   private verZona = false;
   private url: string = '';
   private urlCroquis: any;
@@ -80,8 +81,8 @@ class Croquisylistado {
   private thisAux: any;
   
 
-  private urlSeccion:any="http://172.16.2.205:8000/descargarPdf/021806/00100/1/";
-  private urlEmpadronador:any="http://172.16.2.205:8000/descargarPdf/021806/00100/2/";
+  private urlSeccion:any="";
+  private urlEmpadronador:any="";
   
   constructor(private croquisylistado: CroquisylistadoService, private elementRef: ElementRef, private domSanitizer: DomSanitizer) {
     this.cargarDepa()
@@ -146,6 +147,10 @@ class Croquisylistado {
       this.cargarTabla("2", this.ccdd, this.ccpp, "0", "0")
     }
   }
+  
+  cambiarArea(area: string){
+    this.area=area;
+  }
 
   cargarAeu(zona: string) {
     this.verZona = true;
@@ -192,15 +197,24 @@ class Croquisylistado {
   getRuta() {
     let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona;
     let ubigeo = this.ccdd + this.ccpp + this.ccdi;
-    this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/${urlCroquisAux}.pdf`);
-    this.urlSeccion = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://172.16.2.205:8000/descargarPdf/${ubigeo}/${this.zona}/1/`);
-    this.urlEmpadronador = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://172.16.2.205:8000/descargarPdf/${ubigeo}/${this.zona}/2/`);
+    if(this.area=="0"){
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/urbano/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    }else{
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/rural/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    } 
+    this.urlSeccion = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://172.16.2.205:8000/descargarPdf/${ubigeo}/${this.zona}/1/${this.area}/`);
+    this.urlEmpadronador = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://172.16.2.205:8000/descargarPdf/${ubigeo}/${this.zona}/2/${this.area}/`);
   }
 
   cambiarPdfSeccion(seccion) {
     this.seccion = seccion;
     let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona + ('00' + this.seccion).slice(-3);
-    this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/${urlCroquisAux}.pdf`);
+    let ubigeo = this.ccdd + this.ccpp + this.ccdi;
+    if(this.area=="0"){
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/urbano/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    }else{
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/rural/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    }
     jQuery('#tablaCroAux tr').click(function () {
         jQuery('#tablaCroAux tr').each(function(){
           jQuery(this).removeClass('intro')
@@ -213,7 +227,12 @@ class Croquisylistado {
     this.seccion = seccion;
     this.aeu = aeu;
     let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona + ('00' + this.seccion).slice(-3) + this.aeu;
-    this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/${urlCroquisAux}.pdf`);
+    let ubigeo = this.ccdd + this.ccpp + this.ccdi;
+    if(this.area=="0"){
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/urbano/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    }else{
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/rural/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    }
     jQuery('#tablaCroAux tr').click(function () {
         jQuery('#tablaCroAux tr').each(function(){
           jQuery(this).removeClass('intro')

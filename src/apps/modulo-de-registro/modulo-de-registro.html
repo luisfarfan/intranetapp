@@ -1,134 +1,360 @@
 <h5 class="page-title">Modulo de <span class="fw-semi-bold">Registro</span></h5>
 
-<md-card class="demo-card demo-basic">
-    <md-toolbar color="primary">Filtro</md-toolbar>
-    <md-card-content>
-        <table style="width: 100%" cellspacing="0">
-            <tr>
-                <td>
-                    <div class="form-group">
-                        <label for="departamento">Departamento</label>
-                        <select class="form-control"  [(ngModel)]="selectedDepartamento" (ngModelChange)="getProvincias()" name="departamento" #departamento>
-                            <option value="">Seleccione</option>
+<md-card>
+	<md-card-content>
+		<form class="form-inline">
+			<div class="form-group">
+				<label for="departamento">Departamento</label>
+				<select class="form-control" [(ngModel)]="selectedDepartamento" (ngModelChange)="getProvincias()" name="departamento" #departamento>
+                            <option value="0">Seleccione</option>
                             <option *ngFor="let dep of departamentos" [value]="dep.ccdd">{{ dep.departamento }}</option>
                         </select>
-                    </div>
-                </td>
-
-                <td>
-                    <div class="form-group">
-                        <label for="provincia">Provincia</label>
-                        <select class="form-control" [(ngModel)]="selectedProvincia" (ngModelChange)="getDistritos()" name="provincia" id="provincia">
-                            <option value="">Seleccione</option>
+			</div>
+			<div class="form-group">
+				<label for="provincia">Provincia</label>
+				<select class="form-control" [(ngModel)]="selectedProvincia" (ngModelChange)="getDistritos()" name="provincia" id="provincia">
+                            <option value="0">Seleccione</option>
                             <option *ngFor="let prov of provincias" [value]="prov.ccpp">{{ prov.provincia }}</option>
                         </select>
-                    </div>
-                </td>
-
-                <td>
-                    <div class="form-group">
-                        <label for="distrito">Distrito</label>
-                        <select class="form-control" name="distritos" id="distritos">
-                            <option value="">Seleccione</option>
+			</div>
+			<div class="form-group">
+				<label for="distrito">Distrito</label>
+				<select class="form-control" [(ngModel)]="selectedDistrito" name="distritos" id="distritos">
+                            <option value="0">Seleccione</option>
                             <option *ngFor="let dis of distritos" [value]="dis.ccdi">{{ dis.distrito }}</option>
                         </select>
-                    </div>
-                </td>
-
-            </tr>
-        </table>
-    </md-card-content>
+			</div>
+			<button md-raised-button color="accent">Registrar Local</button>
+			<button md-raised-button color="warn">Buscar</button>
+		</form>
+	</md-card-content>
 </md-card>
 
-<md-card class="demo-card demo-basic">
-    <md-toolbar color="primary">Registrar Local</md-toolbar>
-    <md-card-content>
-        <form>
-            <div class="row">
-                <div class="col-md-12 col-xs-12 col-sm-12 col-lg-8">
-                    <table style="width: 100%" cellspacing="0">
-                        <tr>
-                            <td>
-                                <md-input placeholder="Local" style="width: 100%"></md-input>
-                            </td>
-                            <td>
-                                <md-input placeholder="#Aulas" style="width: 100%"></md-input>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <md-input placeholder="Dirección" style="width: 100%"></md-input>
-                            </td>
-                            <td>
-                                <md-input placeholder="TotalPEA" style="width: 100%"></md-input>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <md-input placeholder="Referencia" style="width: 100%"></md-input>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <md-input placeholder="Teléfono" style="width: 100%"></md-input>
-                            </td>
-                        </tr>
-                    </table>
-                    <table style="width: 100%" cellspacing="0">
-                        <tr>
-                            <td>
-                                <md-input placeholder="Fecha Inicio" style="width: 100%">
-                                    <span md-prefix></span>
-                                </md-input>
-                            </td>
-                            <td>
-                                <md-input placeholder="Fecha Inicio" style="width: 100%"></md-input>
-                            </td>
-                            <td>
-                                <md-input placeholder="Fecha Inicio" style="width: 100%"></md-input>
-                            </td>
-                            <td>
-                                <md-input placeholder="Fecha Inicio" style="width: 100%"></md-input>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="col-md-12 col-xs-12 col-sm-12 col-lg-4">
-                    <md-tab-group>
-                        <md-tab>
-                            <template md-tab-label>Funcionario</template>
-                            <template md-tab-content>
-                                <p>
-                                    <md-input class="demo-full-width" placeholder="Nombre"></md-input>
-                                </p>
-                                <p>
-                                    <md-input class="demo-full-width" placeholder="Contacto"></md-input>
-                                </p>
-                                <p>
-                                    <md-input class="demo-full-width" placeholder="Email"></md-input>
-                                </p>
-                            </template>
-                        </md-tab>
-                        <md-tab>
-                            <template md-tab-label>Contacto</template>
-                            <template md-tab-content>
-                                <p>
-                                    <md-input class="demo-full-width" placeholder="Nombre"></md-input>
-                                </p>
-                                <p>
-                                    <md-input class="demo-full-width" placeholder="Contacto"></md-input>
-                                </p>
-                                <p>
-                                    <md-input class="demo-full-width" placeholder="Email"></md-input>
-                                </p>
-                            </template>
-                        </md-tab>
-                    </md-tab-group>
-                </div>
-            </div>
+<md-card>
+	<md-toolbar color="primary">Registrar Local</md-toolbar>
+	<md-card-content>
+		<div class="row">
+			<form [formGroup]="localForm" (ngSubmit)="onSubmit()">
+				<div class="col-md-12 col-xs-12 col-sm-12 col-lg-8">
+					<table style="width: 100%" cellspacing="0">
+						<tr>
+							<td>
+								<md-input placeholder="Local" formControlName="nombre_local" style="width: 100%"></md-input>
+							</td>
+							<td>
+								<md-input placeholder="#Aulas" formControlName="total_aulas_max" style="width: 100%"></md-input>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div *ngIf="formErrors.nombre_local" class="alert alert-danger">
+									{{ formErrors.nombre_local }}
+								</div>
+							</td>
+							<td>
+								<div *ngIf="formErrors.total_aulas_max" class="alert alert-danger">
+									{{ formErrors.total_aulas_max }}
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<md-input placeholder="Dirección" formControlName="direccion" style="width: 100%"></md-input>
+							</td>
+							<td>
+								<md-input placeholder="TotalPEA" formControlName="total_pea" style="width: 100%"></md-input>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div *ngIf="formErrors.direccion" class="alert alert-danger">
+									{{ formErrors.direccion }}
+								</div>
+							</td>
+							<td>
+								<div *ngIf="formErrors.total_pea" class="alert alert-danger">
+									{{ formErrors.total_pea }}
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<md-input placeholder="Referencia" formControlName="referencia" style="width: 100%"></md-input>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div *ngIf="formErrors.referencia" class="alert alert-danger">
+									{{ formErrors.referencia }}
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<md-input placeholder="Teléfono" formControlName="telefono_local" style="width: 100%"></md-input>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<div *ngIf="formErrors.telefono_local" class="alert alert-danger">
+									{{ formErrors.telefono_local }}
+								</div>
+							</td>
+						</tr>
+					</table>
+					<!--
+					<table style="width: 100%" cellspacing="0">
+						<tr>
+							<td>
+								<md-input placeholder="Fecha Inicio" style="width: 100%">
+									<span md-prefix></span>
+								</md-input>
+							</td>
+							<td>
+								<md-input placeholder="Fecha Inicio" style="width: 100%"></md-input>
+							</td>
+							<td>
+								<md-input placeholder="Fecha Inicio" style="width: 100%"></md-input>
+							</td>
+							<td>
+								<md-input placeholder="Fecha Inicio" style="width: 100%"></md-input>
+							</td>
+						</tr>
+					</table>
+                    -->
+				</div>
+				<div class="col-md-12 col-xs-12 col-sm-12 col-lg-4">
+					<tabset [justified]="true">
+						<tab heading="Funcionario">
+							<p>
+								<md-input class="demo-full-width" formControlName="funcionario_nombre" placeholder="Nombre"></md-input>
+							</p>
+							<div *ngIf="formErrors.funcionario_nombre" class="alert alert-danger">
+								{{ formErrors.funcionario_nombre }}
+							</div>
+							<p>
+								<md-input class="demo-full-width" formControlName="funcionario_celular" placeholder="Contacto"></md-input>
 
-        </form>
-    </md-card-content>
+							</p>
+							<div *ngIf="formErrors.funcionario_celular" class="alert alert-danger">
+								{{ formErrors.funcionario_celular }}
+							</div>
+							<p>
+								<md-input class="demo-full-width" formControlName="funcionario_email" placeholder="Email"></md-input>
+
+							</p>
+							<div *ngIf="formErrors.funcionario_email" class="alert alert-danger">
+								{{ formErrors.funcionario_email }}
+							</div>
+						</tab>
+						<tab heading="Contacto">
+							<p>
+								<md-input class="demo-full-width" formControlName="contacto_nombre" placeholder="Nombre"></md-input>
+							</p>
+							<div *ngIf="formErrors.contacto_nombre" class="alert alert-danger">
+								{{ formErrors.contacto_nombre }}
+							</div>
+							<p>
+								<md-input class="demo-full-width" formControlName="contacto_celular" placeholder="Contacto"></md-input>
+
+							</p>
+							<div *ngIf="formErrors.contacto_celular" class="alert alert-danger">
+								{{ formErrors.contacto_celular }}
+							</div>
+							<p>
+								<md-input class="demo-full-width" formControlName="contacto_email" placeholder="Email"></md-input>
+
+							</p>
+							<div *ngIf="formErrors.contacto_email" class="alert alert-danger">
+								{{ formErrors.contacto_email }}
+							</div>
+						</tab>
+					</tabset>
+				</div>
+				<button [disabled]="!localForm.valid" md-raised-button color="accent">Grabar</button>
+
+			</form>
+		</div>
+	</md-card-content>
+	<md-card-content>
+		<div class="card-block">
+			<div class="col-md-3">
+				<div class="form-group">
+					<label>Paredes</label>
+					<select class="form-control">
+                    <option value="">Seleccione</option>
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option>
+                </select>
+				</div>
+				<div class="form-group">
+					<label>Piso</label>
+					<select class="form-control">
+                    <option value="">Seleccione</option>
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option>
+                </select>
+				</div>
+				<div class="form-group">
+					<label>Techo</label>
+					<select class="form-control">
+                    <option value="">Seleccione</option>
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option>
+                </select>
+				</div>
+			</div>
+
+			<div class="col-md-3">
+				<div class="form-group">
+					<label>Puerta</label>
+					<select class="form-control">
+                    <option value="">Seleccione</option>
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option>
+                </select>
+				</div>
+				<div class="form-group">
+					<label>Ventanas</label>
+					<select class="form-control">
+                    <option value="">Seleccione</option>
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option>
+                </select>
+				</div>
+				<div class="form-group">
+					<label>SS.HH</label>
+					<select class="form-control">
+                    <option value="">Seleccione</option>
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option>
+                </select>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="form-group">
+					<label>Alumbrado</label>
+					<select class="form-control">
+                    <option value="">Seleccione</option>
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option>
+                </select>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="form-group">
+					<label>S. de emergencia</label>
+					<select class="form-control">
+                    <option value="">Seleccione</option>
+                    <option value="1">Option 1</option>
+                    <option value="2">Option 2</option>
+                    <option value="3">Option 3</option>
+                </select>
+				</div>
+			</div>
+		</div>
+	</md-card-content>
 </md-card>
+<ng2-toasty></ng2-toasty>
+<!-- /.Live preview-->
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<!--Content-->
+		<div class="modal-content">
+			<!--Header-->
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+				<h4 class="modal-title" id="myModalLabel">Registro de Aulas</h4>
+			</div>
+			<!--Body-->
+			<div class="modal-body">
+				<div class="col-md-3">
+					<div class="md-form">
+						<label for="email">Nro Aula</label>
+						<input type="text" class="form-control" id="email">
+					</div>
+					<div class="md-form">
+						<label for="email">Capacidad</label>
+						<input type="text" class="form-control" id="email">
+					</div>
+					<div class="md-form">
+						<label for="email">Mobiliario</label>
+						<input type="text" class="form-control" id="email">
+					</div>
+				</div>
+				<div class="col-md-9">
+					<div class="col-md-3">
+						<div class="md-form">
+							<div class="form-group">
+								<input type="checkbox" id="checkbox11">
+								<label for="checkbox11">Internet</label>
+							</div>
 
+							<div class="form-group">
+								<input type="checkbox" id="checkbox11">
+								<label for="checkbox11">Internet</label>
+							</div>
+
+							<div class="form-group">
+								<input type="checkbox" id="checkbox11">
+								<label for="checkbox11">Internet</label>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="md-form">
+							<div class="form-group">
+								<input type="checkbox" id="checkbox11">
+								<label for="checkbox11">Internet</label>
+							</div>
+
+							<div class="form-group">
+								<input type="checkbox" id="checkbox11">
+								<label for="checkbox11">Internet</label>
+							</div>
+
+							<div class="form-group">
+								<input type="checkbox" id="checkbox11">
+								<label for="checkbox11">Internet</label>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-3">
+						<div class="md-form">
+							<div class="form-group">
+								<input type="checkbox" id="checkbox11">
+								<label for="checkbox11">Internet</label>
+							</div>
+
+							<div class="form-group">
+								<input type="checkbox" id="checkbox11">
+								<label for="checkbox11">Internet</label>
+							</div>
+
+							<div class="form-group">
+								<input type="checkbox" id="checkbox11">
+								<label for="checkbox11">Internet</label>
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+			</div>
+			<!--Footer-->
+		</div>
+
+		<!--/.Content-->
+	</div>
+</div>
 <!-- /.Live preview-->
