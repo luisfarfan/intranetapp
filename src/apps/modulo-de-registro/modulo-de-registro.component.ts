@@ -11,6 +11,19 @@ import { CustomValidators } from 'ng2-validation';
 @Component({
   templateUrl: 'modulo-de-registro.html',
   providers: [RegistroService],
+  styles: [`
+  .form-group label {
+    float: left;
+    text-align: left;
+    font-weight: normal;
+}
+
+.form-group select {
+    display: inline-block;
+    width: auto;
+    vertical-align: middle;
+}
+  `]
 })
 export class RegistroComponent implements OnInit {
   local = new Local();
@@ -18,10 +31,19 @@ export class RegistroComponent implements OnInit {
   accion_editlocal: boolean = false;
   // Ubigeo data
   departamentos: Array<Object> = []
+  selectedLocal: any;
+  alert_nofindlocales: boolean = false;
   provincias: Array<Object> = []
   distritos: Array<Object> = []
   selectedDepartamento: any;
   selectedProvincia: any;
+  selectedDistrito: any;
+  _infraestucturas: any;
+  infraestucturas: any;
+  search_locales: Object;
+  estado_infraestuctura: Object = {
+
+  }
 
   // Form
 
@@ -50,6 +72,51 @@ export class RegistroComponent implements OnInit {
     this.toastyConfig.position = "bottom-right";
   }
 
+  ngOnInit() {
+    this.getDepartamentos();
+    this.buildForm();
+    this.getInfraesctura()
+    this.registroservice.getLocalBy('10').subscribe(_ => console.log(_))
+  }
+  onRowSelect(e) {
+    console.log(this.search_locales)
+    this.buildForm();
+    this.local = this.selectedLocal
+    console.log(this.selectedLocal, this.local)
+    this.accion_addlocal = true;
+  }
+
+  onRowUnselect(e) {
+    console.log(this.search_locales)
+    //this.accion_addlocal = false;
+    this.buildForm();
+    this.localForm.reset();
+  }
+  getInfraesctura() {
+    this.registroservice.getInfraestructura().subscribe(infra => {
+      this.infraestucturas = infra;
+      for (let key in infra) {
+        if (infra[key].desc_infraestructura == "SS.HH") {
+          infra[key].estado = ['SI', 'NO']
+        } else {
+          infra[key].estado = ['MALO', 'BUENO', 'REGULAR']
+        }
+      }
+      this._infraestucturas = infra
+      console.log(this._infraestucturas)
+    });
+  }
+
+  setEstadoInfra(val, i) {
+    console.log(val, i);
+    console.log(this.infraestucturas[i].estado1 = val)
+    //console.log(this.infraestucturas[i].estado = val);
+  }
+
+  grabar() {
+    console.log(this.infraestucturas);
+  }
+
   addToast(options: ToastOptions, tipo: string = 'default') {
     // Just add default Toast with title only
     // Or create the instance of ToastOptions
@@ -63,51 +130,61 @@ export class RegistroComponent implements OnInit {
       case 'warning': this.toastyService.warning(toastOptions); break;
     }
   }
-  ngOnInit() {
-    this.getDepartamentos();
-    this.local.nombre_local = 'LOCAL DE JUNIN';
-    this.buildForm();
-  }
   onSubmit() {
+    let ubigeo: string = `${this.selectedDepartamento}${this.selectedProvincia}${this.selectedDistrito}`
+    console.log(this.infraestucturas);
+    let post: Object;
+    let res: any;
     this.submitted = true;
     this.local = this.localForm.value;
+    this.local.ubigeo = ubigeo
     let toastOptions: ToastOptions = {
       title: 'Agregar',
       msg: 'Local Agregado con Éxito',
       showClose: true,
       timeout: 5000,
     };
-    this.registroservice.addLocal(this.local).subscribe(_ => {
+    this.registroservice.addLocal(this.local).subscribe(response => {
+      res = response;
+      for (let key in this.infraestucturas) {
+        post = { id_local: res.id_local, id_infraestructura: this.infraestucturas[key].id_infraestructura, estado: this.infraestucturas[key].estado1 }
+        this.registroservice.addInfraLocal(post).subscribe(_ => true)
+      }
       this.addToast(toastOptions, 'success');
+      setTimeout(_ => {
+        this.accion_editlocal = false
+        this.accion_editlocal = true
+        this.localForm.reset();
+      }, 2000)
     }
     )
   }
 
   buildForm() {
     this.localForm = this.fb.group({
-      'nombre_local': [this.local.nombre_local, [Validators.required, Validators.minLength(10), Validators.maxLength(40),]
+      'nombre_local': [this.local.nombre_local, [Validators.required, Validators.minLength(10), Validators.maxLength(200),]
       ],
-      'direccion': [this.local.direccion, [Validators.required, Validators.minLength(10), Validators.maxLength(30)],
+      'direccion': [this.local.direccion, [Validators.required, Validators.minLength(10), Validators.maxLength(200)],
       ],
-      'referencia': [this.local.referencia, [Validators.required, Validators.minLength(10), Validators.maxLength(30)],
+      'referencia': [this.local.referencia, [Validators.required, Validators.minLength(10), Validators.maxLength(200)],
       ],
       'total_pea': [this.local.total_pea, [Validators.required, CustomValidators.range([1, 1000])],
       ],
-      'total_aulas_max': [this.local.total_aulas_max, [Validators.required, CustomValidators.range([1, 30])],
+      'total_aulas_max': [this.local.total_aulas_max, [Validators.required, CustomValidators.range([1, 999])],
       ],
-      'funcionario_nombre': [this.local.funcionario_nombre, [Validators.required, Validators.minLength(10), Validators.maxLength(30)],
+      'funcionario_nombre': [this.local.funcionario_nombre, [Validators.required, Validators.minLength(10), Validators.maxLength(200)],
       ],
-      'funcionario_email': [this.local.funcionario_email, [Validators.required, Validators.minLength(10), Validators.maxLength(30)],
+      'funcionario_email': [this.local.funcionario_email, [Validators.required, Validators.minLength(10), Validators.maxLength(200)],
       ],
-      'funcionario_celular': [this.local.funcionario_celular, [Validators.required, Validators.minLength(9), Validators.maxLength(30)],
+      'funcionario_celular': [this.local.funcionario_celular, [Validators.required, Validators.minLength(8), Validators.maxLength(9)],
       ],
-      'contacto_nombre': [this.local.contacto_nombre, [Validators.required, Validators.minLength(10), Validators.maxLength(30)],
+      'contacto_nombre': [this.local.contacto_nombre, [Validators.required, Validators.minLength(10), Validators.maxLength(200)],
       ],
-      'contacto_email': [this.local.contacto_email, [Validators.required, Validators.minLength(10), Validators.maxLength(30)],
+      'contacto_email': [this.local.contacto_email, [Validators.required, Validators.minLength(10), Validators.maxLength(200)],
       ],
-      'contacto_celular': [this.local.contacto_celular, [Validators.required, Validators.minLength(9), Validators.maxLength(30)],
+      'contacto_celular': [this.local.contacto_celular, [Validators.required, Validators.minLength(9), Validators.maxLength(9)],
       ],
-      'telefono_local': [this.local.telefono_local, [Validators.required, Validators.minLength(9), Validators.maxLength(30)],
+      'telefono_local': [this.local.telefono_local, [Validators.required, Validators.minLength(9), Validators.maxLength(9)],
       ],
 
     });
@@ -135,67 +212,6 @@ export class RegistroComponent implements OnInit {
     }
   }
 
-  validationMessages = {
-    'nombre_local': {
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
-      'required': 'Nombre del Local is required.'
-    },
-    'direccion': {
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
-      'required': 'Dirección is required.'
-    },
-    'referencia': {
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
-      'required': 'referencia is required.'
-    },
-    'total_pea': {
-      'required': 'total_pea is required.',
-      'range': 'No se encuentra dentro del Rango'
-    },
-    'total_aulas_max': {
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
-      'required': 'total_aulas_max is required.'
-    },
-    'funcionario_nombre': {
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
-      'required': 'funcionario_nombre is required.'
-    },
-    'funcionario_email': {
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
-      'required': 'funcionario_email is required.'
-    },
-    'funcionario_celular': {
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
-      'required': 'funcionario_celular is required.'
-    },
-    'contacto_nombre': {
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
-      'required': 'contacto_nombre is required.'
-    },
-    'contacto_email': {
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
-      'required': 'contacto_email is required.'
-    },
-    'contacto_celular': {
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
-      'required': 'contacto_celular is required.'
-    },
-    'telefono_local': {
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
-      'required': 'telefono_local is required.'
-    },
-  };
   getDepartamentos() {
     this.registroservice.getDepartamentos().subscribe(departamentos => {
       this.departamentos = <Array<Object>>departamentos;
@@ -211,5 +227,19 @@ export class RegistroComponent implements OnInit {
     this.registroservice.getDistritos(this.selectedDepartamento, this.selectedProvincia).subscribe(distritos => {
       this.distritos = <Array<Object>>distritos;
     })
+  }
+
+  findLocales() {
+
+    let ubigeo: string = `${this.selectedDepartamento}${this.selectedProvincia}${this.selectedDistrito}`
+    this.registroservice.getLocalbyUbigeo(ubigeo).subscribe(data => {
+      this.search_locales = data;
+      if (!this.search_locales || Helpers.lengthobj(this.search_locales) == 0) {
+        this.alert_nofindlocales = true;
+      } else {
+        this.accion_editlocal = true;
+        this.alert_nofindlocales = false;
+      }
+    });
   }
 }

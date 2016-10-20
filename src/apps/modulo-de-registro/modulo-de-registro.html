@@ -3,40 +3,60 @@
 <md-card>
 	<md-card-content>
 		<form class="form-inline">
-			<div class="form-group">
-				<label for="departamento">Departamento</label>
-				<select class="form-control" [(ngModel)]="selectedDepartamento" (ngModelChange)="getProvincias()" name="departamento" #departamento>
-                            <option value="0">Seleccione</option>
+			<div class="col-xs-4">
+				<div class="form-group">
+					<label for="departamento">Departamento</label>
+					<select class="form-control" [(ngModel)]="selectedDepartamento" (ngModelChange)="getProvincias()" name="departamento" id="departamento">
+                            <option selected value="0">Seleccione</option>
                             <option *ngFor="let dep of departamentos" [value]="dep.ccdd">{{ dep.departamento }}</option>
                         </select>
+				</div>
 			</div>
-			<div class="form-group">
-				<label for="provincia">Provincia</label>
-				<select class="form-control" [(ngModel)]="selectedProvincia" (ngModelChange)="getDistritos()" name="provincia" id="provincia">
-                            <option value="0">Seleccione</option>
+			<div class="col-xs-4">
+				<div class="form-group">
+					<label for="provincia">Provincia</label>
+					<select class="form-control" [(ngModel)]="selectedProvincia" (ngModelChange)="getDistritos()" name="provincia" id="provincia">
+                            <option selected value="0">Seleccione</option>
                             <option *ngFor="let prov of provincias" [value]="prov.ccpp">{{ prov.provincia }}</option>
                         </select>
+				</div>
 			</div>
-			<div class="form-group">
-				<label for="distrito">Distrito</label>
-				<select class="form-control" [(ngModel)]="selectedDistrito" name="distritos" id="distritos">
-                            <option value="0">Seleccione</option>
+			<div class="col-xs-4">
+				<div class="form-group">
+					<label for="distrito">Distrito</label>
+					<select class="form-control" [(ngModel)]="selectedDistrito" name="distritos" id="distrito">
+                            <option selected value="0">Seleccione</option>
                             <option *ngFor="let dis of distritos" [value]="dis.ccdi">{{ dis.distrito }}</option>
                         </select>
+				</div>
 			</div>
-			<button md-raised-button color="accent">Registrar Local</button>
-			<button md-raised-button color="warn">Buscar</button>
 		</form>
 	</md-card-content>
 </md-card>
 
 <md-card>
+	<button md-raised-button (click)="accion_addlocal=true" color="accent">Registrar Local</button>
+	<button md-raised-button (click)="findLocales()" color="warn">Buscar Local</button>
+</md-card>
+
+<div *ngIf="alert_nofindlocales"  class="alert alert-danger">
+	<strong>No existen locales para este ubigeo.</strong> 
+</div>
+<md-card *ngIf="accion_addlocal">
 	<md-toolbar color="primary">Registrar Local</md-toolbar>
 	<md-card-content>
 		<div class="row">
 			<form [formGroup]="localForm" (ngSubmit)="onSubmit()">
 				<div class="col-md-12 col-xs-12 col-sm-12 col-lg-8">
 					<table style="width: 100%" cellspacing="0">
+						<tr>
+							<td>
+								<md-input placeholder="Fecha de Inicio" formControlName="nombre_local" style="width: 100%"></md-input>
+							</td>
+							<td>
+								<md-input placeholder="Fecha Fin" formControlName="total_aulas_max" style="width: 100%"></md-input>
+							</td>
+						</tr>
 						<tr>
 							<td>
 								<md-input placeholder="Local" formControlName="nombre_local" style="width: 100%"></md-input>
@@ -102,26 +122,6 @@
 							</td>
 						</tr>
 					</table>
-					<!--
-					<table style="width: 100%" cellspacing="0">
-						<tr>
-							<td>
-								<md-input placeholder="Fecha Inicio" style="width: 100%">
-									<span md-prefix></span>
-								</md-input>
-							</td>
-							<td>
-								<md-input placeholder="Fecha Inicio" style="width: 100%"></md-input>
-							</td>
-							<td>
-								<md-input placeholder="Fecha Inicio" style="width: 100%"></md-input>
-							</td>
-							<td>
-								<md-input placeholder="Fecha Inicio" style="width: 100%"></md-input>
-							</td>
-						</tr>
-					</table>
-                    -->
 				</div>
 				<div class="col-md-12 col-xs-12 col-sm-12 col-lg-4">
 					<tabset [justified]="true">
@@ -171,98 +171,47 @@
 						</tab>
 					</tabset>
 				</div>
-				<button [disabled]="!localForm.valid" md-raised-button color="accent">Grabar</button>
 
+				<div class="col-xs-12">
+					<div class="panel panel panel-default-border">
+						<div class="panel-body">
+							<div *ngFor="let infra of _infraestucturas; let i=index" class="col-xs-3">
+								<div class="form-group delpmbottom">
+									<label>{{ infra.desc_infraestructura }} <span class="text-danger">(*)</span></label>
+									<select (change)="setEstadoInfra($event.target.value,i)" class="form-control" name="txtDpto1"><option *ngFor="let est of infra.estado" [value]="est">{{ est }}</option></select>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<button [hidden]="!accion_editlocal" [disabled]="!localForm.valid" md-raised-button color="accent">Grabar</button>
+				<button [hidden]="accion_addlocal" [disabled]="!localForm.valid" md-raised-button color="accent">Registrar Aulas</button>
 			</form>
-		</div>
-	</md-card-content>
-	<md-card-content>
-		<div class="card-block">
-			<div class="col-md-3">
-				<div class="form-group">
-					<label>Paredes</label>
-					<select class="form-control">
-                    <option value="">Seleccione</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                </select>
-				</div>
-				<div class="form-group">
-					<label>Piso</label>
-					<select class="form-control">
-                    <option value="">Seleccione</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                </select>
-				</div>
-				<div class="form-group">
-					<label>Techo</label>
-					<select class="form-control">
-                    <option value="">Seleccione</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                </select>
-				</div>
-			</div>
-
-			<div class="col-md-3">
-				<div class="form-group">
-					<label>Puerta</label>
-					<select class="form-control">
-                    <option value="">Seleccione</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                </select>
-				</div>
-				<div class="form-group">
-					<label>Ventanas</label>
-					<select class="form-control">
-                    <option value="">Seleccione</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                </select>
-				</div>
-				<div class="form-group">
-					<label>SS.HH</label>
-					<select class="form-control">
-                    <option value="">Seleccione</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                </select>
-				</div>
-			</div>
-			<div class="col-md-3">
-				<div class="form-group">
-					<label>Alumbrado</label>
-					<select class="form-control">
-                    <option value="">Seleccione</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                </select>
-				</div>
-			</div>
-			<div class="col-md-3">
-				<div class="form-group">
-					<label>S. de emergencia</label>
-					<select class="form-control">
-                    <option value="">Seleccione</option>
-                    <option value="1">Option 1</option>
-                    <option value="2">Option 2</option>
-                    <option value="3">Option 3</option>
-                </select>
-				</div>
-			</div>
 		</div>
 	</md-card-content>
 </md-card>
 <ng2-toasty></ng2-toasty>
+
+<md-card>
+	<md-card-content>
+
+	</md-card-content>
+</md-card>
+<md-card *ngIf="accion_editlocal">
+	<div class="table-responsive">
+		<p-dataTable class="table table-hover table-mc-light-blue" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" [value]="search_locales"
+		 selectionMode="single" [(selection)]="selectedLocal">
+            <p-column field="nombre_local" header="Nombre Local"></p-column>
+            <p-column field="referencia" header="Referencia"></p-column>
+            <p-column field="telefono_local" header="Telefono Local"></p-column>
+            <p-column field="total_aulas_max" header="Total Aulas Máximas"></p-column>
+			<p-column field="total_pea" header="Total PEA"></p-column>
+			<p-column field="direccion" header="Dirección"></p-column>
+			<p-column field="telefono_local" header="Telefono Local"></p-column>
+        </p-dataTable>
+	</div>
+</md-card>
 <!-- /.Live preview-->
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

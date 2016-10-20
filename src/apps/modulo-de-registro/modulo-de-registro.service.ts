@@ -35,6 +35,10 @@ export class RegistroService {
     dist_url: string = `${Settings.HOST_LOCAL()}distritos/`;
     local_url: string = `${Settings.HOST_LOCAL()}api/local/`;
     infra_url: string = `${Settings.HOST_LOCAL()}api/infraestructura/`;
+    infralocal_url: string = `${Settings.HOST_LOCAL()}api/infraestructuralocal/`;
+    localinfra_url: string = `${Settings.HOST_LOCAL()}localesinfra/`;
+    localinfra_ubigeo: string = `${Settings.HOST_LOCAL()}localesinfrabyUbigeo/`;
+
 
     constructor(private http: Http) { }
 
@@ -61,6 +65,16 @@ export class RegistroService {
             .map(Helpers.extractData)
             .catch(Helpers.handleError)
     }
+    getLocalBy(pklocal): Observable<Object> {
+        return this.http.get(this.localinfra_url + pklocal + '/')
+            .map(Helpers.extractData)
+            .catch(Helpers.handleError)
+    }
+    getLocalbyUbigeo(ubigeo) {
+        return this.http.get(this.localinfra_ubigeo + ubigeo + '/')
+            .map(Helpers.extractData)
+            .catch(Helpers.handleError)
+    }
 
     editLocal(pk, data): Observable<Object> {
         let body = JSON.stringify(data);
@@ -81,12 +95,20 @@ export class RegistroService {
             .catch(Helpers.handleError);
     }
 
-    getInfraestructura():Observable<Object>{
+    getInfraestructura(): Observable<Object> {
         return this.http.get(this.infra_url)
             .map(Helpers.extractData)
             .catch(Helpers.handleError)
     }
 
+    addInfraLocal(data): Observable<Object> {
+        let body = JSON.stringify(data);
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post(this.infralocal_url, body, options)
+            .map(Helpers.extractData)
+            .catch(Helpers.handleError);
+    }
 
 
 }
