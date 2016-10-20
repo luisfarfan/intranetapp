@@ -17,7 +17,6 @@ import {
 } from '@angular/forms';
 import { TabsModule } from 'ng2-bootstrap/ng2-bootstrap';
 import { CustomFormsModule } from 'ng2-validation'
-
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegistroComponent } from './modulo-de-registro.component';
 import { DataTableModule, SharedModule } from 'primeng/primeng';

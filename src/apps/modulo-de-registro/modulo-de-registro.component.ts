@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild } from '@angular/core';
 import { TableOptions, TableColumn, ColumnMode } from 'angular2-data-table';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import {
@@ -8,6 +8,7 @@ import { RegistroService } from './modulo-de-registro.service'
 import { Local } from './local';
 import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
 import { CustomValidators } from 'ng2-validation';
+declare var jQuery:any;
 @Component({
   templateUrl: 'modulo-de-registro.html',
   providers: [RegistroService],
@@ -75,6 +76,8 @@ export class RegistroComponent implements OnInit {
   ngOnInit() {
     this.getDepartamentos();
     this.buildForm();
+    this.local = new Local();
+    this.local.direccion='hola!'
     this.getInfraesctura()
     this.registroservice.getLocalBy('10').subscribe(_ => console.log(_))
   }
@@ -92,6 +95,7 @@ export class RegistroComponent implements OnInit {
     this.buildForm();
     this.localForm.reset();
   }
+
   getInfraesctura() {
     this.registroservice.getInfraestructura().subscribe(infra => {
       this.infraestucturas = infra;
@@ -193,6 +197,68 @@ export class RegistroComponent implements OnInit {
     )
     this.onValueChanged();
   }
+  validationMessages = {
+    'nombre_local': {
+      'required': 'nombre_local is required.',
+      'minlength': 'Name must be at least 4 characters long.',
+      'maxlength': 'Name cannot be more than 24 characters long.',
+    },
+    'direccion': {
+      'required': 'Name is required.',
+      'minlength': 'Name must be at least 4 characters long.',
+      'maxlength': 'Name cannot be more than 24 characters long.',
+    },
+    'referencia': {
+      'required': 'Name is required.',
+      'minlength': 'Name must be at least 4 characters long.',
+      'maxlength': 'Name cannot be more than 24 characters long.',
+    },
+    'total_pea': {
+      'required': 'Name is required.',
+      'minlength': 'Name must be at least 4 characters long.',
+      'maxlength': 'Name cannot be more than 24 characters long.',
+    },
+    'total_aulas_max': {
+      'required': 'Name is required.',
+      'minlength': 'Name must be at least 4 characters long.',
+      'maxlength': 'Name cannot be more than 24 characters long.',
+    },
+    'funcionario_nombre': {
+      'required': 'Name is required.',
+      'minlength': 'Name must be at least 4 characters long.',
+      'maxlength': 'Name cannot be more than 24 characters long.',
+    },
+    'funcionario_email': {
+      'required': 'Name is required.',
+      'minlength': 'Name must be at least 4 characters long.',
+      'maxlength': 'Name cannot be more than 24 characters long.',
+    },
+    'funcionario_celular': {
+      'required': 'Name is required.',
+      'minlength': 'Name must be at least 4 characters long.',
+      'maxlength': 'Name cannot be more than 24 characters long.',
+    },
+    'contacto_nombre': {
+      'required': 'Name is required.',
+      'minlength': 'Name must be at least 4 characters long.',
+      'maxlength': 'Name cannot be more than 24 characters long.',
+    },
+    'contacto_email': {
+      'required': 'Name is required.',
+      'minlength': 'Name must be at least 4 characters long.',
+      'maxlength': 'Name cannot be more than 24 characters long.',
+    },
+    'contacto_celular': {
+      'required': 'Name is required.',
+      'minlength': 'Name must be at least 4 characters long.',
+      'maxlength': 'Name cannot be more than 24 characters long.',
+    },
+    'telefono_local': {
+      'required': 'Name is required.',
+      'minlength': 'Name must be at least 4 characters long.',
+      'maxlength': 'Name cannot be more than 24 characters long.',
+    },
+  };
 
   onValueChanged(data?: any) {
     if (!this.localForm) { return; }
@@ -230,7 +296,7 @@ export class RegistroComponent implements OnInit {
   }
 
   findLocales() {
-
+    this.accion_addlocal = true;
     let ubigeo: string = `${this.selectedDepartamento}${this.selectedProvincia}${this.selectedDistrito}`
     this.registroservice.getLocalbyUbigeo(ubigeo).subscribe(data => {
       this.search_locales = data;
@@ -242,4 +308,5 @@ export class RegistroComponent implements OnInit {
       }
     });
   }
+
 }

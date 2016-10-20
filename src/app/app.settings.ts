@@ -7,7 +7,7 @@ export class Settings {
         return 'http://lfarfan.inei.com.pe:8000/';
     }
     public static HOST_LOCAL(): string {
-        return 'http://localhost:85/';
+        return 'http://lfarfan.inei.com.pe:85/';
     }
     public static HOST_ROCIO(): string {
         return 'http://rvila.inei.com.pe:8000/';

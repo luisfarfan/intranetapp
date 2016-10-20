@@ -39,8 +39,8 @@
 	<button md-raised-button (click)="findLocales()" color="warn">Buscar Local</button>
 </md-card>
 
-<div *ngIf="alert_nofindlocales"  class="alert alert-danger">
-	<strong>No existen locales para este ubigeo.</strong> 
+<div *ngIf="alert_nofindlocales" class="alert alert-danger">
+	<strong>No existen locales para este ubigeo.</strong>
 </div>
 <md-card *ngIf="accion_addlocal">
 	<md-toolbar color="primary">Registrar Local</md-toolbar>
@@ -49,14 +49,6 @@
 			<form [formGroup]="localForm" (ngSubmit)="onSubmit()">
 				<div class="col-md-12 col-xs-12 col-sm-12 col-lg-8">
 					<table style="width: 100%" cellspacing="0">
-						<tr>
-							<td>
-								<md-input placeholder="Fecha de Inicio" formControlName="nombre_local" style="width: 100%"></md-input>
-							</td>
-							<td>
-								<md-input placeholder="Fecha Fin" formControlName="total_aulas_max" style="width: 100%"></md-input>
-							</td>
-						</tr>
 						<tr>
 							<td>
 								<md-input placeholder="Local" formControlName="nombre_local" style="width: 100%"></md-input>
@@ -79,7 +71,7 @@
 						</tr>
 						<tr>
 							<td>
-								<md-input placeholder="Dirección" formControlName="direccion" style="width: 100%"></md-input>
+								<md-input placeholder="Dirección" formControlName="direccion" #algo style="width: 100%"></md-input>
 							</td>
 							<td>
 								<md-input placeholder="TotalPEA" formControlName="total_pea" style="width: 100%"></md-input>
@@ -178,15 +170,19 @@
 							<div *ngFor="let infra of _infraestucturas; let i=index" class="col-xs-3">
 								<div class="form-group delpmbottom">
 									<label>{{ infra.desc_infraestructura }} <span class="text-danger">(*)</span></label>
-									<select (change)="setEstadoInfra($event.target.value,i)" class="form-control" name="txtDpto1"><option *ngFor="let est of infra.estado" [value]="est">{{ est }}</option></select>
+									<select (change)="setEstadoInfra($event.target.value,i)" class="form-control">
+										<option value="0">Seleccione</option>
+										<option *ngFor="let est of infra.estado" [value]="est">{{ est }}</option></select>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
+				<div class="col-xs-12">
+					<button [hidden]="!accion_editlocal" [disabled]="!localForm.valid" md-raised-button color="accent">Grabar</button>
+					<button [hidden]="accion_addlocal" [disabled]="!localForm.valid" md-raised-button color="accent">Registrar Aulas</button>
+				</div>
 
-				<button [hidden]="!accion_editlocal" [disabled]="!localForm.valid" md-raised-button color="accent">Grabar</button>
-				<button [hidden]="accion_addlocal" [disabled]="!localForm.valid" md-raised-button color="accent">Registrar Aulas</button>
 			</form>
 		</div>
 	</md-card-content>
@@ -199,17 +195,22 @@
 	</md-card-content>
 </md-card>
 <md-card *ngIf="accion_editlocal">
+
 	<div class="table-responsive">
-		<p-dataTable class="table table-hover table-mc-light-blue" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" [value]="search_locales"
-		 selectionMode="single" [(selection)]="selectedLocal">
-            <p-column field="nombre_local" header="Nombre Local"></p-column>
-            <p-column field="referencia" header="Referencia"></p-column>
-            <p-column field="telefono_local" header="Telefono Local"></p-column>
-            <p-column field="total_aulas_max" header="Total Aulas Máximas"></p-column>
+		<div class="ui-widget-header ui-helper-clearfix" style="padding:4px 10px;border-bottom: 0 none">
+			<i class="fa fa-search" style="float:left;margin:4px 4px 0 0"></i>
+			<input #gb type="text" pInputText size="50" style="float:left" placeholder="Buscador">
+		</div>
+		<p-dataTable class="table table-hover table-mc-light-blue" [globalFilter]="gb" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
+			[value]="search_locales" selectionMode="single" [(selection)]="selectedLocal">
+			<p-column field="nombre_local" header="Nombre Local"></p-column>
+			<p-column field="referencia" header="Referencia"></p-column>
+			<p-column field="telefono_local" header="Telefono Local"></p-column>
+			<p-column field="total_aulas_max" header="Total Aulas Máximas"></p-column>
 			<p-column field="total_pea" header="Total PEA"></p-column>
 			<p-column field="direccion" header="Dirección"></p-column>
 			<p-column field="telefono_local" header="Telefono Local"></p-column>
-        </p-dataTable>
+		</p-dataTable>
 	</div>
 </md-card>
 <!-- /.Live preview-->

@@ -11,6 +11,7 @@
                         <option *ngFor="let el of departamentos" value="{{ el.CCDD }}">{{ el.DEPARTAMENTO }}</option>
                     </select>
                 </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <div class="form-group">
                     <label for="lProvincia"><h5> PROVINCIA</h5></label>
                     <select class="form-control" name="provincias" (change)="cargarDistritos($event.target.value)">
@@ -18,6 +19,7 @@
                         <option *ngFor="let e of provincias" value="{{ e.CCPP }}">{{ e.PROVINCIA }}</option>
                     </select>
                 </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <div class="form-group">
                     <label for="lDistrito"><h5> DISTRITO</h5></label>
                     <select class="form-control" name="distritos" (change)="cargarZonas($event.target.value)">
@@ -25,6 +27,7 @@
                         <option *ngFor="let e1 of distritos" value="{{ e1.CCDI }}">{{ e1.DISTRITO }}</option>
                     </select>
                 </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <div class="form-group">
                     <label for="lArea"><h5> ÁREA</h5></label>
                     <select class="form-control" name="areas">
@@ -32,6 +35,7 @@
                         <option value="1"> Rural</option>
                     </select>
                 </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <div class="form-group">
                     <label for="lZona"><h5> ZONA</h5></label>
                     <select class="form-control" name="zonas" (change)="cargarAeu($event.target.value)">
@@ -41,11 +45,11 @@
                 </div>
             </form>
 
-            <form action="" class="inline">
-                <div *ngIf="distrito" class="col-md-2">
-                    <button type="button" (click)="procesarSeg()" class="btn btn-primary">Procesar</button>
-                </div>
+            <form action="" class="inline">                
                 <div class="col-md-12" align="left">
+                    <div *ngIf="distrito" class="col-md-2">
+                        <button type="button" (click)="procesarSeg()" class="btn btn-primary">Procesar</button>
+                    </div>
                     <hr style="color: black; background-color: black; width:100%;" />
                     <a class="btn btn-primary" (click)="descargarExcel('tablaSeg', 'SEGMENTACION')">EXCEL <i class="fa fa-download"></i></a>
                 </div>

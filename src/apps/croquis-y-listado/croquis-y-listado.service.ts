@@ -88,7 +88,6 @@ export class CroquisylistadoService {
     getZip(ccdd:string='',ccpp:string='',ccdi:string='',zona:string='',tipo:string=''): Observable <Object> {
         let queryparameters:string = `${ccdd}${ccpp}${ccdi}/${zona}/${tipo}/`;
         let tablaUrlAux3 = this.tablaUrlZip + queryparameters;
-        console.log(tablaUrlAux3);
         return this.http.get(tablaUrlAux3).map(this.extractData);        
     }
 

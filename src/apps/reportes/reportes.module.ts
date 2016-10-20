@@ -47,18 +47,18 @@ import {
 import {
   DepartamentoInterface
 } from './departamento.interface';
-import {Helpers} from './../../app/helper';
+import { Helpers } from './../../app/helper';
 import {
   RegistroInterface
 } from './registro.interface';
-import {DomSanitizer} from "@angular/platform-browser";
-import {DataTableModule,SharedModule,ButtonModule} from 'primeng/primeng';
+import { DomSanitizer } from "@angular/platform-browser";
+import { DataTableModule, SharedModule, ButtonModule } from 'primeng/primeng';
 
 
 
 @Component({
   templateUrl: 'reportes.html',
-  styles:[`.intro { 
+  styles: [`.intro { 
     background-color: #A9E2F3;
 }`],
   providers: [ReportesService]
@@ -90,16 +90,19 @@ class Reportes {
   private distritos: DistritoInterface;
   private zonas: ZonaInterface;
   private thisAux: any;
-  
-  private reporte01: boolean=true;
-  private reporte02: boolean=false;
-  private reporte03: boolean=false;
-  private reporte04: boolean=false;
-  private reporte05: boolean=false;
-  
-  private tipo: string='';    
 
-  private datareporte01: Reporte01Interface;  
+  private reporteDepa: boolean = true ;
+  private reporteDepa01: boolean = false ;  
+
+  private reporte01: boolean = true;
+  private reporte02: boolean = false;
+  private reporte03: boolean = false;
+  private reporte04: boolean = false;
+  private reporte05: boolean = false;
+
+  private tipo: string = '';
+
+  private datareporte01: Reporte01Interface;
   private datareporte02: Reporte02Interface;
   private datareporte03: Reporte03Interface;
   private datareporte04: Reporte04Interface;
@@ -121,20 +124,21 @@ class Reportes {
   cargarProvincias(ccdd: string, ccpp: string = "0") {
     this.ccdd = ccdd;
     this.distrito = false;
-    this.verZona = false;    
-    this.datareporte01=null;
-    this.datareporte02=null;
-    this.datareporte03=null;
-    this.datareporte04=null;
-    this.datareporte05=null;
+    this.verZona = false;
+    this.datareporte01 = null;
+    this.datareporte02 = null;
+    this.datareporte03 = null;
+    this.datareporte04 = null;
+    this.datareporte05 = null;
     if (this.ccdd != 0) {
-        this.reportes.getProvincias(ccdd, ccpp).subscribe(res => {
+      this.reportes.getProvincias(ccdd, ccpp).subscribe(res => {
         this.provincias = <ProvinciaInterface>res;
       })
+      this.cargarTablaAux2();
     } else {
       this.provincias = null;
       this.distritos = null;
-      this.zonas = null;      
+      this.zonas = null;
     }
   }
 
@@ -142,15 +146,16 @@ class Reportes {
     this.ccpp = ccpp;
     this.distrito = false;
     this.verZona = false;
-    this.datareporte01=null;
-    this.datareporte02=null;
-    this.datareporte03=null;
-    this.datareporte04=null;
-    this.datareporte05=null;
+    this.datareporte01 = null;
+    this.datareporte02 = null;
+    this.datareporte03 = null;
+    this.datareporte04 = null;
+    this.datareporte05 = null;
     if (this.ccpp != 0) {
       this.reportes.getDistritos(this.ccdd, ccpp, "0").subscribe(res => {
         this.distritos = <DistritoInterface>res;
       })
+      this.cargarTablaAux();
     } else {
       this.distritos = null;
       this.zonas = null;
@@ -173,31 +178,50 @@ class Reportes {
   }
 
   cargarTabla(ccdi: string) {
-    this.ccdi=ccdi;
-    if(this.reporte01){
-      this.tipo='0';
+    this.ccdi = ccdi;
+    if (this.reporte01) {
+      this.tipo = '0';
     }
-    if(this.reporte02){
-      this.tipo='1';
+    if (this.reporte02) {
+      this.tipo = '1';
     }
-    if(this.reporte03){
-      this.tipo='2';
+    if (this.reporte03) {
+      this.tipo = '2';
     }
     this.reportes.getTabla(this.tipo, this.ccdd, this.ccpp, this.ccdi).subscribe(res => {
       this.tabledata = true;
-      if(this.reporte01){
+      if (this.reporte01) {
         this.datareporte01 = <Reporte01Interface>res;
       }
-      if(this.reporte02){
+      if (this.reporte02) {
         this.datareporte02 = <Reporte02Interface>res;
       }
-      if(this.reporte03){
+      if (this.reporte03) {
         this.datareporte03 = <Reporte03Interface>res;
       }
-      if(this.reporte04){
+
+    })
+  }
+
+  cargarTablaAux() {
+    this.tipo='3';
+    if (this.reporte04) {
+      this.tipo = '3';
+    }
+    this.reportes.getTabla(this.tipo, this.ccdd, this.ccpp, '0').subscribe(res => {
+      if (this.reporte04) {
         this.datareporte04 = <Reporte04Interface>res;
       }
-      if(this.reporte05){
+    })
+  }
+
+  cargarTablaAux2() {
+    this.tipo='4';
+    if (this.reporte05) {
+      this.tipo = '4';
+    }
+    this.reportes.getTabla(this.tipo, this.ccdd, this.ccpp, '0').subscribe(res => {
+      if (this.reporte05) {
         this.datareporte05 = <Reporte05Interface>res;
       }
     })
@@ -207,45 +231,58 @@ class Reportes {
     Helpers.descargarExcel(id, nom);
   }
 
-  elegirReporte(reporte){
-    if(reporte=="0"){
-      this.reporte01=true;
-      this.reporte02=false;
-      this.reporte03=false;
-      this.reporte04=false;
-      this.reporte05=false;
+  elegirReporte(reporte) {    
+    if (reporte == "0") {
+      this.reporte01 = true;
+      this.reporte02 = false;
+      this.reporte03 = false;
+      this.reporte04 = false;
+      this.reporte05 = false;
+      this.cargarTabla(this.ccdi);
+      this.reporteDepa = true;
+      this.reporteDepa01 = true;
     }
-    if(reporte=="1"){
-      this.reporte01=false;
-      this.reporte02=true;
-      this.reporte03=false;
-      this.reporte04=false;
-      this.reporte05=false;
+    if (reporte == "1") {
+      this.reporte01 = false;
+      this.reporte02 = true;
+      this.reporte03 = false;
+      this.reporte04 = false;
+      this.reporte05 = false;
+      this.cargarTabla(this.ccdi);
+      this.reporteDepa = true;
+      this.reporteDepa01 = true;
     }
-    if(reporte=="2"){
-      this.reporte01=false;
-      this.reporte02=false;
-      this.reporte03=true;
-      this.reporte04=false;
-      this.reporte05=false;
+    if (reporte == "2") {
+      this.reporte01 = false;
+      this.reporte02 = false;
+      this.reporte03 = true;
+      this.reporte04 = false;
+      this.reporte05 = false;
+      this.cargarTabla(this.ccdi);
+      this.reporteDepa = true;
+      this.reporteDepa01 = true;
     }
-    if(reporte=="3"){
-      this.reporte01=false;
-      this.reporte02=false;
-      this.reporte03=false;
-      this.reporte04=true;
-      this.reporte05=false;
+    if (reporte == "3") {
+      this.reporte01 = false;
+      this.reporte02 = false;
+      this.reporte03 = false;
+      this.reporte04 = true;
+      this.reporte05 = false;
+      this.cargarTablaAux();
+      this.reporteDepa = false;
+      this.reporteDepa01 = true;
     }
-    if(reporte=="4"){
-      this.reporte01=false;
-      this.reporte02=false;
-      this.reporte03=false;
-      this.reporte04=false;
-      this.reporte05=true;
-    }
-    this.cargarTabla(this.ccdi);
+    if (reporte == "4") {
+      this.reporte01 = false;
+      this.reporte02 = false;
+      this.reporte03 = false;
+      this.reporte04 = false;
+      this.reporte05 = true;
+      this.cargarTablaAux2();
+      this.reporteDepa = false;
+      this.reporteDepa01 = false;
+    }    
   }
-
 }
 
 const routes: Routes = [{
@@ -254,7 +291,7 @@ const routes: Routes = [{
 }];
 
 @NgModule({
-  imports: [CommonModule, RouterModule.forChild(routes), FormsModule,DataTableModule,SharedModule,ButtonModule],
+  imports: [CommonModule, RouterModule.forChild(routes), FormsModule, DataTableModule, SharedModule, ButtonModule],
   declarations: [Reportes]
 })
 export default class ReportesModule { }

@@ -41,7 +41,9 @@ export class ControldecalidadService {
     private distUrl: string = 'http://bromero.inei.com.pe:8000/recargaDis/';
     private zonaUrl: string = 'http://bromero.inei.com.pe:8000/recargaZona/';
     private tablaUrlAux: string = 'http://bromero.inei.com.pe:8000/calidadrecargaTabla01/';
-
+    private tablaUrlAux2: string = 'http://bromero.inei.com.pe:8000/calidadrecargaTabla02/';
+    private tablaReporte: string = 'http://bromero.inei.com.pe:8000/tablaReporte/';
+    
     /*private depaUrl: string = 'http://bromero.inei.com.pe:8090/recargaDepa/';
     private provUrl: string = 'http://bromero.inei.com.pe:8090/recargaProv/';
     private distUrl: string = 'http://bromero.inei.com.pe:8090/recargaDis/';
@@ -80,6 +82,12 @@ export class ControldecalidadService {
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
 
+    getTablaAux(tipo: string="0", ccdd: string="0", ccpp: string="0", ccdi: string="0"): Observable < Object > {
+        let queryparameters:string = `${tipo}/${ccdd}${ccpp}${ccdi}/`;
+        let url:string = this.tablaReporte + queryparameters;
+        return this.http.get(url).map(this.extractData).catch(this.handleError)
+    }
+
     private extractData(res: Response) {
         let body = res.json();
         return body || {};
@@ -93,9 +101,9 @@ export class ControldecalidadService {
     }
     
     getRegistro(url:string=''): Observable < Object > {
-        let tablaUrlAux2 = this.tablaUrlAux + url;
+        let tablaUrlAux3 = this.tablaUrlAux2 + url;
         if(url!=''){
-            return this.http.get(tablaUrlAux2).map(this.extractData)
+            return this.http.get(tablaUrlAux3).map(this.extractData)
         }else{
             return this.http.get(this.tablaUrlAux).map(this.extractData)
         }        
