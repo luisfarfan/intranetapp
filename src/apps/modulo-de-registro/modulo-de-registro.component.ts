@@ -1,14 +1,12 @@
-import { Component, OnInit,ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { TableOptions, TableColumn, ColumnMode } from 'angular2-data-table';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import {
-  Helpers
-} from './../../app/helper';
+import { Helpers } from './../../app/helper';
 import { RegistroService } from './modulo-de-registro.service'
 import { Local } from './local';
+import { Infraestructura } from './infraestructura';
 import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
 import { CustomValidators } from 'ng2-validation';
-declare var jQuery:any;
 @Component({
   templateUrl: 'modulo-de-registro.html',
   providers: [RegistroService],
@@ -28,6 +26,7 @@ declare var jQuery:any;
 })
 export class RegistroComponent implements OnInit {
   local = new Local();
+  infraestructuras = new Infraestructura();
   accion_addlocal: boolean = false;
   accion_editlocal: boolean = false;
   // Ubigeo data
@@ -41,6 +40,7 @@ export class RegistroComponent implements OnInit {
   selectedDistrito: any;
   _infraestucturas: any;
   infraestucturas: any;
+  infraSelected: Array<Object>;
   search_locales: Object;
   estado_infraestuctura: Object = {
 
@@ -50,6 +50,7 @@ export class RegistroComponent implements OnInit {
 
   submitted = false;
   localForm: FormGroup;
+  infraForm: FormGroup;
   formErrors = {
     'nombre_local': '',
     'direccion': '',
@@ -77,15 +78,29 @@ export class RegistroComponent implements OnInit {
     this.getDepartamentos();
     this.buildForm();
     this.local = new Local();
-    this.local.direccion='hola!'
-    this.getInfraesctura()
+    this.local.direccion = 'hola!'
     this.registroservice.getLocalBy('10').subscribe(_ => console.log(_))
+    this.getInfraesctura();
+  }
+
+  accionAddLocal() {
+    this.accion_editlocal = false;
+    this.accion_addlocal = true;
   }
   onRowSelect(e) {
+    this.accion_addlocal = true;
     console.log(this.search_locales)
     this.buildForm();
     this.local = this.selectedLocal
     console.log(this.selectedLocal, this.local)
+    for (let i in this.infraestructuras) {
+      for (let p in this.selectedLocal.infraestructuras) {
+        if (this.selectedLocal.infraestructuras[p].desc_infraestructura == this.infraestructuras[i].desc_infraestructura) {
+          this.infraestructuras[i].estado1 = this.selectedLocal.infraestructuras[p].estado;
+        }
+      }
+    }
+    console.log(this.infraestructuras);
     this.accion_addlocal = true;
   }
 
@@ -94,31 +109,33 @@ export class RegistroComponent implements OnInit {
     //this.accion_addlocal = false;
     this.buildForm();
     this.localForm.reset();
+    for (let k in this.infraestructuras) {
+      this.infraestructuras[k].estado1 = '';
+    }
   }
 
   getInfraesctura() {
     this.registroservice.getInfraestructura().subscribe(infra => {
-      this.infraestucturas = infra;
+      console.log(infra);
+      this.infraestructuras = <Infraestructura>infra;
+      console.log(this.infraestructuras);
       for (let key in infra) {
         if (infra[key].desc_infraestructura == "SS.HH") {
           infra[key].estado = ['SI', 'NO']
         } else {
           infra[key].estado = ['MALO', 'BUENO', 'REGULAR']
         }
+        infra[key].estado1 = '';
       }
-      this._infraestucturas = infra
-      console.log(this._infraestucturas)
     });
   }
 
   setEstadoInfra(val, i) {
     console.log(val, i);
-    console.log(this.infraestucturas[i].estado1 = val)
+    console.log(this.infraestructuras[i].estado1 = val);
+    console.log(this.infraestructuras)
+    //this.infraSelected.push({id_infraestructura : this.infraestructuras[i].id_infraestructura, estado:val})
     //console.log(this.infraestucturas[i].estado = val);
-  }
-
-  grabar() {
-    console.log(this.infraestucturas);
   }
 
   addToast(options: ToastOptions, tipo: string = 'default') {
@@ -172,9 +189,9 @@ export class RegistroComponent implements OnInit {
       ],
       'referencia': [this.local.referencia, [Validators.required, Validators.minLength(10), Validators.maxLength(200)],
       ],
-      'total_pea': [this.local.total_pea, [Validators.required, CustomValidators.range([1, 1000])],
+      'total_pea': [this.local.total_pea, [Validators.required, Validators.pattern('^[1-9][0-9]$')],
       ],
-      'total_aulas_max': [this.local.total_aulas_max, [Validators.required, CustomValidators.range([1, 999])],
+      'total_aulas_max': [this.local.total_aulas_max, [Validators.required, Validators.pattern('^[1-9][0-9]{6}$'), CustomValidators.number],
       ],
       'funcionario_nombre': [this.local.funcionario_nombre, [Validators.required, Validators.minLength(10), Validators.maxLength(200)],
       ],
@@ -192,6 +209,10 @@ export class RegistroComponent implements OnInit {
       ],
 
     });
+    this.infraForm = this.fb.group({
+      'nombre_local': [this.infraestructuras.desc_infraestructura, [Validators.required, Validators.minLength(10), Validators.maxLength(200),]
+      ],
+    })
     this.localForm.valueChanges.subscribe(
       data => this.onValueChanged(data)
     )
@@ -199,22 +220,22 @@ export class RegistroComponent implements OnInit {
   }
   validationMessages = {
     'nombre_local': {
-      'required': 'nombre_local is required.',
+      'required': 'Nombre Local es requerido',
       'minlength': 'Name must be at least 4 characters long.',
       'maxlength': 'Name cannot be more than 24 characters long.',
     },
     'direccion': {
-      'required': 'Name is required.',
+      'required': 'Dirección es requerido',
       'minlength': 'Name must be at least 4 characters long.',
       'maxlength': 'Name cannot be more than 24 characters long.',
     },
     'referencia': {
-      'required': 'Name is required.',
+      'required': 'Referencia es requerida',
       'minlength': 'Name must be at least 4 characters long.',
       'maxlength': 'Name cannot be more than 24 characters long.',
     },
     'total_pea': {
-      'required': 'Name is required.',
+      'required': 'Total PEA es requerido',
       'minlength': 'Name must be at least 4 characters long.',
       'maxlength': 'Name cannot be more than 24 characters long.',
     },
@@ -296,7 +317,7 @@ export class RegistroComponent implements OnInit {
   }
 
   findLocales() {
-    this.accion_addlocal = true;
+    this.accion_addlocal = false;
     let ubigeo: string = `${this.selectedDepartamento}${this.selectedProvincia}${this.selectedDistrito}`
     this.registroservice.getLocalbyUbigeo(ubigeo).subscribe(data => {
       this.search_locales = data;

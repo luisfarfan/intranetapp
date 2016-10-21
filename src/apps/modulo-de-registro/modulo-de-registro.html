@@ -35,10 +35,9 @@
 </md-card>
 
 <md-card>
-	<button md-raised-button (click)="accion_addlocal=true" color="accent">Registrar Local</button>
+	<button md-raised-button (click)="accionAddLocal()" color="accent">Registrar Local</button>
 	<button md-raised-button (click)="findLocales()" color="warn">Buscar Local</button>
 </md-card>
-
 <div *ngIf="alert_nofindlocales" class="alert alert-danger">
 	<strong>No existen locales para este ubigeo.</strong>
 </div>
@@ -125,7 +124,7 @@
 								{{ formErrors.funcionario_nombre }}
 							</div>
 							<p>
-								<md-input class="demo-full-width" formControlName="funcionario_celular" placeholder="Contacto"></md-input>
+								<md-input class="demo-full-width" formControlName="funcionario_celular" placeholder="Teléfono"></md-input>
 
 							</p>
 							<div *ngIf="formErrors.funcionario_celular" class="alert alert-danger">
@@ -147,15 +146,13 @@
 								{{ formErrors.contacto_nombre }}
 							</div>
 							<p>
-								<md-input class="demo-full-width" formControlName="contacto_celular" placeholder="Contacto"></md-input>
-
+								<md-input class="demo-full-width" formControlName="contacto_celular" placeholder="Teléfono"></md-input>
 							</p>
 							<div *ngIf="formErrors.contacto_celular" class="alert alert-danger">
 								{{ formErrors.contacto_celular }}
 							</div>
 							<p>
 								<md-input class="demo-full-width" formControlName="contacto_email" placeholder="Email"></md-input>
-
 							</p>
 							<div *ngIf="formErrors.contacto_email" class="alert alert-danger">
 								{{ formErrors.contacto_email }}
@@ -163,27 +160,27 @@
 						</tab>
 					</tabset>
 				</div>
-
-				<div class="col-xs-12">
-					<div class="panel panel panel-default-border">
-						<div class="panel-body">
-							<div *ngFor="let infra of _infraestucturas; let i=index" class="col-xs-3">
-								<div class="form-group delpmbottom">
-									<label>{{ infra.desc_infraestructura }} <span class="text-danger">(*)</span></label>
-									<select (change)="setEstadoInfra($event.target.value,i)" class="form-control">
+			</form>
+			<div class="col-xs-12">
+				<div class="panel panel panel-default-border">
+					<div class="panel-body">
+						<div *ngFor="let infra of infraestructuras; let i=index" class="col-xs-3">
+							<div class="form-group delpmbottom">
+								<label>{{ infra.desc_infraestructura }} <span class="text-danger">(*)</span></label>
+								<select [(ngModel)]="infra.estado1" (ngModelChange)="setEstadoInfra($event,i)" class="form-control">
 										<option value="0">Seleccione</option>
 										<option *ngFor="let est of infra.estado" [value]="est">{{ est }}</option></select>
-								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="col-xs-12">
-					<button [hidden]="!accion_editlocal" [disabled]="!localForm.valid" md-raised-button color="accent">Grabar</button>
-					<button [hidden]="accion_addlocal" [disabled]="!localForm.valid" md-raised-button color="accent">Registrar Aulas</button>
-				</div>
+			</div>
+			<div class="col-xs-12">
+				<button [disabled]="!localForm.valid" md-raised-button color="accent">Grabar</button>
+				<button [hidden]="accion_editlocal" [disabled]="!localForm.valid" md-raised-button color="accent">Registrar Aulas</button>
+			</div>
 
-			</form>
+
 		</div>
 	</md-card-content>
 </md-card>

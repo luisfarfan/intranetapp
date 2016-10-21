@@ -1,9 +1,10 @@
 export class Local {
     constructor(
+        public id_local: string = '',
         public nombre_local: string = '',
         public direccion: string = '',
         public referencia: string = '',
-        public telefono_local:string = '',
+        public telefono_local: string = '',
         public total_pea: number = 0,
         public total_aulas_max: number = 0,
         public funcionario_nombre: string = '',
