@@ -32,6 +32,7 @@ import {Helpers} from './../../helper';
 
 declare var jQuery: any;
 
+
 @Component({
   selector: '[sidebar]',
   templateUrl: './sidebar.template.html',

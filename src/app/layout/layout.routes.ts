@@ -49,7 +49,7 @@ function getRoutes() {
       loadChildren: () => System.import(`./../../apps/${module}/${module}.module`)
     }));
   }
-  console.log(results);
+  console.log(Helpers.getJsonSession());
   return results;
 
 }

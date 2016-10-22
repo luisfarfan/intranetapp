@@ -39,6 +39,9 @@ export class RegistroService {
     localinfra_url: string = `${Settings.HOST_LOCAL()}localesinfra/`;
     localinfra_ubigeo: string = `${Settings.HOST_LOCAL()}localesinfrabyUbigeo/`;
 
+    aula_url: string = `${Settings.HOST_LOCAL()}api/aula/`;
+    aula_url2: string = `${Settings.HOST_LOCAL()}aulasbylocal/`;
+
 
     constructor(private http: Http) { }
 
@@ -108,6 +111,21 @@ export class RegistroService {
         return this.http.post(this.infralocal_url, body, options)
             .map(Helpers.extractData)
             .catch(Helpers.handleError);
+    }
+
+    addAula(data) {
+        let body = JSON.stringify(data);
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post(this.aula_url, body, options)
+            .map(Helpers.extractData)
+            .catch(Helpers.handleError);
+    }
+
+    getAula(pk): Observable<Object> {
+        return this.http.get(this.aula_url2+pk+'/')
+            .map(Helpers.extractData)
+            .catch(Helpers.handleError)
     }
 
 

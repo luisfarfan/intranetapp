@@ -3,7 +3,7 @@ import { TableOptions, TableColumn, ColumnMode } from 'angular2-data-table';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Helpers } from './../../app/helper';
 import { RegistroService } from './modulo-de-registro.service'
-import { Local } from './local';
+import { Local, Aula } from './local';
 import { Infraestructura } from './infraestructura';
 import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
 import { CustomValidators } from 'ng2-validation';
@@ -26,9 +26,13 @@ import { CustomValidators } from 'ng2-validation';
 })
 export class RegistroComponent implements OnInit {
   local = new Local();
+  aula = new Aula();
   infraestructuras = new Infraestructura();
   accion_addlocal: boolean = false;
   accion_editlocal: boolean = false;
+  registrarAula: boolean = false;
+  aulasbylocal: any;
+  selectedAula:any;
   // Ubigeo data
   departamentos: Array<Object> = []
   selectedLocal: any;
@@ -42,6 +46,7 @@ export class RegistroComponent implements OnInit {
   infraestucturas: any;
   infraSelected: Array<Object>;
   search_locales: Object;
+
   estado_infraestuctura: Object = {
 
   }
@@ -50,7 +55,6 @@ export class RegistroComponent implements OnInit {
 
   submitted = false;
   localForm: FormGroup;
-  infraForm: FormGroup;
   formErrors = {
     'nombre_local': '',
     'direccion': '',
@@ -78,21 +82,21 @@ export class RegistroComponent implements OnInit {
     this.getDepartamentos();
     this.buildForm();
     this.local = new Local();
-    this.local.direccion = 'hola!'
-    this.registroservice.getLocalBy('10').subscribe(_ => console.log(_))
     this.getInfraesctura();
   }
 
   accionAddLocal() {
     this.accion_editlocal = false;
     this.accion_addlocal = true;
+    this.registrarAula = false;
   }
   onRowSelect(e) {
     this.accion_addlocal = true;
-    console.log(this.search_locales)
+    this.registrarAula = true;
+    //console.log(this.search_locales)
     this.buildForm();
     this.local = this.selectedLocal
-    console.log(this.selectedLocal, this.local)
+    //console.log(this.selectedLocal, this.local)
     for (let i in this.infraestructuras) {
       for (let p in this.selectedLocal.infraestructuras) {
         if (this.selectedLocal.infraestructuras[p].desc_infraestructura == this.infraestructuras[i].desc_infraestructura) {
@@ -100,8 +104,12 @@ export class RegistroComponent implements OnInit {
         }
       }
     }
-    console.log(this.infraestructuras);
+    this.getAulas()
+    //console.log(this.infraestructuras);
+    this.aulasbylocal = this.selectedLocal.aulas
+
     this.accion_addlocal = true;
+    console.log(this.localForm)
   }
 
   onRowUnselect(e) {
@@ -207,12 +215,7 @@ export class RegistroComponent implements OnInit {
       ],
       'telefono_local': [this.local.telefono_local, [Validators.required, Validators.minLength(9), Validators.maxLength(9)],
       ],
-
     });
-    this.infraForm = this.fb.group({
-      'nombre_local': [this.infraestructuras.desc_infraestructura, [Validators.required, Validators.minLength(10), Validators.maxLength(200),]
-      ],
-    })
     this.localForm.valueChanges.subscribe(
       data => this.onValueChanged(data)
     )
@@ -221,63 +224,63 @@ export class RegistroComponent implements OnInit {
   validationMessages = {
     'nombre_local': {
       'required': 'Nombre Local es requerido',
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
+      'minlength': 'Nombre de Local muy corto.',
+      'maxlength': 'Nombre de local paso del maximo permitido.',
     },
     'direccion': {
       'required': 'Dirección es requerido',
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
+      'minlength': 'Nombre de Local muy corto.',
+      'maxlength': 'Nombre de local paso del maximo permitido.',
     },
     'referencia': {
       'required': 'Referencia es requerida',
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
+      'minlength': 'Referencia muy corto.',
+      'maxlength': 'Referencia paso del maximo permitido.',
     },
     'total_pea': {
       'required': 'Total PEA es requerido',
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
+      'minlength': 'Total PEA muy corto.',
+      'maxlength': 'Total PEA paso del maximo permitido.',
     },
     'total_aulas_max': {
-      'required': 'Name is required.',
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
+      'required': 'Total Aulas Máximo is required.',
+      'minlength': 'Total Aulas Máximo muy corto.',
+      'maxlength': 'Total Aulas Máximo paso del maximo permitido.',
     },
     'funcionario_nombre': {
-      'required': 'Name is required.',
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
+      'required': 'Funcionario nombre es requerido.',
+      'minlength': 'Funcionario nombre muy corto.',
+      'maxlength': 'Funcionario nombre paso del maximo permitido.',
     },
     'funcionario_email': {
-      'required': 'Name is required.',
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
+      'required': 'Funcionario email is required.',
+      'minlength': 'Funcionario email muy corto.',
+      'maxlength': 'Funcionario email paso del maximo permitido.',
     },
     'funcionario_celular': {
-      'required': 'Name is required.',
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
+      'required': 'Funcionario Celular is required.',
+      'minlength': 'Funcionario Celular muy corto.',
+      'maxlength': 'Funcionario Celular paso del maximo permitido.',
     },
     'contacto_nombre': {
-      'required': 'Name is required.',
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
+      'required': 'Contacto Nombre is required.',
+      'minlength': 'Contacto Nombre muy corto.',
+      'maxlength': 'Contacto Nombre paso del maximo permitido.',
     },
     'contacto_email': {
-      'required': 'Name is required.',
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
+      'required': 'Contacto Email is required.',
+      'minlength': 'Contacto Email muy corto.',
+      'maxlength': 'Contacto Email paso del maximo permitido.',
     },
     'contacto_celular': {
-      'required': 'Name is required.',
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
+      'required': 'Contacto Celular is required.',
+      'minlength': 'Contacto Celular muy corto.',
+      'maxlength': 'Contacto Celular paso del maximo permitido.',
     },
     'telefono_local': {
-      'required': 'Name is required.',
-      'minlength': 'Name must be at least 4 characters long.',
-      'maxlength': 'Name cannot be more than 24 characters long.',
+      'required': 'Teléfono Local is required.',
+      'minlength': 'Teléfono Local muy corto.',
+      'maxlength': 'Teléfono Local paso del maximo permitido.',
     },
   };
 
@@ -330,4 +333,23 @@ export class RegistroComponent implements OnInit {
     });
   }
 
+  addAula() {
+    this.aula.id_local = this.local.id_local
+    console.log(this.aula);
+    console.log(Helpers.booleanToNumber(this.aula));
+    let data = Helpers.booleanToNumber(this.aula)
+    this.registroservice.addAula(data).subscribe(
+      _ => {
+        this.aula = new Aula();
+        this.getAulas();
+      }
+
+    )
+  }
+
+  getAulas() {
+    this.registroservice.getAula(this.local.id_local).subscribe(aulasbylocal => {
+      this.aulasbylocal = aulasbylocal
+    })
+  }
 }

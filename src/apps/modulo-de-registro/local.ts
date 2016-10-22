@@ -19,3 +19,20 @@ export class Local {
     ) {
     }
 }
+
+export class Aula {
+    constructor(
+        public id_local: string = '',
+        public num_aula: string = '',
+        public mobiliario: string = '',
+        public internet: boolean = false,
+        public audio: boolean = false,
+        public proyector: boolean = false,
+        public pizarra: boolean = false,
+        public mesas: string = '',
+        public sillas: string = '',
+        public unipersonales: string = '',
+        public bipersonales: string = '',
+    ) {
+    }
+}

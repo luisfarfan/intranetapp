@@ -177,7 +177,7 @@
 			</div>
 			<div class="col-xs-12">
 				<button [disabled]="!localForm.valid" md-raised-button color="accent">Grabar</button>
-				<button [hidden]="accion_editlocal" [disabled]="!localForm.valid" md-raised-button color="accent">Registrar Aulas</button>
+				<button type="button" data-toggle="modal" data-target="#myModal" [hidden]="!registrarAula" md-raised-button color="accent">Registrar Aulas</button>
 			</div>
 
 
@@ -225,78 +225,85 @@
 			</div>
 			<!--Body-->
 			<div class="modal-body">
-				<div class="col-md-3">
-					<div class="md-form">
-						<label for="email">Nro Aula</label>
-						<input type="text" class="form-control" id="email">
+				<div class="row">
+					<div class="col-md-3">
+						<div class="md-form">
+							<label>Nro Aula</label>
+							<input [(ngModel)]="aula.num_aula" name="num_aula" type="text" class="form-control" id="email">
+						</div>
+						<div class="md-form">
+							<label for="email">Capacidad</label>
+							<input [(ngModel)]="aula.capacidad" name="capacidad" type="text" class="form-control" id="email">
+						</div>
+						<div class="md-form">
+							<label for="email">Mobiliario</label>
+							<input [(ngModel)]="aula.mobiliario" name="mobiliario" type="text" class="form-control" id="email">
+						</div>
 					</div>
-					<div class="md-form">
-						<label for="email">Capacidad</label>
-						<input type="text" class="form-control" id="email">
+					<div class="col-md-9">
+						<div class="col-md-3">
+							<div class="md-form">
+								<div class="form-group">
+									<input [(ngModel)]="aula.internet" name="internet" type="checkbox" id="checkbox11">
+									<label for="checkbox11">Internet</label>
+								</div>
+
+								<div class="form-group">
+									<input [(ngModel)]="aula.pizarra" name="pizarra" type="checkbox" id="checkbox11">
+									<label for="checkbox11">Pizarra</label>
+								</div>
+
+								<div class="form-group">
+									<input [(ngModel)]="aula.unipersonales" name="unipersonales" type="checkbox" id="checkbox11">
+									<label for="checkbox11">C. Unipersonales</label>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="md-form">
+								<div class="form-group">
+									<input [(ngModel)]="aula.audio" name="audio" type="checkbox" id="checkbox11">
+									<label for="checkbox11">Audio</label>
+								</div>
+
+								<div class="form-group">
+									<input [(ngModel)]="aula.mesas" name="mesas" type="number">
+									<label for="checkbox11">Mesas</label>
+								</div>
+
+								<div class="form-group">
+									<input [(ngModel)]="aula.bipersonales" name="bipersonales" type="number">
+									<label for="checkbox11">C.Bipersonales</label>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3">
+							<div class="md-form">
+								<div class="form-group">
+									<input [(ngModel)]="aula.proyector" name="proyector" type="checkbox" id="checkbox11">
+									<label for="checkbox11">Proyector</label>
+								</div>
+
+								<div class="form-group">
+									<input [(ngModel)]="aula.sillas" name="sillas" type="number">
+									<label for="checkbox11">Sillas</label>
+								</div>
+							</div>
+						</div>
 					</div>
-					<div class="md-form">
-						<label for="email">Mobiliario</label>
-						<input type="text" class="form-control" id="email">
-					</div>
+					<button md-raised-button (click)="addAula()" color="accent">Añadir</button>
 				</div>
-				<div class="col-md-9">
-					<div class="col-md-3">
-						<div class="md-form">
-							<div class="form-group">
-								<input type="checkbox" id="checkbox11">
-								<label for="checkbox11">Internet</label>
-							</div>
-
-							<div class="form-group">
-								<input type="checkbox" id="checkbox11">
-								<label for="checkbox11">Internet</label>
-							</div>
-
-							<div class="form-group">
-								<input type="checkbox" id="checkbox11">
-								<label for="checkbox11">Internet</label>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="md-form">
-							<div class="form-group">
-								<input type="checkbox" id="checkbox11">
-								<label for="checkbox11">Internet</label>
-							</div>
-
-							<div class="form-group">
-								<input type="checkbox" id="checkbox11">
-								<label for="checkbox11">Internet</label>
-							</div>
-
-							<div class="form-group">
-								<input type="checkbox" id="checkbox11">
-								<label for="checkbox11">Internet</label>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="md-form">
-							<div class="form-group">
-								<input type="checkbox" id="checkbox11">
-								<label for="checkbox11">Internet</label>
-							</div>
-
-							<div class="form-group">
-								<input type="checkbox" id="checkbox11">
-								<label for="checkbox11">Internet</label>
-							</div>
-
-							<div class="form-group">
-								<input type="checkbox" id="checkbox11">
-								<label for="checkbox11">Internet</label>
-							</div>
-						</div>
-					</div>
+				<div class="row">
+					<p-dataTable class="table table-hover table-mc-light-blue"  [value]="aulasbylocal" selectionMode="single" [(selection)]="selectedAula">
+						<p-column field="num_aula" header="Nombre Local"></p-column>
+						<p-column field="capacidad" header="Referencia"></p-column>
+						<p-column field="capacidad" header="Telefono Local"></p-column>
+						<p-column field="internet" header="Total Aulas Máximas"></p-column>
+						<p-column field="audio" header="Total PEA"></p-column>
+						<p-column field="proyector" header="Dirección"></p-column>
+						<p-column field="pizarra" header="Telefono Local"></p-column>
+					</p-dataTable>
 				</div>
-
-
 			</div>
 			<!--Footer-->
 		</div>
