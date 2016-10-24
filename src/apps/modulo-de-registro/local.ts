@@ -2,6 +2,8 @@ export class Local {
     constructor(
         public id_local: string = '',
         public nombre_local: string = '',
+        public fecha_inicio:string = '',
+        public fecha_fin:string = '',
         public direccion: string = '',
         public referencia: string = '',
         public telefono_local: string = '',
@@ -31,7 +33,7 @@ export class Aula {
         public pizarra: boolean = false,
         public mesas: string = '',
         public sillas: string = '',
-        public unipersonales: string = '',
+        public unipersonales: boolean = false,
         public bipersonales: string = '',
     ) {
     }

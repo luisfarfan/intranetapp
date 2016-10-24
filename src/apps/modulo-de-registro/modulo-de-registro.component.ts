@@ -10,29 +10,20 @@ import { CustomValidators } from 'ng2-validation';
 @Component({
   templateUrl: 'modulo-de-registro.html',
   providers: [RegistroService],
-  styles: [`
-  .form-group label {
-    float: left;
-    text-align: left;
-    font-weight: normal;
-}
-
-.form-group select {
-    display: inline-block;
-    width: auto;
-    vertical-align: middle;
-}
-  `]
+  styleUrls: ['styles.scss']
 })
 export class RegistroComponent implements OnInit {
+  date: Date = new Date(2016, 10, 23);
+  date2: Date = new Date(2016, 10, 23);
   local = new Local();
   aula = new Aula();
-  infraestructuras = new Infraestructura();
+  deleteaula: boolean = false;
+  infraestructuras: any;
   accion_addlocal: boolean = false;
   accion_editlocal: boolean = false;
   registrarAula: boolean = false;
   aulasbylocal: any;
-  selectedAula:any;
+  selectedAula: any;
   // Ubigeo data
   departamentos: Array<Object> = []
   selectedLocal: any;
@@ -46,14 +37,13 @@ export class RegistroComponent implements OnInit {
   infraestucturas: any;
   infraSelected: Array<Object>;
   search_locales: Object;
-
+  submitted: boolean = false;
   estado_infraestuctura: Object = {
 
   }
 
   // Form
 
-  submitted = false;
   localForm: FormGroup;
   formErrors = {
     'nombre_local': '',
@@ -82,7 +72,7 @@ export class RegistroComponent implements OnInit {
     this.getDepartamentos();
     this.buildForm();
     this.local = new Local();
-    this.getInfraesctura();
+    this.getInfraestructura();
   }
 
   accionAddLocal() {
@@ -91,11 +81,12 @@ export class RegistroComponent implements OnInit {
     this.registrarAula = false;
   }
   onRowSelect(e) {
-    this.accion_addlocal = true;
+    this.accion_addlocal = false;
+    this.accion_editlocal = true;
     this.registrarAula = true;
     //console.log(this.search_locales)
-    this.buildForm();
     this.local = this.selectedLocal
+    this.buildForm();
     //console.log(this.selectedLocal, this.local)
     for (let i in this.infraestructuras) {
       for (let p in this.selectedLocal.infraestructuras) {
@@ -107,9 +98,6 @@ export class RegistroComponent implements OnInit {
     this.getAulas()
     //console.log(this.infraestructuras);
     this.aulasbylocal = this.selectedLocal.aulas
-
-    this.accion_addlocal = true;
-    console.log(this.localForm)
   }
 
   onRowUnselect(e) {
@@ -122,11 +110,8 @@ export class RegistroComponent implements OnInit {
     }
   }
 
-  getInfraesctura() {
+  getInfraestructura() {
     this.registroservice.getInfraestructura().subscribe(infra => {
-      console.log(infra);
-      this.infraestructuras = <Infraestructura>infra;
-      console.log(this.infraestructuras);
       for (let key in infra) {
         if (infra[key].desc_infraestructura == "SS.HH") {
           infra[key].estado = ['SI', 'NO']
@@ -135,6 +120,7 @@ export class RegistroComponent implements OnInit {
         }
         infra[key].estado1 = '';
       }
+      this.infraestructuras = infra;
     });
   }
 
@@ -167,31 +153,59 @@ export class RegistroComponent implements OnInit {
     this.submitted = true;
     this.local = this.localForm.value;
     this.local.ubigeo = ubigeo
-    let toastOptions: ToastOptions = {
-      title: 'Agregar',
-      msg: 'Local Agregado con Éxito',
-      showClose: true,
-      timeout: 5000,
-    };
-    this.registroservice.addLocal(this.local).subscribe(response => {
-      res = response;
-      for (let key in this.infraestucturas) {
-        post = { id_local: res.id_local, id_infraestructura: this.infraestucturas[key].id_infraestructura, estado: this.infraestucturas[key].estado1 }
-        this.registroservice.addInfraLocal(post).subscribe(_ => true)
+    let toastOptions: ToastOptions = { title: 'Agregar', msg: 'Local Agregado con Éxito', showClose: true, timeout: 5000, };
+
+    if (this.accion_addlocal) {
+      this.registroservice.addLocal(this.local).subscribe(response => {
+        res = response;
+        for (let key in this.infraestructuras) {
+          post = { id_local: res.id_local, id_infraestructura: this.infraestructuras[key].id_infraestructura, estado: this.infraestructuras[key].estado1 }
+          this.registroservice.addInfraLocal(post).subscribe(_ => console.log(_))
+        }
+        this.addToast(toastOptions, 'success');
+        setTimeout(_ => {
+          this.accion_editlocal = false
+          this.accion_editlocal = true
+          this.submitted = true;
+          this.localForm.reset();
+        }, 2000)
+        this.submitted = false;
+        console.log(this.submitted)
       }
+      )
+    }
+    else if (this.accion_editlocal) {
+      for (let key in this.infraestructuras) {
+        this.registroservice.editLocal(this.selectedLocal.id_local, this.local).subscribe(_ => true)
+        this.registroservice.getInfraestructuraLocal(this.selectedLocal.id_local, this.infraestructuras[key].id_infraestructura).subscribe(res => {
+          let data = { estado: this.infraestructuras[key].estado1 }
+          console.log(res[0].id_infraestructuralocal, this.infraestructuras[key])
+          this.registroservice.editInfraLocal(res[0].id_infraestructuralocal, data).subscribe(_ => true)
+        }
+        )
+      }
+      this.findLocales();
+      toastOptions.title = 'Editar'
+      toastOptions.msg = 'Registro Editado con Éxito'
       this.addToast(toastOptions, 'success');
       setTimeout(_ => {
         this.accion_editlocal = false
-        this.accion_editlocal = true
+        this.submitted = true;
         this.localForm.reset();
       }, 2000)
+      this.submitted = false;
+      console.log(this.submitted)
     }
-    )
+
   }
 
   buildForm() {
     this.localForm = this.fb.group({
       'nombre_local': [this.local.nombre_local, [Validators.required, Validators.minLength(10), Validators.maxLength(200),]
+      ],
+      'fecha_inicio': [this.local.fecha_inicio, [Validators.required]
+      ],
+      'fecha_fin': [this.local.fecha_fin, [Validators.required]
       ],
       'direccion': [this.local.direccion, [Validators.required, Validators.minLength(10), Validators.maxLength(200)],
       ],
@@ -226,6 +240,12 @@ export class RegistroComponent implements OnInit {
       'required': 'Nombre Local es requerido',
       'minlength': 'Nombre de Local muy corto.',
       'maxlength': 'Nombre de local paso del maximo permitido.',
+    },
+    'fecha_fin': {
+      'required': 'Fecha fin es requerido',
+    },
+    'fecha_inicio': {
+      'required': 'Fecha inicio es requerido',
     },
     'direccion': {
       'required': 'Dirección es requerido',
@@ -321,6 +341,7 @@ export class RegistroComponent implements OnInit {
 
   findLocales() {
     this.accion_addlocal = false;
+    console.log(this.submitted = false)
     let ubigeo: string = `${this.selectedDepartamento}${this.selectedProvincia}${this.selectedDistrito}`
     this.registroservice.getLocalbyUbigeo(ubigeo).subscribe(data => {
       this.search_locales = data;
@@ -336,20 +357,40 @@ export class RegistroComponent implements OnInit {
   addAula() {
     this.aula.id_local = this.local.id_local
     console.log(this.aula);
-    console.log(Helpers.booleanToNumber(this.aula));
-    let data = Helpers.booleanToNumber(this.aula)
-    this.registroservice.addAula(data).subscribe(
-      _ => {
+    let data = Helpers.booleanToYesNo(this.aula)
+    if (this.selectedAula) {
+      this.registroservice.editAula(this.selectedAula.id_aula, data).subscribe(_ => {
         this.aula = new Aula();
         this.getAulas();
-      }
-
-    )
+      })
+    } else {
+      this.registroservice.addAula(data).subscribe(
+        _ => {
+          this.aula = new Aula();
+          this.getAulas();
+        }
+      )
+    }
   }
 
   getAulas() {
     this.registroservice.getAula(this.local.id_local).subscribe(aulasbylocal => {
       this.aulasbylocal = aulasbylocal
     })
+  }
+  onRowSelect2(e) {
+    this.deleteaula = true;
+    this.aula = <Aula>Helpers.YesNoToboolean(this.selectedAula);
+  }
+  onRowUnSelect2(e) {
+    this.deleteaula = false;
+    this.aula = new Aula();
+  }
+  deleteAula() {
+    this.registroservice.deleteAula(this.selectedAula.id_aula).subscribe(_ => {
+      this.getAulas()
+      this.aula = new Aula();
+    })
+
   }
 }

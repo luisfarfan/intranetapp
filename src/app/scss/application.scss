@@ -3,9 +3,10 @@
 @import "../../../node_modules/bootstrap/scss/bootstrap";
 @import "../../../node_modules/font-awesome/scss/font-awesome";
 @import "../../../node_modules/glyphicons-halflings/scss/glyphicons-halflings";
-//@import "../../node_modules/pace/themes/pace-theme-flash";
+@import "../../../node_modules/pace/themes/pace-theme-flash";
 @import "../../../node_modules/animate.css/animate";
 @import "../../../node_modules/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox";
+@import "../../../node_modules/bootstrap-select/dist/css/bootstrap-select";
 @import "../../../node_modules/primeng/resources/primeng";
 @import "../../../node_modules/primeng/resources/themes/bootstrap/theme";
 @import "bootstrap-override";
@@ -18,9 +19,8 @@
 @import "global-transitions";
 @import "base";
 @import "utils";
+@import "print";
 @import '~@angular/material/core/theming/all-theme';
-@import 'http://desarrollo/RRHH/censo/convoca/css/bootstrap.min.css';
-@import 'http://desarrollo/RRHH/censo/convoca/css/bootstrap-universidad.min.css';
 // Plus imports for other components in your app.
 // Include the base styles for Angular Material core. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
@@ -901,5 +901,3 @@ $theme: md-light-theme($primary, $accent, $warn);
     background-color: #f0ad4e;
     border-color: #eea236;
 }
-
-

@@ -5,9 +5,9 @@ declare let jQuery: any;
 @Injectable()
 export class AppConfig {
   config = {
-    name: 'INEI',
-    title: 'Intranet de Aplicaciones version',
-    version: '0.1',
+    name: 'sing',
+    title: 'Sing Dashboard App with Angular 2.0 support by Flatlogic',
+    version: '3.2.0',
     /**
      * Whether to print and alert some log information
      */
@@ -53,7 +53,7 @@ export class AppConfig {
       /**
        * whether navigation is static (prevent automatic collapsing)
        */
-      'nav-static': true
+      'nav-static': false
     }
   };
 

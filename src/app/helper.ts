@@ -136,4 +136,26 @@ export class Helpers {
         }
         return object
     }
+
+    public static booleanToYesNo(object: Object) {
+        for (let key in object) {
+            if (!object.hasOwnProperty(key)) continue;
+            if (typeof object[key] == "boolean") {
+                object[key] == true ? object[key] = "SI" : object[key] = "NO";
+            }
+        }
+        return object
+    }
+
+    public static YesNoToboolean(object: Object) {
+        for (let key in object) {
+            if (!object.hasOwnProperty(key)) continue;
+            if(object[key]=="SI"){
+                object[key] = true
+            }else if (object[key] =="NO"){
+                object[key] = false
+            }
+        }
+        return object
+    }
 }

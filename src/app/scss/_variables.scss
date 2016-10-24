@@ -36,11 +36,11 @@ $brand-info-light: #f2fafa !default;
 $brand-warning-light: lighten($brand-warning, 43%) !default;
 $brand-danger-light: #fff2ef !default;
 $addition-bg: #f8f8f8 !default;
-$sidebar-bg-color: #00a1c7 !default;
-$sidebar-color: #ffffff !default;
-$sidebar-item-border-color: #ffffff !default;
+$sidebar-bg-color: #2196f3 !default;
+$sidebar-color: #fffefe !default;
+$sidebar-item-border-color: #2d2d2d !default;
 $sidebar-item-active-color: #F2BE35 !default;
-$sidebar-item-hover-bg-color: #1B5583 !default;
+$sidebar-item-hover-bg-color: #81D4FA !default;
 // Typography
 // -------------------------
 $text-color: $gray !default;
@@ -73,6 +73,14 @@ $chat-sidebar-width: 250px+$sidebar-slim-scroll-width !default;
 $content-padding-vertical: 42px !default;
 $content-padding-top: $content-padding-vertical+$navbar-height !default;
 $content-padding-horizontal: 40px !default;
+//== Panels
+//
+//##
+$panel-bg: transparent !default;
+$panel-body-padding: 15px !default;
+$panel-default-text: $gray-dark !default;
+$panel-default-border: transparent !default;
+$panel-default-heading-bg: $gray-semi-lighter !default;
 // Screens
 // -------------------------
 $screen-lg-height: 670px !default;
@@ -195,11 +203,11 @@ $tag-font-weight: 600;
 $thumbnail-bg: $white !default;
 //== Breadcrumbs
 //
-$breadcrumb-padding-horizontal: 0 !default;
+$breadcrumb-padding-x: 0 !default;
 $breadcrumb-bg: transparent !default;
-$breadcrumb-color: $text-color !default;
+$breadcrumb-divider-color: $text-color !default;
 $breadcrumb-active-color: $text-color !default;
-$breadcrumb-separator: ">" !default;
+$breadcrumb-divider: ">" !default;
 //== Pagination
 //
 //##
@@ -221,8 +229,3 @@ $pagination-disabled-border: transparent !default;
 // ------------------------
 // ------------------------
 $fa-font-path: "assets/fonts/font-awesome" !default;
-$panel-bg : transparent !default;
-$panel-body-padding : 15px !default;
-$panel-default-text : $gray-dark !default;
-$panel-default-border : transparent !default;
-$panel-default-heading-bg : $gray-semi-lighter !default;

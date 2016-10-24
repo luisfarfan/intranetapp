@@ -1,29 +1,39 @@
-
 /**
 * if set to device-width ie10 built-in scrollbar overflows content. Fix it as of here
 * http://stackoverflow.com/questions/17045132/scrollbar-overlay-in-ie10-how-do-you-stop-that-might-be-bootstrap
 */
-@-ms-viewport{
-  width: auto;
+
+@-ms-viewport {
+    width: auto;
 }
 
-html, body{
-  height: 100%;
+html,
+body {
+    height: 100%;
 }
 
-body{
-  font-weight: $font-weight-base;
-  overflow-x: hidden;
+body {
+    font-weight: $font-weight-base;
+    overflow-x: hidden;
 }
 
-th{
-  font-weight: $font-weight-semi-bold;
+th {
+    font-weight: $font-weight-semi-bold;
 }
 
 a {
-  cursor: pointer;
+    cursor: pointer;
 }
 
 svg {
-  width: 100%;
+    width: 100%;
+}
+
+strong,
+b {
+    font-weight: bold;
+}
+
+abbr[title] {
+    text-decoration: none;
 }

@@ -1,4 +1,3 @@
-//import 'bootstrap-select/dist/js/bootstrap-select.js';
 /*
  * Angular bootstraping
  */

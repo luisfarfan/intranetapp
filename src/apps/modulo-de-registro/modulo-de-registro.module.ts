@@ -23,6 +23,9 @@ import { DataTableModule, SharedModule } from 'primeng/primeng';
 import { MaterialModule } from '@angular/material';
 import { TypeaheadModule } from 'ng2-bootstrap/components/typeahead';
 import { ToastyModule } from 'ng2-toasty';
+import 'ng2-datetime/src/vendor/bootstrap-datepicker/bootstrap-datepicker.min.js';
+import 'ng2-datetime/src/vendor/bootstrap-timepicker/bootstrap-timepicker.min.js';
+import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
 const routes: Routes = [{
     path: '',
     component: RegistroComponent
@@ -30,7 +33,7 @@ const routes: Routes = [{
 
 @NgModule({
     imports: [RouterModule.forChild(routes),
-        CommonModule,
+        CommonModule,NKDatetimeModule,
         FormsModule, DataTableModule,TabsModule,ToastyModule.forRoot(),CustomFormsModule, SharedModule, MaterialModule.forRoot(), ReactiveFormsModule, TypeaheadModule],
     declarations: [RegistroComponent],
 })
