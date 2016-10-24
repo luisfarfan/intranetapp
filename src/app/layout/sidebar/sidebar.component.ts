@@ -49,7 +49,39 @@ export class Sidebar implements OnInit {
   config: any;
   router: Router;
   location: Location;
-
+  menu_segmentacion = `<ul class="sidebar-nav">
+<li>
+	<a class="collapsed" data-target="#sidebar-levels" data-toggle="collapse" data-parent="#sidebar">
+		<span class="icon">
+            <i class="fa fa-folder-open"></i>
+          </span> SEGMENTACIÓN
+		<i class="toggle fa fa-angle-down"></i>
+	</a>
+	<ul id="sidebar-levels" class="collapse">
+		<li class="active"><a routerlink="segmentacion" href="#/app/segmentacion">SEGMENTACION</a></li>
+		<li>
+			<a class="collapsed" data-target="#sidebar-sub-levels" data-toggle="collapse" data-parent="#sidebar-levels">
+            CROQUIS Y LISTADOS
+            <i class="toggle fa fa-angle-down"></i>
+          </a>
+			<ul id="sidebar-sub-levels" class="collapse">
+				<li><a routerlink="croquis-y-listado" href="#/app/croquis-y-listado">ESPACIAL</a></li>
+				<li><a routerlink="croquis-y-listados-tabular" href="#/app/croquis-y-listados-tabular">TABULAR</a></li>
+			</ul>
+		</li>
+    <li>
+			<a class="collapsed" data-target="#sidebar-sub-levels2" data-toggle="collapse" data-parent="#sidebar-levels">
+            REPORTES
+            <i class="toggle fa fa-angle-down"></i>
+          </a>
+			<ul id="sidebar-sub-levels2" class="collapse">
+				<li><a href="#/app/reportes" routerlink="reportes">ESPACIAL</a></li>
+				<li><a href="#/app/reportes-tabular" routerlink="reportes-tabular">TABULAR</a></li>
+			</ul>
+		</li>
+	</ul>
+</li>
+</ul>`
   constructor(config: AppConfig, el: ElementRef, router: Router, location: Location,
     private compiler: Compiler,
     private _viewContainerRef: ViewContainerRef,
@@ -96,12 +128,13 @@ export class Sidebar implements OnInit {
       this.cmpRef.destroy();
     }
     let id_usuario = this.getIdUsuario();
+    console.log(this.getIdUsuario());
     let queryparameter = `?id_usuario=${id_usuario}`;
     if (id_usuario != "") {
       this.sidebarservice.getMenuLinks(queryparameter).subscribe(res => {
         localStorage.setItem('menu', JSON.stringify(res))
         let menustring = localStorage.getItem('menu')
-        this.compileToComponent(res).then((factory: ComponentFactory < any > ) => {
+        this.compileToComponent(this.getIdUsuario()=="9" ? this.menu_segmentacion : res).then((factory: ComponentFactory < any > ) => {
           this.cmpRef = this.target.createComponent(factory)
         })
       })

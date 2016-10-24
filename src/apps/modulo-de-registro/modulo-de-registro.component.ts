@@ -38,9 +38,8 @@ export class RegistroComponent implements OnInit {
   infraSelected: Array<Object>;
   search_locales: Object;
   submitted: boolean = false;
-  estado_infraestuctura: Object = {
-
-  }
+  searchedlocales: boolean = false;
+  max_aulas: boolean = false;
 
   // Form
 
@@ -84,8 +83,8 @@ export class RegistroComponent implements OnInit {
     this.accion_addlocal = false;
     this.accion_editlocal = true;
     this.registrarAula = true;
-    //console.log(this.search_locales)
     this.local = this.selectedLocal
+    console.log(this.selectedLocal);
     this.buildForm();
     //console.log(this.selectedLocal, this.local)
     for (let i in this.infraestructuras) {
@@ -95,9 +94,9 @@ export class RegistroComponent implements OnInit {
         }
       }
     }
-    this.getAulas()
+    this.getAulas();
     //console.log(this.infraestructuras);
-    this.aulasbylocal = this.selectedLocal.aulas
+    this.aulasbylocal = this.selectedLocal.aulas;
   }
 
   onRowUnselect(e) {
@@ -211,9 +210,9 @@ export class RegistroComponent implements OnInit {
       ],
       'referencia': [this.local.referencia, [Validators.required, Validators.minLength(10), Validators.maxLength(200)],
       ],
-      'total_pea': [this.local.total_pea, [Validators.required, Validators.pattern('^[1-9][0-9]$')],
+      'total_pea': [this.local.total_pea, [Validators.required],
       ],
-      'total_aulas_max': [this.local.total_aulas_max, [Validators.required, Validators.pattern('^[1-9][0-9]{6}$'), CustomValidators.number],
+      'total_aulas_max': [this.local.total_aulas_max, [Validators.required, CustomValidators.number],
       ],
       'funcionario_nombre': [this.local.funcionario_nombre, [Validators.required, Validators.minLength(10), Validators.maxLength(200)],
       ],
@@ -340,6 +339,7 @@ export class RegistroComponent implements OnInit {
   }
 
   findLocales() {
+
     this.accion_addlocal = false;
     console.log(this.submitted = false)
     let ubigeo: string = `${this.selectedDepartamento}${this.selectedProvincia}${this.selectedDistrito}`
@@ -348,8 +348,8 @@ export class RegistroComponent implements OnInit {
       if (!this.search_locales || Helpers.lengthobj(this.search_locales) == 0) {
         this.alert_nofindlocales = true;
       } else {
-        this.accion_editlocal = true;
         this.alert_nofindlocales = false;
+        this.searchedlocales = true;
       }
     });
   }
@@ -364,12 +364,19 @@ export class RegistroComponent implements OnInit {
         this.getAulas();
       })
     } else {
-      this.registroservice.addAula(data).subscribe(
-        _ => {
-          this.aula = new Aula();
-          this.getAulas();
-        }
-      )
+      if (this.selectedLocal.total_aulas_max <= Helpers.lengthobj(this.aulasbylocal)) {
+        this.max_aulas = true;
+        this.aula = new Aula();
+        this.getAulas();
+      } else {
+        this.registroservice.addAula(data).subscribe(
+          _ => {
+            this.aula = new Aula();
+            this.getAulas();
+          }
+        )
+      }
+
     }
   }
 
@@ -390,6 +397,7 @@ export class RegistroComponent implements OnInit {
     this.registroservice.deleteAula(this.selectedAula.id_aula).subscribe(_ => {
       this.getAulas()
       this.aula = new Aula();
+      this.deleteaula = false;
     })
 
   }

@@ -1,12 +1,10 @@
 import {
     Injectable
 } from '@angular/core';
-
 import {
     Http,
     Response
 } from '@angular/http';
-
 import {
     Headers,
     RequestOptions,
@@ -17,7 +15,6 @@ import {
 import {
     Observable
 } from 'rxjs/Observable';
-
 // Statics
 import 'rxjs/add/observable/throw';
 
@@ -26,28 +23,33 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
-import { Helpers } from './../../app/helper';
 
 @Injectable()
-export class ControldecalidadService {
+export class ReportestabularService {
     constructor(private http: Http) {}
+
+    /*private depaUrl: string = 'http://192.168.200.123:8081/segrecargaDepa/';
+    private provUrl: string = 'http://192.168.200.123:8081/segrecargaProv/';
+    private distUrl: string = 'http://192.168.200.123:8081/segrecargaDis/';
+    private zonaUrl: string = 'http://192.168.200.123:8081/segrecargaZona/';
+    //private tablaUrl: string = 'http://192.168.200.123:8081/segrecargaTabla/';
+    private tablaUrlAux: string = 'http://192.168.200.123:8081/crorecargaTabla01/';
+    private tablaUrlAux2: string = 'http://192.168.200.123:8081/crorecargaTabla02/';*/
+
+    /*private depaUrl: string = 'http://bromero.inei.com.pe:8000/recargaDepa/';
+    private provUrl: string = 'http://bromero.inei.com.pe:8000/recargaProv/';
+    private distUrl: string = 'http://bromero.inei.com.pe:8000/recargaDis/';
+    private zonaUrl: string = 'http://bromero.inei.com.pe:8000/recargaZona/';
+    private tablaUrlAux: string = 'http://bromero.inei.com.pe:8000/crorecargaTabla01/';
+    private tablaUrlAux2: string = 'http://bromero.inei.com.pe:8000/crorecargaTabla02/';
+    private tablaUrlZip: string = 'http://bromero.inei.com.pe:8000/crodescargarPdf/';*/
 
     private depaUrl: string = 'http://bromero.inei.com.pe:8000/recargaDepa/';
     private provUrl: string = 'http://bromero.inei.com.pe:8000/recargaProv/';
     private distUrl: string = 'http://bromero.inei.com.pe:8000/recargaDis/';
     private zonaUrl: string = 'http://bromero.inei.com.pe:8000/recargaZona/';
-    private tablaUrlAux: string = 'http://bromero.inei.com.pe:8000/calidadrecargaTabla01/';
-    private tablaUrlAux2: string = 'http://bromero.inei.com.pe:8000/calidadrecargaTabla02/';
-    private tablaUrlAux4: string = 'http://bromero.inei.com.pe:8000/CalidadList/';
-    private tablaReporte: string = 'http://bromero.inei.com.pe:8000/tablaReporte/';
+    private tablaReporte: string = 'http://bromero.inei.com.pe:8000/tablaReportetabular/';
     
-    
-    /*private depaUrl: string = 'http://bromero.inei.com.pe:8090/recargaDepa/';
-    private provUrl: string = 'http://bromero.inei.com.pe:8090/recargaProv/';
-    private distUrl: string = 'http://bromero.inei.com.pe:8090/recargaDis/';
-    private zonaUrl: string = 'http://bromero.inei.com.pe:8090/recargaZona/';
-    private tablaUrlAux: string = 'http://bromero.inei.com.pe:8090/calidadrecargaTabla01/';*/
-
     getCargaDepaInicial(): Observable < Object >{
         return this.http.get(this.depaUrl).map(this.extractData).catch(this.handleError)
     }
@@ -74,13 +76,7 @@ export class ControldecalidadService {
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
 
-    getTabla(tipo: string="0", ccdd: string="0", ccpp: string="0", ccdi: string="0" ,zona: string="0"): Observable < Object > {
-        let queryparameters:string = `${tipo}/${ccdd}/${ccpp}/${ccdi}/${zona}/`;
-        let url:string = this.tablaUrlAux + queryparameters;
-        return this.http.get(url).map(this.extractData).catch(this.handleError)
-    }
-
-    getTablaAux(tipo: string="0", ccdd: string="0", ccpp: string="0", ccdi: string="0"): Observable < Object > {
+    getTabla(tipo: string="0", ccdd: string="0", ccpp: string="0", ccdi: string="0"): Observable < Object > {
         let queryparameters:string = `${tipo}/${ccdd}${ccpp}${ccdi}/`;
         let url:string = this.tablaReporte + queryparameters;
         return this.http.get(url).map(this.extractData).catch(this.handleError)
@@ -96,23 +92,5 @@ export class ControldecalidadService {
             error.status ? `${error.status} - ${error.statusText}` : 'Server error';
         console.error(errMsg);
         return Observable.throw(errMsg);
-    }
-    
-    getRegistro(url:string=''): Observable < Object > {
-        let tablaUrlAux3 = this.tablaUrlAux2 + url;
-        if(url!=''){
-            return this.http.get(tablaUrlAux3).map(this.extractData)
-        }else{
-            return this.http.get(this.tablaUrlAux).map(this.extractData)
-        }        
-    }
-
-    guardarObservacion(data): Observable < Object > {
-        let body = JSON.stringify(data);
-        let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.tablaUrlAux4, body, options)
-            .map(Helpers.extractData)
-            .catch(Helpers.handleError);
     }
 }

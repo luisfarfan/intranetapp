@@ -42,6 +42,11 @@ function getRoutes() {
     loadChildren: () => System.import('../dashboard/dashboard.module')
   });
 
+  results.push({
+    path: 'cursos',
+    loadChildren: () =>System.import(`./../../apps/cursos-y-examenes/cursos-y-examenes.module`)
+  });
+
   if (validsession) {
     let modules: Array < string > = < Array < string >> session[0]['routes'];
     modules.map(module => results.push({

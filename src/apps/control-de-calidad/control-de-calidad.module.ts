@@ -63,6 +63,7 @@ class Controldecalidad {
   private ccpp: any;
   private ccdi: any;
   private zona: any = 0;
+  private area: string="0";
   private tipo_cro: number = 0;
   private contador: number = 0;
   private verZona = false;
@@ -218,15 +219,24 @@ class Controldecalidad {
   getRuta() {
     let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona;
     let ubigeo = this.ccdd + this.ccpp + this.ccdi;
-    this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/${urlCroquisAux}.pdf`);
-    this.urlSeccion = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://172.16.2.205:8000/descargarPdf/${ubigeo}/${this.zona}/1/`);
-    this.urlEmpadronador = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://172.16.2.205:8000/descargarPdf/${ubigeo}/${this.zona}/2/`);
+    if(this.area=="0"){
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/urbano/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    }else{
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/rural/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    } 
+    this.urlSeccion = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://172.16.2.205:8000/descargarPdf/${ubigeo}/${this.zona}/1/${this.area}/`);
+    this.urlEmpadronador = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://172.16.2.205:8000/descargarPdf/${ubigeo}/${this.zona}/2/${this.area}/`);
   }
 
   cambiarPdfSeccion(seccion) {
     this.seccion = seccion;
     let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona + ('00' + this.seccion).slice(-3);
-    this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/${urlCroquisAux}.pdf`);
+    let ubigeo = this.ccdd + this.ccpp + this.ccdi;
+    if(this.area=="0"){
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/urbano/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    }else{
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/rural/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    }
     jQuery('#tablaCroAux tr').click(function () {
       jQuery('#tablaCroAux tr').each(function () {
         jQuery(this).removeClass('intro')
@@ -239,7 +249,12 @@ class Controldecalidad {
     this.seccion = seccion;
     this.aeu = aeu;
     let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona + ('00' + this.seccion).slice(-3) + this.aeu;
-    this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/${urlCroquisAux}.pdf`);
+    let ubigeo = this.ccdd + this.ccpp + this.ccdi;
+    if(this.area=="0"){
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/urbano/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    }else{
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/rural/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    }
     jQuery('#tablaCroAux tr').click(function () {
       jQuery('#tablaCroAux tr').each(function () {
         jQuery(this).removeClass('intro')
@@ -254,13 +269,22 @@ class Controldecalidad {
       })
     this.controldecalidadservice.getTablaAux('2', this.ccdd, this.ccpp, this.ccdi).subscribe(res => {
       this.datareporte03 = <Reporte03Interface>res;
-      console.log(this.datareporte03);
       })        
   }
 
+  guardarObs(){
+    let ubigeo = this.ccdd + this.ccpp + this.ccdi;
+    var texto = jQuery("textarea#comentario").val();
+    let data = {ubigeo:ubigeo,zona:this.zona,aeu:this.aeu,texto:texto}
+    this.controldecalidadservice.guardarObservacion(data).subscribe(res => {      
+    })
+  }
+
+  guardarInd(){
+    
+  }
+
   descargarExcel(id, nom) {
-    console.log(id)
-    console.log(nom)
     Helpers.descargarExcel(id, nom);    
   }
 
