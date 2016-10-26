@@ -51,8 +51,8 @@
 					REGISTRAR LOCAL
 				</header>
 				<div class="widget-body">
-					<form [formGroup]="localForm" (ngSubmit)="onSubmit()">
-						<div class="row">
+					<form (ngSubmit)="onSubmit()">
+						<div [formGroup]="localForm" class="row">
 							<div class="col-lg-4">
 								<div class="form-group">
 									<label for="distrito">Local</label>
@@ -86,7 +86,8 @@
 							<div class="col-lg-2">
 								<div class="form-group">
 									<label for="distrito">Fecha Inicio</label>
-                                    <input type="text" [textMask]="{mask: mask_date}" formControlName="fecha_inicio" class="form-control">
+									<input type="text" [textMask]="{mask: mask_date}" placeholder="DD/MM/YYYY" #fecha_inicio_input formControlName="fecha_inicio"
+										class="form-control">
 								</div>
 								<div *ngIf="formErrors.fecha_inicio" class="alert alert-danger">
 									{{ formErrors.fecha_inicio }}
@@ -102,7 +103,7 @@
 							<div class="col-lg-2">
 								<div class="form-group">
 									<label for="distrito">Fecha Fin</label>
-									<input type="text" [textMask]="{mask: mask_date}" formControlName="fecha_fin" class="form-control">
+									<input type="text" [textMask]="{mask: mask_date}" formControlName="fecha_fin" placeholder="DD/MM/YYYY" class="form-control">
 								</div>
 								<div *ngIf="formErrors.fecha_fin" class="alert alert-danger">
 									{{ formErrors.fecha_fin }}
@@ -166,32 +167,33 @@
 								</tabset>
 							</div>
 						</div>
-						<button [disabled]="!localForm.valid || submitted" md-raised-button color="accent">Guardar</button>
+						<div class="row">
+							<div class="col-lg-12">
+								<section class="widget" widget>
+									<header>INFRAESTRUCTURA DE LOCAL</header>
+									<div class="widget-body">
+										<div class="row">
+											<div *ngFor="let infra of infraestructuras; let i=index" class="col-lg-3">
+												<div class="form-group">
+													<label>{{ infra.desc_infraestructura }} <span class="text-danger">(*)</span></label>
+													<select [(ngModel)]="infra.estado1" name="{{'estado'+i}}" (ngModelChange)="setEstadoInfra($event,i)" class="form-control">
+										<option value="0">Seleccione</option>
+										<option *ngFor="let est of infra.estado" [value]="est">{{ est }}</option></select>
+												</div>
+											</div>
+										</div>
+									</div>
+								</section>
+							</div>
+						</div>
+						<button [disabled]="(!localForm.valid || !selectsInfraestructuras) || submitted" md-raised-button color="accent">Guardar</button>
 						<button type="button" data-toggle="modal" data-target="#myModal" [disabled]="!selectedLocal" md-raised-button color="accent">Registrar Aulas</button>
 					</form>
 				</div>
 			</section>
 		</div>
 	</div>
-	<div class="row">
-		<div class="col-lg-12">
-			<section class="widget" widget>
-				<header>INFRAESTRUCTURA DE LOCAL</header>
-				<div class="widget-body">
-					<div class="row">
-						<div *ngFor="let infra of infraestructuras; let i=index" class="col-lg-3">
-							<div class="form-group">
-								<label>{{ infra.desc_infraestructura }} <span class="text-danger">(*)</span></label>
-								<select [(ngModel)]="infra.estado1" (ngModelChange)="setEstadoInfra($event,i)" class="form-control">
-										<option value="0">Seleccione</option>
-										<option *ngFor="let est of infra.estado" [value]="est">{{ est }}</option></select>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-		</div>
-	</div>
+
 </div>
 <div *ngIf="alert_nofindlocales" class="alert alert-danger">
 	<strong>No existen locales para este ubigeo.</strong>

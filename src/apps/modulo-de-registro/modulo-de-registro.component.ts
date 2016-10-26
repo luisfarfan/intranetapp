@@ -7,12 +7,14 @@ import { Local, Aula } from './local';
 import { Infraestructura } from './infraestructura';
 import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
 import { CustomValidators } from 'ng2-validation';
+import { dateValidator, FechaisMayor } from './../CustomValidators';
 @Component({
   templateUrl: 'modulo-de-registro.html',
   providers: [RegistroService],
   styleUrls: ['styles.scss']
 })
 export class RegistroComponent implements OnInit {
+  @ViewChild('fecha_inicio_input') fecha_inicio_input
   public mask_date = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]
   local = new Local();
   aula = new Aula();
@@ -21,6 +23,7 @@ export class RegistroComponent implements OnInit {
   accion_addlocal: boolean = false;
   accion_editlocal: boolean = false;
   registrarAula: boolean = false;
+  selectsInfraestructuras: boolean = false;
   aulasbylocal: any;
   selectedAula: any;
   // Ubigeo data
@@ -45,7 +48,7 @@ export class RegistroComponent implements OnInit {
   localForm: FormGroup;
   formErrors = {
     'nombre_local': '',
-    'fecha_inicio':'',
+    'fecha_inicio': '',
     'direccion': '',
     'referencia': '',
     'total_pea': '',
@@ -69,8 +72,8 @@ export class RegistroComponent implements OnInit {
 
   ngOnInit() {
     this.getDepartamentos();
-    this.buildForm();
     this.local = new Local();
+    this.buildForm();
     this.getInfraestructura();
   }
 
@@ -127,6 +130,13 @@ export class RegistroComponent implements OnInit {
     console.log(val, i);
     console.log(this.infraestructuras[i].estado1 = val);
     console.log(this.infraestructuras)
+    let count = 0;
+    for (let k in this.infraestructuras) {
+      if (this.infraestructuras[k].estado1 == '') {
+        count++;
+      }
+    }
+    count > 0 ? this.selectsInfraestructuras = false : this.selectsInfraestructuras = true;
     //this.infraSelected.push({id_infraestructura : this.infraestructuras[i].id_infraestructura, estado:val})
     //console.log(this.infraestucturas[i].estado = val);
   }
@@ -202,9 +212,9 @@ export class RegistroComponent implements OnInit {
     this.localForm = this.fb.group({
       'nombre_local': [this.local.nombre_local, [Validators.required, Validators.minLength(10), Validators.maxLength(200),]
       ],
-      'fecha_inicio': [this.local.fecha_inicio, [Validators.required]
+      'fecha_inicio': [this.local.fecha_inicio, [Validators.required, dateValidator(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]
       ],
-      'fecha_fin': [this.local.fecha_fin, [Validators.required]
+      'fecha_fin': [this.local.fecha_fin, [Validators.required, dateValidator(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]
       ],
       'direccion': [this.local.direccion, [Validators.required, Validators.minLength(10), Validators.maxLength(200)],
       ],
@@ -233,6 +243,7 @@ export class RegistroComponent implements OnInit {
       data => this.onValueChanged(data)
     )
     this.onValueChanged();
+    console.log(this.local);
   }
   validationMessages = {
     'nombre_local': {
@@ -242,9 +253,11 @@ export class RegistroComponent implements OnInit {
     },
     'fecha_fin': {
       'required': 'Fecha fin es requerido',
+      'dateValidator': 'Fecha no valida'
     },
     'fecha_inicio': {
       'required': 'Fecha inicio es requerido',
+      'dateValidator': 'Fecha no valida'
     },
     'direccion': {
       'required': 'Dirección es requerido',
@@ -341,6 +354,7 @@ export class RegistroComponent implements OnInit {
   findLocales() {
 
     this.accion_addlocal = false;
+    this.accion_editlocal = false;
     console.log(this.submitted = false)
     let ubigeo: string = `${this.selectedDepartamento}${this.selectedProvincia}${this.selectedDistrito}`
     this.registroservice.getLocalbyUbigeo(ubigeo).subscribe(data => {
