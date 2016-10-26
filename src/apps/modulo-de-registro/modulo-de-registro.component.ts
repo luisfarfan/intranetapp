@@ -126,19 +126,19 @@ export class RegistroComponent implements OnInit {
     });
   }
 
-  setEstadoInfra(val, i) {
-    console.log(val, i);
-    console.log(this.infraestructuras[i].estado1 = val);
-    console.log(this.infraestructuras)
+  validEstadosInfraestructuras() {
     let count = 0;
     for (let k in this.infraestructuras) {
-      if (this.infraestructuras[k].estado1 == '') {
+      if (this.infraestructuras[k].estado1 == '' || this.infraestructuras[k].estado1 == 0) {
         count++;
       }
     }
     count > 0 ? this.selectsInfraestructuras = false : this.selectsInfraestructuras = true;
-    //this.infraSelected.push({id_infraestructura : this.infraestructuras[i].id_infraestructura, estado:val})
-    //console.log(this.infraestucturas[i].estado = val);
+  }
+
+  setEstadoInfra(val, i) {
+    this.infraestructuras[i].estado1 = val;
+    this.validEstadosInfraestructuras();
   }
 
   addToast(options: ToastOptions, tipo: string = 'default') {
@@ -352,7 +352,6 @@ export class RegistroComponent implements OnInit {
   }
 
   findLocales() {
-
     this.accion_addlocal = false;
     this.accion_editlocal = false;
     console.log(this.submitted = false)
@@ -366,11 +365,11 @@ export class RegistroComponent implements OnInit {
         this.searchedlocales = true;
       }
     });
+    this.validEstadosInfraestructuras();
   }
 
   addAula() {
     this.aula.id_local = this.local.id_local
-    console.log(this.aula);
     let data = Helpers.booleanToYesNo(this.aula)
     if (this.selectedAula) {
       this.registroservice.editAula(this.selectedAula.id_aula, data).subscribe(_ => {
