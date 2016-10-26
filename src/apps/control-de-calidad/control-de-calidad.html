@@ -30,13 +30,13 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <div class="form-group">
                     <label for="lArea"><h5> ÁREA</h5></label>
-                    <select class="form-control" name="areas">
+                    <select class="form-control" name="areas" (change)="cambiarArea($event.target.value)">
                         <option value="0"> Urbana</option>
                         <option value="1"> Rural</option>
                     </select>
                 </div>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <div class="form-group">
+                <div *ngIf="urbanoZona" class="form-group">
                     <label for="lZona"><h5> ZONA</h5></label>
                     <select class="form-control" name="zonas" (change)="cargarAeu($event.target.value)">
                         <option value="0">TODOS</option>
@@ -99,9 +99,10 @@
                     <p-column field="DEPARTAMENTO" header="DEPARTAMENTO" [sortable]="true"></p-column>
                     <p-column field="PROVINCIA" header="PROVINCIA" [sortable]="true"></p-column>
                     <p-column field="DISTRITO" header="DISTRITO" [sortable]="true"></p-column>
-                    <p-column field="ZONA" header="ZONA" [sortable]="true"></p-column>
+                    <p-column *ngIf="urbanoZona" field="ZONA" header="ZONA" [sortable]="true"></p-column>                    
                     <p-column field="NUM_SEC" header="NRO. DE SECCIONES" [sortable]="true"></p-column>
-                    <p-column field="NUM_AEU" header="NRO. DE AEUs" [sortable]="true"></p-column>
+                    <p-column *ngIf="urbanoZona" field="NUM_AEU" header="NRO. DE AEUs" [sortable]="true"></p-column>
+                    <p-column *ngIf="ruralZona" field="NUM_AEU" header="NRO. DE AERs" [sortable]="true"></p-column>
                     <p-column field="EST_CONT" header="NRO. DE ZONAS OBSERVADAS" [sortable]="true"></p-column>
                     <p-column field="EST_CONT" styleClass="col-button" header="ESTADO">
                         <template let-col let-car="rowData" pTemplate type="body">
@@ -112,6 +113,11 @@
                         </template>
                     </p-column>
                     <p-column *ngIf="verZona" header="VER">
+                        <template pTemplate type="body">
+                            <button (click)="getRegistro(0)" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fa fa-pencil"></i></button>
+                        </template>
+                    </p-column>
+                    <p-column *ngIf="verDistrito" header="VER">
                         <template pTemplate type="body">
                             <button (click)="getRegistro(0)" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fa fa-pencil"></i></button>
                         </template>

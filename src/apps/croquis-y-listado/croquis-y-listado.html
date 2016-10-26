@@ -37,7 +37,7 @@
                     </select>
                 </div>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <div class="form-group">
+                <div *ngIf="urbanoZona" class="form-group">
                     <label for="lZona"><h5> ZONA</h5></label>
                     <select class="form-control" name="zonas" (change)="cargarAeu($event.target.value)">
                         <option value="0">TODOS</option>
@@ -50,7 +50,6 @@
                 <div *ngIf="distrito" class="col-md-2">
                     <button type="button" (click)="procesarCro()" class="btn btn-primary">Procesar</button>
                 </div>
-
                 <div class="col-md-12" align="left">
                     <hr style="color: black; background-color: black; width:100%;" />
                     <a class="btn btn-primary" (click)="descargarExcel('tablaCro', 'CROQUIS_Y_LISTADO')">EXCEL <i class="fa fa-download"></i></a>
@@ -79,9 +78,10 @@
                     <p-column field="DEPARTAMENTO" header="DEPARTAMENTO" [sortable]="true"></p-column>
                     <p-column field="PROVINCIA" header="PROVINCIA" [sortable]="true"></p-column>
                     <p-column field="DISTRITO" header="DISTRITO" [sortable]="true"></p-column>
-                    <p-column field="ZONA" header="ZONA" [sortable]="true"></p-column>
+                    <p-column *ngIf="urbanoZona" field="ZONA" header="ZONA" [sortable]="true"></p-column>
                     <p-column field="NUM_SEC" header="NRO. DE SECCIONES" [sortable]="true"></p-column>
-                    <p-column field="NUM_AEU" header="NRO. DE AEUs" [sortable]="true"></p-column>
+                    <p-column *ngIf="urbanoZona" field="NUM_AEU" header="NRO. DE AEUs" [sortable]="true"></p-column>
+                    <p-column *ngIf="ruralZona" field="NUM_AEU" header="NRO. DE AERs" [sortable]="true"></p-column> 
                     <p-column field="EST_CROQUIS" styleClass="col-button" header="ESTADO">
                         <template let-col let-car="rowData" pTemplate type="body">
                             <span [ngSwitch]="car[col.field]">
@@ -104,7 +104,23 @@
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" [href]=urlCroquis download>ZONA</a>
                                     <a class="dropdown-item" [href]=urlSeccion download> SECCION</a>
-                                    <a class="dropdown-item" [href]=urlEmpadronador download> EMPADRONADOR</a>
+                                    <a class="dropdown-item" [href]=urlEmpadronador download> AEU</a>
+                                </div>
+                            </div>
+                        </template>
+                    </p-column>
+                    <p-column *ngIf="verDistrito" header="VER">
+                        <template pTemplate type="body">
+                            <button (click)="getRegistro(0)" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fa fa-pencil"></i></button>
+                        </template>
+                    </p-column>
+                    <p-column *ngIf="verDistrito" header="DESCARGAR">
+                        <template pTemplate type="body">
+                            <div class="btn-group" style="position:absolute">
+                                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-download"> </i></button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" [href]=urlSeccion download> SECCION</a>
+                                    <a class="dropdown-item" [href]=urlEmpadronador download> AER</a>
                                 </div>
                             </div>
                         </template>
@@ -129,19 +145,26 @@
                     <div class="col-md-3" style="overflow-y:scroll;">
                         <section class="widget">
                             <form class="form-inline">
-                                <div class="form-group">
+                                <label for="lDepa"><h5>{{nombreDepa}} - </h5></label>
+                                <label for="lPro"><h5>{{nombreProv}} - </h5></label>
+                                <label for="lDis"><h5>{{nombreDist}}</h5></label>
+                                <div class="form-group">                                    
                                     <label for="lSeccion"><h5> SECCIÓN</h5></label>
-                                    <select class="form-control" name="seccion" (change)="getRegistro($event.target.value)">
+                                    <select *ngIf="urbanoZona" class="form-control" name="seccion" (change)="getRegistro($event.target.value)">
                                         <option value="0">ZONA</option>
                                         <option value="1">SECCIÓN</option>
-                                        <option value="2">EMPADRONADOR</option>                        
+                                        <option value="2">AEU</option>                        
+                                    </select>
+                                    <select *ngIf="ruralZona" class="form-control" name="seccion" (change)="getRegistro($event.target.value)">
+                                        <option value="1">SECCIÓN</option>
+                                        <option value="2">AER</option>                        
                                     </select>
                                     <a class="btn btn-primary" [href]=urlCroquis download> PDF  <i class="fa fa-download"> </i></a>
                                 </div>
                             </form>
                         </section>
                         <section class="widget">
-                            <table border="2" class="table table-bordered table-lg mt-lg mb-0" id="tablaCroAux" class="scroll">
+                            <table *ngIf="urbanoZona" border="2" class="table table-bordered table-lg mt-lg mb-0" id="tablaCroAux" class="scroll">
                                 <thead>
                                     <tr>
                                         <th width="11%">Zona</th>
@@ -153,6 +176,31 @@
                                 <tbody><!-- max-height="500px">-->
                                     <tr *ngFor="let re1 of registros2">
                                         <td align="center">{{re1.ZONA}}</td>
+                                        <td align="center" *ngIf="seccionAux" (click)="cambiarPdfSeccion(re1.SECCION)">{{re1.SECCION}}</td>
+                                        <td align="center" *ngIf="aeuAux" (click)="cambiarPdfAeu(re1.SECCION,re1.AEU_FINAL)">{{re1.AEU_FINAL}}</td>
+                                        <td align="center"> <span class="btn btn-success">EXITOSO</span> </td>
+                                        <!--<td>
+                                            <span [ngSwitch]="[re1.EST_CROQUIS]">
+                                            <span *ngSwitchCase="1"> - </span>
+                                            <span *ngSwitchCase="2" class="btn btn-warning">PENDIENTE</span>
+                                            <span *ngSwitchCase="3" class="btn btn-primary">EN PROCESO</span>
+                                            <span *ngSwitchCase="4" class="btn btn-success">EXITOSO</span>
+                                            <span *ngSwitchCase="9" class="btn btn-danger">FALLIDO</span>
+                                            </span>                                            
+                                        </td>-->
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table *ngIf="ruralZona" border="2" class="table table-bordered table-lg mt-lg mb-0" id="tablaCroAux" class="scroll">
+                                <thead>
+                                    <tr>
+                                        <th *ngIf="seccionAux" width="10%">Sección</th>
+                                        <th *ngIf="aeuAux" width="10%">Nro. de AER</th>
+                                        <th width="11%">Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody><!-- max-height="500px">-->
+                                    <tr *ngFor="let re1 of registros2">
                                         <td align="center" *ngIf="seccionAux" (click)="cambiarPdfSeccion(re1.SECCION)">{{re1.SECCION}}</td>
                                         <td align="center" *ngIf="aeuAux" (click)="cambiarPdfAeu(re1.SECCION,re1.AEU_FINAL)">{{re1.AEU_FINAL}}</td>
                                         <td align="center"> <span class="btn btn-success">EXITOSO</span> </td>

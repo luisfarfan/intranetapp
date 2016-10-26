@@ -58,6 +58,9 @@ class Croquisylistado {
   private ccpp: any;
   private ccdi: any;
   private zona: any = 0;
+  private urbanoZona :boolean=true;
+  private ruralZona :boolean=false;
+  private verDistrito: boolean=false;
   private seccion: any = 0;
   private aeu: any = 0;
   private area: string="0";
@@ -80,6 +83,9 @@ class Croquisylistado {
   private zonas: ZonaInterface;
   private thisAux: any;
   
+  private nombreDepa: string="";
+  private nombreDist: string="";
+  private nombreProv: string="";
 
   private urlSeccion:any="";
   private urlEmpadronador:any="";
@@ -102,6 +108,7 @@ class Croquisylistado {
     this.ccdd = ccdd;
     this.distrito = false;
     this.verZona = false;
+    this.verDistrito=false;
     if (this.ccdd != 0) {
       this.croquisylistado.getProvincias(ccdd, ccpp).subscribe(res => {
         this.provincias = <ProvinciaInterface>res;
@@ -119,6 +126,7 @@ class Croquisylistado {
     this.ccpp = ccpp;
     this.distrito = false;
     this.verZona = false;
+    this.verDistrito=false;
     if (this.ccpp != 0) {
       this.croquisylistado.getDistritos(this.ccdd, ccpp, "0").subscribe(res => {
         this.distritos = <DistritoInterface>res;
@@ -136,6 +144,9 @@ class Croquisylistado {
     this.verZona = false;
     let ubigeo = this.ccdd + this.ccpp + ccdi;
     this.distrito = true;
+    if(this.area=="1"){
+      this.verDistrito=true;
+    }
     if (this.ccdi != 0) {
       this.croquisylistado.getZonas(ubigeo).subscribe(res => {
         this.zonas = <ZonaInterface>res;
@@ -149,7 +160,22 @@ class Croquisylistado {
   }
   
   cambiarArea(area: string){
-    this.area=area;
+    this.distrito=false;
+    this.area = area;
+    this.verDistrito=false;
+    this.verZona=false;
+    if(this.area=="0"){
+      this.urbanoZona=true;
+      this.ruralZona=false;      
+    }else{
+      this.urbanoZona=false;
+      this.ruralZona=true;
+    }
+    this.cargarDepa()
+    this.cargarTabla("0","0","0","0","0") //se debe cambiar el query para cada area (urbana / rural)
+    this.provincias=null;
+    this.distritos=null;
+    this.zonas=null;   
   }
 
   cargarAeu(zona: string) {
@@ -165,10 +191,20 @@ class Croquisylistado {
   }
 
   cargarTabla(tipo: string, ccdd: string, ccpp: string, ccdi: string, zona: string) {
-    this.croquisylistado.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
-      this.tabledata = true;
-      this.registros = <RegistroInterface>res;
-    })
+    if(this.area=="0"){
+      this.croquisylistado.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
+        this.tabledata = true;
+        this.registros = <RegistroInterface>res;
+        this.nombreDepa = this.registros[0].DEPARTAMENTO;
+        this.nombreProv = this.registros[0].PROVINCIA;
+        this.nombreDist = this.registros[0].DISTRITO;
+      })
+    }else{
+      this.croquisylistado.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
+        this.tabledata = true;
+        this.registros = <RegistroInterface>res;//null;
+      })
+    }    
   }
 
   getRegistro(tipo_cro) {    
@@ -248,9 +284,9 @@ class Croquisylistado {
   procesarCro() {
     this.urlProcesar = '';
     if (this.zona != '0') {
-      this.urlProcesar = this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/' + this.zona + '/';
+      this.urlProcesar = this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/' + this.area + '/' + this.zona + '/';
     } else {
-      this.urlProcesar = this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/0/';
+      this.urlProcesar = this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/' + this.area + '/' + '/0/';
     }
     alert("PROCESANDO GENERACION DE CROQUIS Y LISTADO: " + this.urlProcesar)
   }

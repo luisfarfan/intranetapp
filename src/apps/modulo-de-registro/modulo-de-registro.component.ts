@@ -13,8 +13,7 @@ import { CustomValidators } from 'ng2-validation';
   styleUrls: ['styles.scss']
 })
 export class RegistroComponent implements OnInit {
-  date: Date = new Date(2016, 10, 23);
-  date2: Date = new Date(2016, 10, 23);
+  public mask_date = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]
   local = new Local();
   aula = new Aula();
   deleteaula: boolean = false;
@@ -46,6 +45,7 @@ export class RegistroComponent implements OnInit {
   localForm: FormGroup;
   formErrors = {
     'nombre_local': '',
+    'fecha_inicio':'',
     'direccion': '',
     'referencia': '',
     'total_pea': '',
@@ -202,7 +202,7 @@ export class RegistroComponent implements OnInit {
     this.localForm = this.fb.group({
       'nombre_local': [this.local.nombre_local, [Validators.required, Validators.minLength(10), Validators.maxLength(200),]
       ],
-      'fecha_inicio': [this.local.fecha_inicio, [Validators.required]
+      'fecha_inicio': [this.local.fecha_inicio, [Validators.required, Validators.pattern(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]
       ],
       'fecha_fin': [this.local.fecha_fin, [Validators.required]
       ],

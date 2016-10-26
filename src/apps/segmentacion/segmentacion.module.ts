@@ -50,6 +50,11 @@ class Segmentacion{
   private ccdd :any;
   private ccpp :any;
   private ccdi :any;
+  private area :string="0";
+  
+  private urbanoZona :boolean=true;
+  private ruralZona :boolean=false;
+
   private zona :any=0;
   private contador :number=0;
   private verZona=false;
@@ -64,9 +69,6 @@ class Segmentacion{
   private provincias:ProvinciaInterface;
   private distritos:DistritoInterface;
   private zonas:ZonaInterface;
-  private abc: boolean=true;
-  private tablaaa:any;
-  private tablaaa1:any;
 
   constructor(private segmentacionservice: SegmentacionService, private elementRef: ElementRef) {
     this.cargarDepa()
@@ -117,6 +119,22 @@ class Segmentacion{
     }    
   }
 
+  cambiarArea(area: string){
+    this.area = area;
+    if(this.area=="0"){
+      this.urbanoZona=true;
+      this.ruralZona=false;
+    }else{
+      this.urbanoZona=false;
+      this.ruralZona=true;
+    }
+    this.cargarDepa()
+    this.cargarTabla("0","0","0","0","0") //se debe cambiar el query para cada area (urbana / rural)
+    this.provincias=null;
+    this.distritos=null;
+    this.zonas=null;   
+  }
+
   cargarZonas(ccdi: string) {
     this.ccdi = ccdi;
     this.verZona=false;
@@ -146,22 +164,19 @@ class Segmentacion{
   }
 
   cargarTabla(tipo: string, ccdd: string, ccpp: string, ccdi: string, zona: string){
-    this.segmentacionservice.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
-      this.registros= < RegistroInterface > res;      
-    })
-    /*this.segmentacionservice.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
-      if(this.contador==0){
-        this.tablaaa = $('#tablaSeg').DataTable();
-        this.contador=2;
-      }else{
-        this.tablaaa.destroy();
-        this.tablaaa = $('#tablaSeg').DataTable();                    
-      }      
-    })*/
+    if(this.area=="0"){
+      this.segmentacionservice.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
+        this.registros= < RegistroInterface > res;      
+      })
+    }else{
+      this.segmentacionservice.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
+        this.registros= null;      
+      })
+    }
+    
   }
 
   getRegistro() {
-    this.url=''; //no he validado si es necesaria esta línea
     this.url = '4/' + this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/' + this.zona + '/';
     this.segmentacionservice.getRegistro(this.url).subscribe((data) => {
       this.registro = < RegistroInterface > data

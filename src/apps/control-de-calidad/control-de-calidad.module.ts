@@ -64,6 +64,10 @@ class Controldecalidad {
   private ccdi: any;
   private zona: any = 0;
   private area: string="0";
+
+  private urbanoZona :boolean=true;
+  private ruralZona :boolean=false;
+
   private tipo_cro: number = 0;
   private contador: number = 0;
   private verZona = false;
@@ -95,6 +99,7 @@ class Controldecalidad {
   private datareporte03: Reporte03Interface;
   private tipo: string = '';
 
+  private verDistrito: boolean=false;
 
   constructor(private controldecalidadservice: ControldecalidadService, private elementRef: ElementRef, private domSanitizer: DomSanitizer) {
     this.cargarDepaInicial()
@@ -121,6 +126,7 @@ class Controldecalidad {
   cargarProvincias(ccdd: string, ccpp: string = "0") {
     this.ccdd = ccdd;
     this.distrito = false;
+    this.verDistrito=false;
     this.verZona = false;
     this.verZonaPrevia = false;
     if (this.ccdd != 0) {
@@ -137,6 +143,7 @@ class Controldecalidad {
   }
 
   cargarDistritos(ccpp: string) {
+    this.verDistrito=false;
     this.ccpp = ccpp;
     this.distrito = false;
     this.verZona = false;
@@ -153,18 +160,40 @@ class Controldecalidad {
     }
   }
 
+  cambiarArea(area: string){
+    this.verDistrito=false;
+    this.verZona = false;
+    this.area = area;
+    if(this.area=="0"){
+      this.urbanoZona=true;
+      this.ruralZona=false;
+    }else{
+      this.urbanoZona=false;
+      this.ruralZona=true;
+    }
+    this.cargarDepa()
+    this.cargarTabla("0","0","0","0","0") //se debe cambiar el query para cada area (urbana / rural)
+    this.provincias=null;
+    this.distritos=null;
+    this.zonas=null;   
+  }
+
   cargarZonas(ccdi: string) {
     this.ccdi = ccdi;
     this.verZona = false;
     let ubigeo = this.ccdd + this.ccpp + ccdi;
     this.distrito = true;
     if (this.ccdi != 0) {
+      if(this.area=="1"){        
+        this.verDistrito=true;
+      }
       this.controldecalidadservice.getZonas(ubigeo).subscribe(res => {
         this.zonas = <ZonaInterface>res;
       })
       this.verZonaPrevia = true;
       this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
     } else {
+      this.verDistrito=false;
       this.zonas = null;
       this.distrito = false;
       this.verZonaPrevia = false;
@@ -185,9 +214,15 @@ class Controldecalidad {
   }
 
   cargarTabla(tipo: string, ccdd: string, ccpp: string, ccdi: string, zona: string) {
-    this.controldecalidadservice.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
-      this.registros = <RegistroInterface>res;
-    })
+    if(this.area=="0"){
+      this.controldecalidadservice.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
+        this.registros = <RegistroInterface>res;
+      })
+    }else{
+      this.controldecalidadservice.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
+        this.registros = <RegistroInterface>res;//null;
+      })
+    }
   }
 
   getRegistro(tipo_cro) {

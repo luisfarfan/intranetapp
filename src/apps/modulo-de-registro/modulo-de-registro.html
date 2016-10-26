@@ -86,7 +86,7 @@
 							<div class="col-lg-2">
 								<div class="form-group">
 									<label for="distrito">Fecha Inicio</label>
-									<datetime [timepicker]="false" formControlName="fecha_inicio"></datetime>
+                                    <input type="text" [textMask]="{mask: mask_date}" formControlName="fecha_inicio" class="form-control">
 								</div>
 								<div *ngIf="formErrors.fecha_inicio" class="alert alert-danger">
 									{{ formErrors.fecha_inicio }}
@@ -102,7 +102,7 @@
 							<div class="col-lg-2">
 								<div class="form-group">
 									<label for="distrito">Fecha Fin</label>
-									<datetime [timepicker]="false" formControlName="fecha_fin"></datetime>
+									<input type="text" [textMask]="{mask: mask_date}" formControlName="fecha_fin" class="form-control">
 								</div>
 								<div *ngIf="formErrors.fecha_fin" class="alert alert-danger">
 									{{ formErrors.fecha_fin }}

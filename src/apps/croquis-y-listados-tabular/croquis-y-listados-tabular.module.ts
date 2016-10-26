@@ -81,6 +81,10 @@ class Croquisylistadostabular {
   private thisAux: any;
   private urlSeccion:any="";
   private urlEmpadronador:any="";
+
+  private nombreDepa: string="";
+  private nombreDist: string="";
+  private nombreProv: string="";
   
   constructor(private croquisylistadostabular: CroquisylistadostabularService, private elementRef: ElementRef, private domSanitizer: DomSanitizer) {
     this.cargarDepa()
@@ -166,6 +170,9 @@ class Croquisylistadostabular {
     this.croquisylistadostabular.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
       this.tabledata = true;
       this.registros = <RegistroInterface>res;
+      this.nombreDepa = this.registros[0].DEPARTAMENTO;
+      this.nombreProv = this.registros[0].PROVINCIA;
+      this.nombreDist = this.registros[0].DISTRITO;
     })
   }
 

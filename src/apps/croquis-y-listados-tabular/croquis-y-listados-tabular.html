@@ -100,7 +100,7 @@
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" [href]=urlCroquis download>ZONA</a>
                                     <a class="dropdown-item" [href]=urlSeccion download> SECCION</a>
-                                    <a class="dropdown-item" [href]=urlEmpadronador download> EMPADRONADOR</a>
+                                    <a class="dropdown-item" [href]=urlEmpadronador download> AEU</a>
                                 </div>
                             </div>
                         </template>
@@ -125,12 +125,15 @@
                     <div class="col-md-3" style="overflow-y:scroll;">
                         <section class="widget">
                             <form class="form-inline">
+                                <label for="lDepa"><h5>{{nombreDepa}} - </h5></label>
+                                <label for="lPro"><h5>{{nombreProv}} - </h5></label>
+                                <label for="lDis"><h5>{{nombreDist}}</h5></label>
                                 <div class="form-group">
                                     <label for="lSeccion"><h5> SECCIÓN</h5></label>
                                     <select class="form-control" name="seccion" (change)="getRegistro($event.target.value)">
                                         <option value="0">ZONA</option>
                                         <option value="1">SECCIÓN</option>
-                                        <option value="2">EMPADRONADOR</option>                        
+                                        <option value="2">AEU</option>                        
                                     </select>
                                     <a class="btn btn-primary" [href]=urlCroquis download> PDF  <i class="fa fa-download"> </i></a>
                                 </div>

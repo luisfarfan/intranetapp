@@ -59,12 +59,14 @@ export class SegmentacionService {
     getProvincias(ccdd: string, ccpp:string): Observable < Object > {
         let queryparameters:string = `${ccdd}/${ccpp}/`;
         let url: string = this.provUrl+queryparameters;
+        console.log(url);
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
 
     getDistritos(ccdd: string, ccpp:string, ccdi:string): Observable < Object > {
         let queryparameters:string = `${ccdd}/${ccpp}/${ccdi}/`;
         let url: string = this.distUrl + queryparameters;
+        console.log(url);
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
 
