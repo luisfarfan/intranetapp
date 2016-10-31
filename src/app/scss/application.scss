@@ -901,3 +901,32 @@ $theme: md-light-theme($primary, $accent, $warn);
     background-color: #f0ad4e;
     border-color: #eea236;
 }
+
+.tree {
+    padding: 10px 0;
+    font-size: 14px;
+    @media (min-width: map_get($grid-breakpoints, lg)) and (min-height: $screen-lg-height), (max-width: map_get($grid-breakpoints, md) - 1px) {
+        font-size: 16px;
+    }
+}
+
+.tree-node {
+    display: block;
+    color: $sidebar-color;
+    text-decoration: none;
+}
+
+.node-content-wrapper {
+    flex-grow: 1;
+    position: relative;
+}
+
+.tree-children {
+    flex-grow: 1;
+    width: 100%;
+}
+
+.pull-right {
+    position: absolute;
+    right: 10px;
+}

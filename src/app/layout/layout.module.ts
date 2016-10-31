@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { TooltipModule } from 'ng2-bootstrap/ng2-bootstrap';
 
 import { ROUTES } from './layout.routes';
-
+import { TreeModule } from 'angular2-tree-component';
 import { Layout } from './layout.component';
 import { Sidebar } from './sidebar/sidebar.component';
 import { Navbar } from './navbar/navbar.component';
@@ -18,7 +18,7 @@ import { Notifications } from './notifications/notifications.component';
 import { MaterialModule } from '@angular/material';
 
 @NgModule({
-  imports: [CommonModule, TooltipModule, ROUTES, FormsModule,MaterialModule.forRoot()],
+  imports: [CommonModule, TooltipModule,TreeModule, ROUTES, FormsModule,MaterialModule.forRoot()],
   declarations: [Layout, Sidebar, Navbar, ChatSidebar, SearchPipe, Notifications, NotificationLoad, ChatMessage]
 })
 export default class LayoutModule {

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { TreeModule } from 'angular2-tree-component';
 import { RouterModule } from '@angular/router';
 import { Dashboard } from './dashboard.component.ts';
 import { Widget } from '../layout/widget/widget.directive';
@@ -11,7 +11,7 @@ export const routes = [
 
 console.log(Helpers.getJsonSession());
 @NgModule({
-  imports: [CommonModule, RouterModule.forChild(routes)],
+  imports: [CommonModule,TreeModule, RouterModule.forChild(routes)],
   declarations: [Dashboard, Widget]
 })
 export default class DashboardModule {
