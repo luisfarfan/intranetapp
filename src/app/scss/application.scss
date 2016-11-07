@@ -902,6 +902,7 @@ $theme: md-light-theme($primary, $accent, $warn);
     border-color: #eea236;
 }
 
+<<<<<<< HEAD
 .popup {
     position: absolute;
     background-color: #fff;
@@ -927,4 +928,33 @@ legend.scheduler-border {
     padding: 0 10px;
     /* To give a bit of padding on the left and right */
     border-bottom: none;
+=======
+.tree {
+    padding: 10px 0;
+    font-size: 14px;
+    @media (min-width: map_get($grid-breakpoints, lg)) and (min-height: $screen-lg-height), (max-width: map_get($grid-breakpoints, md) - 1px) {
+        font-size: 16px;
+    }
+}
+
+.tree-node {
+    display: block;
+    color: $sidebar-color;
+    text-decoration: none;
+}
+
+.node-content-wrapper {
+    flex-grow: 1;
+    position: relative;
+}
+
+.tree-children {
+    flex-grow: 1;
+    width: 100%;
+}
+
+.pull-right {
+    position: absolute;
+    right: 10px;
+>>>>>>> 960bf933d96d10bb7114cbf4874c7a538eaa78d1
 }

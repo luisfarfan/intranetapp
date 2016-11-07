@@ -29,23 +29,9 @@ import {
 } from './../../app/app.settings';
 import { Helpers } from './../../app/helper';
 
-@Component({
-  selector: 'another',
-  template: '<Tree [nodes]="nodes"></Tree>',
-  providers: [serviceMenu]
-})
-export class AnotherPage {
-  private nodes: any;
-  constructor(private service: serviceMenu) {
-    this.service.getMenu().subscribe(data => {
-      this.nodes = data;
-      console.log(data);
-    })
-  }
-}
 
 @Injectable()
-class serviceMenu {
+export class ServiceMenu {
   constructor(private http: Http) {
 
   }
@@ -55,4 +41,3 @@ class serviceMenu {
   }
 
 }
-

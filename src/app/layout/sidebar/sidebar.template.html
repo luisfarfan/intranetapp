@@ -1,4 +1,5 @@
 <div class="js-sidebar-content">
+<<<<<<< HEAD
 	<header class="logo hidden-sm-down">
 		<a href="index.html">INEI</a>
 	</header>
@@ -20,4 +21,30 @@
 	<!-- main notification links are placed inside of .sidebar-nav -->
 	<div #mymenu>
 	</div>
+=======
+    <header class="logo hidden-sm-down">
+        <a href="index.html">INEI</a>
+    </header>
+    <div class="sidebar-status hidden-md-up">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <span class="thumb-sm avatar pull-xs-right">
+        <img class="img-circle" src="assets/img/people/a5.jpg" alt="...">
+              </span>
+            <!-- .circle is a pretty cool way to add a bit of beauty to raw data.
+           should be used with bg-* and text-* classes for colors -->
+            <span class="circle bg-warning fw-bold text-gray-dark">
+                  13
+              </span> &nbsp; Philip <strong>Smith</strong>
+            <b class="caret"></b>
+        </a>
+        <!-- #notifications-dropdown-menu goes here when screen collapsed to xs or sm -->
+    </div>
+    <!-- main notification links are placed inside of .sidebar-nav -->
+    <Tree #tree [nodes]="nodes" (click)="clickedNode($event)" (onFocus)="onEvent($event)">
+        <template #treeNodeTemplate let-node>
+            <span *ngIf="!node.data.padre_id" class="icon"><i class="fa fa-desktop"></i></span>
+            <span>{{ node.data.name }}</span>
+        </template>
+    </Tree>
+>>>>>>> 960bf933d96d10bb7114cbf4874c7a538eaa78d1
 </div>
