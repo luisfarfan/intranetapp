@@ -9,21 +9,21 @@
                     <label for="lDepartamento"><h5> DEPARTAMENTO</h5></label>
                     <select class="form-control" name="departamentos" (change)="cargarProvincias($event.target.value)">
                         <option value="0">TODOS</option>
-                        <option *ngFor="let el of departamentos" value="{{ el.CCDD }}">{{ el.DEPARTAMENTO }}</option>
+                        <option *ngFor="let el of departamentos" value="{{ el.CCDD }}">{{ el.CCDD }} {{ el.DEPARTAMENTO }}</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="lProvincia"><h5> PROVINCIA</h5></label>
                     <select class="form-control" name="provincias" (change)="cargarDistritos($event.target.value)">
                         <option value="0">TODOS</option>
-                        <option *ngFor="let e of provincias" value="{{ e.CCPP }}">{{ e.PROVINCIA }}</option>
+                        <option *ngFor="let e of provincias" value="{{ e.CCPP }}">{{ e.CCPP }} {{ e.PROVINCIA }}</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="lDistrito"><h5> DISTRITO</h5></label>
                     <select class="form-control" name="distritos" (change)="cargarZonas($event.target.value)">
                         <option value="0">TODOS</option>
-                        <option *ngFor="let e of distritos" value="{{ e.CCDI }}">{{ e.DISTRITO }}</option>
+                        <option *ngFor="let e of distritos" value="{{ e.CCDI }}">{{ e.CCDI }} {{ e.DISTRITO }}</option>
                     </select>
                 </div>
                 <div class="form-group">

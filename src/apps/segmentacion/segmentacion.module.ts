@@ -34,11 +34,14 @@ import {
   DepartamentoInterface
 } from './departamento.interface';
 import {Helpers} from './../../app/helper';
-import {DataTableModule,SharedModule,ButtonModule} from 'primeng/primeng';
+import {DataTableModule,SharedModule,ButtonModule,ConfirmDialogModule} from 'primeng/primeng';
+import { ToastyModule, ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
 import {
   RegistroInterface
 } from './registro.interface';
-
+import {
+  RegistroInterfaceRural
+} from './registrorural.interface';
 
 @Component({
   templateUrl: 'segmentacion.html',
@@ -56,11 +59,9 @@ class Segmentacion{
   private ruralZona :boolean=false;
 
   private zona :any=0;
-  private contador :number=0;
   private verZona=false;
   private url :string='';
   private urlProcesar :string='';
-  private tabledata:boolean = false;
   private distrito:boolean = false;
   private registros:Object;
   private regTabla:Object;
@@ -70,10 +71,15 @@ class Segmentacion{
   private distritos:DistritoInterface;
   private zonas:ZonaInterface;
 
-  constructor(private segmentacionservice: SegmentacionService, private elementRef: ElementRef) {
+  constructor(private segmentacionservice: SegmentacionService, 
+              private elementRef: ElementRef,
+              private toastyService: ToastyService, 
+              private toastyConfig: ToastyConfig) {
     this.cargarDepa()
     this.cargarTabla("0","0","0","0","0")
     this.registro = this.model
+    this.toastyConfig.theme = 'bootstrap';
+    this.toastyConfig.position = "center-center"; 
   }
 
   model = new RegistroInterface();
@@ -129,7 +135,7 @@ class Segmentacion{
       this.ruralZona=true;
     }
     this.cargarDepa()
-    this.cargarTabla("0","0","0","0","0") //se debe cambiar el query para cada area (urbana / rural)
+    this.cargarTabla("0","0","0","0","0")
     this.provincias=null;
     this.distritos=null;
     this.zonas=null;   
@@ -165,15 +171,14 @@ class Segmentacion{
 
   cargarTabla(tipo: string, ccdd: string, ccpp: string, ccdi: string, zona: string){
     if(this.area=="0"){
-      this.segmentacionservice.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
+      this.segmentacionservice.getTabla(this.area, tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
         this.registros= < RegistroInterface > res;      
       })
     }else{
-      this.segmentacionservice.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
-        this.registros= null;      
+      this.segmentacionservice.getTabla(this.area, tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
+        this.registros= < RegistroInterfaceRural > res;
       })
-    }
-    
+    }    
   }
 
   getRegistro() {
@@ -193,11 +198,29 @@ class Segmentacion{
   procesarSeg(){
     this.urlProcesar = '';
     if(this.zona!='0'){
-      this.urlProcesar = this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/' + this.zona + '/';
+      this.urlProcesar = this.area + '/' + this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/' + this.zona + '/';
     }else{
-      this.urlProcesar = this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/0/';
+      this.urlProcesar = this.area + '/' + this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/0/';
     }
-    alert("PROCESANDO SEGMENTACION: "+this.urlProcesar)
+    let toastOptions1: ToastOptions = {
+                            title: 'PROCESANDO',
+                            msg: this.urlProcesar,
+                            showClose: true,
+                            timeout: 5000,
+    };
+    this.addToast(toastOptions1 , 'info');
+  }
+
+  addToast(options: ToastOptions, tipo: string = 'default') {
+        let toastOptions: ToastOptions = options
+        switch (tipo) {
+            case 'default': this.toastyService.default(toastOptions); break;
+            case 'info': this.toastyService.info(toastOptions); break;
+            case 'success': this.toastyService.success(toastOptions); break;
+            case 'wait': this.toastyService.wait(toastOptions); break;
+            case 'error': this.toastyService.error(toastOptions); break;
+            case 'warning': this.toastyService.warning(toastOptions); break;
+        }
   }
 
   descargarExcel(id,nom){
@@ -212,7 +235,7 @@ const routes: Routes = [{
 }];
 
 @NgModule({
-  imports: [CommonModule,RouterModule.forChild(routes), FormsModule, DataTableModule,SharedModule,ButtonModule],
+  imports: [CommonModule,RouterModule.forChild(routes), FormsModule, DataTableModule,SharedModule,ButtonModule, ToastyModule.forRoot(), ConfirmDialogModule],
   declarations: [Segmentacion]
 })
 export default class SegmentacionModule {}

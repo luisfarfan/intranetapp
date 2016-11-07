@@ -231,56 +231,32 @@ class Reportestabular {
     Helpers.descargarExcel(id, nom);
   }
 
-  elegirReporte(reporte) {    
-    if (reporte == "0") {
-      this.reporte01 = true;
-      this.reporte02 = false;
-      this.reporte03 = false;
-      this.reporte04 = false;
-      this.reporte05 = false;
-      this.cargarTabla(this.ccdi);
-      this.reporteDepa = true;
-      this.reporteDepa01 = true;
-    }
-    if (reporte == "1") {
-      this.reporte01 = false;
-      this.reporte02 = true;
-      this.reporte03 = false;
-      this.reporte04 = false;
-      this.reporte05 = false;
-      this.cargarTabla(this.ccdi);
-      this.reporteDepa = true;
-      this.reporteDepa01 = true;
-    }
-    if (reporte == "2") {
-      this.reporte01 = false;
-      this.reporte02 = false;
-      this.reporte03 = true;
-      this.reporte04 = false;
-      this.reporte05 = false;
+  elegirReporte(reporte) {
+    this.reporte01 = false;
+    this.reporte02 = false;
+    this.reporte03 = false;
+    this.reporte04 = false;
+    this.reporte05 = false;
+    this.reporteDepa = false;
+    this.reporteDepa01 = false;
+    if (reporte == "0" || reporte == "1" || reporte == "2") {
+      switch (reporte) {
+        case "0":          this.reporte01 = true;          break;
+        case "1":          this.reporte02 = true;          break;
+        case "2":          this.reporte03 = true;          break;
+      }
       this.cargarTabla(this.ccdi);
       this.reporteDepa = true;
       this.reporteDepa01 = true;
     }
     if (reporte == "3") {
-      this.reporte01 = false;
-      this.reporte02 = false;
-      this.reporte03 = false;
       this.reporte04 = true;
-      this.reporte05 = false;
-      this.cargarTablaAux();
-      this.reporteDepa = false;
+      this.cargarTablaAux();      
       this.reporteDepa01 = true;
     }
     if (reporte == "4") {
-      this.reporte01 = false;
-      this.reporte02 = false;
-      this.reporte03 = false;
-      this.reporte04 = false;
       this.reporte05 = true;
       this.cargarTablaAux2();
-      this.reporteDepa = false;
-      this.reporteDepa01 = false;
     }    
   }
 }

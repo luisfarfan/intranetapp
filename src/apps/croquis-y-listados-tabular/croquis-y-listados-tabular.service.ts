@@ -36,18 +36,6 @@ export class CroquisylistadostabularService {
     private tablaUrlAux2: string = 'http://bromero.inei.com.pe:8000/crotabrecargaTabla02/';
     private tablaUrlZip: string = 'http://bromero.inei.com.pe:8000/crotabdescargarPdf/';
 
-    /*private depaUrl: string = 'http://bromero.inei.com.pe:8090/recargaDepa/';
-    private provUrl: string = 'http://bromero.inei.com.pe:8090/recargaProv/';
-    private distUrl: string = 'http://bromero.inei.com.pe:8090/recargaDis/';
-    private zonaUrl: string = 'http://bromero.inei.com.pe:8090/recargaZona/';
-    private tablaUrlAux: string = 'http://bromero.inei.com.pe:8090/crotabrecargaTabla01/';
-    private tablaUrlAux2: string = 'http://bromero.inei.com.pe:8090/crotabrecargaTabla02/';
-    private tablaUrlZip: string = 'http://bromero.inei.com.pe:8090/crotabdescargarPdf/';*/
-
-    getCargaDepaInicial(): Observable < Object >{
-        return this.http.get(this.depaUrl).map(this.extractData).catch(this.handleError)
-    }
-
     getDepartamentos(): Observable < Object > {
         return this.http.get(this.depaUrl).map(this.extractData).catch(this.handleError)
     }

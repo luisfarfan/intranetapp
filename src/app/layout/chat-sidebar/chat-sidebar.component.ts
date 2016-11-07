@@ -27,43 +27,43 @@ export class ChatSidebar implements OnInit {
   }
 
   deactivateLink(e): void {
-    jQuery(e.currentTarget).removeClass('active').find('.badge').remove();
+    // jQuery(e.currentTarget).removeClass('active').find('.badge').remove();
   }
 
   initChatSidebarScroll(): void {
-    let $sidebarContent = jQuery('.chat-sidebar-contacts', this.$el);
-    if (this.$el.find('.slimScrollDiv').length !== 0) {
-      $sidebarContent.slimscroll({
-        destroy: true
-      });
-    }
-    $sidebarContent.slimscroll({
-      height: window.innerHeight,
-      width: '',
-      size: '4px'
-    });
+    // let $sidebarContent = jQuery('.chat-sidebar-contacts', this.$el);
+    // if (this.$el.find('.slimScrollDiv').length !== 0) {
+    //   $sidebarContent.slimscroll({
+    //     destroy: true
+    //   });
+    // }
+    // $sidebarContent.slimscroll({
+    //   height: window.innerHeight,
+    //   width: '',
+    //   size: '4px'
+    // });
   }
 
   ngOnInit(): void {
-    let $chatContainer = jQuery('layout').addClass('chat-sidebar-container');
-    let chatSidebarSwipe = new Hammer(document.getElementById('content-wrap'));
+    // let $chatContainer = jQuery('layout').addClass('chat-sidebar-container');
+    // let chatSidebarSwipe = new Hammer(document.getElementById('content-wrap'));
 
-    chatSidebarSwipe.on('swipeleft', () => {
-      if ($chatContainer.is('.nav-collapsed')) {
-        $chatContainer.addClass('chat-sidebar-opened');
-      }
-    });
+    // chatSidebarSwipe.on('swipeleft', () => {
+    //   if ($chatContainer.is('.nav-collapsed')) {
+    //     $chatContainer.addClass('chat-sidebar-opened');
+    //   }
+    // });
 
-    chatSidebarSwipe.on('swiperight', () => {
-      setTimeout(() => {
-        if ($chatContainer.is('.chat-sidebar-opened')) {
-          $chatContainer.removeClass('chat-sidebar-opened');
-        }
-      });
-    });
+    // chatSidebarSwipe.on('swiperight', () => {
+    //   setTimeout(() => {
+    //     if ($chatContainer.is('.chat-sidebar-opened')) {
+    //       $chatContainer.removeClass('chat-sidebar-opened');
+    //     }
+    //   });
+    // });
 
-    jQuery(window).on('sn:resize', this.initChatSidebarScroll.bind(this));
-    this.initChatSidebarScroll();
+    // jQuery(window).on('sn:resize', this.initChatSidebarScroll.bind(this));
+    // this.initChatSidebarScroll();
   }
 
 }

@@ -37,12 +37,8 @@ export class CroquisylistadoComponent {
     private distrito = new DistritoInterface();
     private area = new AreaInterface();
     private zona = new ZonaInterface();
-    //private validLogin = this.loginservice.isValidSession();
-    //private errorLogin = false;
 
     constructor(private croquisylistadoservice: CroquisylistadoService, private router: Router) {
-        //if (this.validLogin) {
-            this.router.navigate(['croquisylistado'])
-        //}
+        this.router.navigate(['croquisylistado'])
     }
 }

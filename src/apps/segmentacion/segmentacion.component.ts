@@ -37,13 +37,9 @@ export class SegmentacionComponent {
     private distrito = new DistritoInterface();
     private area = new AreaInterface();
     private zona = new ZonaInterface();
-    //private validLogin = this.loginservice.isValidSession();
-    //private errorLogin = false;
 
     constructor(private segmentacionservice: SegmentacionService, private router: Router) {
-        //if (this.validLogin) {
-            this.router.navigate(['segmentacion'])
-        //}
+        this.router.navigate(['segmentacion'])
     }
 
     procesar() {

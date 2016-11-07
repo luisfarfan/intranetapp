@@ -21,6 +21,11 @@ export class Helpers {
         return body || {};
     }
 
+    public static extractDatabyUbigeo(res: Response) {
+        let body = res.json();
+        return body || {};
+    }
+
     public static handleError(error: any) {
         // In a real world app, we might use a remote logging infrastructure
         // We'd also dig deeper into the error to get a better message
@@ -37,6 +42,27 @@ export class Helpers {
 
     public static getJsonSession(key: string = '') {
         return JSON.parse(localStorage.getItem(key === '' ? 'usuario' : key));
+    }
+
+    public static findUbigeoByBody(body) {
+        let session = this.getJsonSession();
+        console.log(session);
+        console.log(body);
+        session = session[0];
+        let resultado: Array<Object> = []
+        let usuario_ubigeo = { ccdd: session.ccdd, ccpp: session.ccpp, ccdi: session.ccdi, zona: session.zona }
+        for (let i in body) {
+            if ('CCDD' in body[i]) {
+                body[i].CCDD == usuario_ubigeo.ccdd ? resultado.push(body[i]) : '';
+            } else if ('CCPP' in body[i]) {
+                body[i].CCPP == usuario_ubigeo.ccpp ? resultado.push(body[i]) : '';
+            } else if ('CCDI' in body[i]) {
+                body[i].CCDI == usuario_ubigeo.ccdi ? resultado.push(body[i]) : '';
+            } else if ('UBIGEO' in body[i]) {
+                body[i].UBIGEO == usuario_ubigeo.zona ? resultado.push(body[i]) : '';
+            }
+        }
+        return resultado.length == 0 ? body : resultado;
     }
 
     public static isValidSession(key: string = ''): boolean {
@@ -150,9 +176,9 @@ export class Helpers {
     public static YesNoToboolean(object: Object) {
         for (let key in object) {
             if (!object.hasOwnProperty(key)) continue;
-            if(object[key]=="SI"){
+            if (object[key] == "SI") {
                 object[key] = true
-            }else if (object[key] =="NO"){
+            } else if (object[key] == "NO") {
                 object[key] = false
             }
         }

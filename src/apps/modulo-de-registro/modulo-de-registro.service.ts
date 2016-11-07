@@ -43,8 +43,6 @@ export class RegistroService {
     aula_url2: string = `${Settings.HOST_LOCAL()}aulasbylocal/`;
     infralocal2_url: string = `${Settings.HOST_LOCAL()}infralocal/`;
 
-
-
     constructor(private http: Http) { }
 
     getDepartamentos(): Observable<Object> {

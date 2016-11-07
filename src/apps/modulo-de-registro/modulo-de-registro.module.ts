@@ -25,7 +25,7 @@ import { TypeaheadModule } from 'ng2-bootstrap/components/typeahead';
 import { ToastyModule } from 'ng2-toasty';
 import 'ng2-datetime/src/vendor/bootstrap-datepicker/bootstrap-datepicker.min.js';
 import 'ng2-datetime/src/vendor/bootstrap-timepicker/bootstrap-timepicker.min.js';
-import { NKDatetimeModule } from 'ng2-datetime/ng2-datetime';
+import { DatepickerModule } from 'ng2-bootstrap/components/datepicker';
 import MaskedInput from 'angular2-text-mask'
 
 const routes: Routes = [{
@@ -35,8 +35,8 @@ const routes: Routes = [{
 
 @NgModule({
     imports: [RouterModule.forChild(routes),
-        CommonModule,NKDatetimeModule,
-        FormsModule, DataTableModule,TabsModule,ToastyModule.forRoot(),CustomFormsModule, SharedModule, MaterialModule.forRoot(), ReactiveFormsModule, TypeaheadModule],
-    declarations: [RegistroComponent,MaskedInput],
+        CommonModule, DatepickerModule,
+        FormsModule, DataTableModule, TabsModule, ToastyModule.forRoot(), CustomFormsModule, SharedModule, MaterialModule.forRoot(), ReactiveFormsModule, TypeaheadModule],
+    declarations: [RegistroComponent, MaskedInput],
 })
 export default class RegistroModule { }

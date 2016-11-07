@@ -901,3 +901,30 @@ $theme: md-light-theme($primary, $accent, $warn);
     background-color: #f0ad4e;
     border-color: #eea236;
 }
+
+.popup {
+    position: absolute;
+    background-color: #fff;
+    border-radius: 3px;
+    border: 1px solid #ddd;
+    height: 251px;
+}
+
+fieldset.scheduler-border {
+    border: 1px groove #ddd !important;
+    padding: 0 1.4em 1.4em 1.4em !important;
+    margin: 0 0 1.5em 0 !important;
+    -webkit-box-shadow: 0px 0px 0px 0px #000;
+    box-shadow: 0px 0px 0px 0px #000;
+}
+
+legend.scheduler-border {
+    font-size: 1.2em !important;
+    font-weight: bold !important;
+    text-align: left !important;
+    width: inherit;
+    /* Or auto */
+    padding: 0 10px;
+    /* To give a bit of padding on the left and right */
+    border-bottom: none;
+}

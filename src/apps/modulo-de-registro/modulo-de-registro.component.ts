@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { TableOptions, TableColumn, ColumnMode } from 'angular2-data-table';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Helpers } from './../../app/helper';
@@ -8,12 +8,22 @@ import { Infraestructura } from './infraestructura';
 import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
 import { CustomValidators } from 'ng2-validation';
 import { dateValidator, FechaisMayor } from './../CustomValidators';
+declare var jQuery: any;
+
 @Component({
   templateUrl: 'modulo-de-registro.html',
   providers: [RegistroService],
   styleUrls: ['styles.scss']
 })
 export class RegistroComponent implements OnInit {
+  @Input() dateModel: Date;
+  @Input() dateModel2: Date;
+  @Input() label: string;
+  private showDatepicker: boolean = false;
+  private showDatepicker2: boolean = false;
+  public formats: Array<string> = ['DD/MM/YYYY', 'YYYY/MM/DD', 'DD.MM.YYYY', 'shortDate'];
+  public format: string = this.formats[0];
+
   @ViewChild('fecha_inicio_input') fecha_inicio_input
   public mask_date = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]
   local = new Local();
@@ -415,4 +425,32 @@ export class RegistroComponent implements OnInit {
     })
 
   }
+
+  showPopup(num: any) {
+    if (num == 1) {
+      this.showDatepicker = true;
+      this.showDatepicker2 = false;
+    } else {
+      this.showDatepicker = false;
+      this.showDatepicker2 = true;
+    }
+    jQuery('#datepickermodal').modal('show');
+  }
+
+  setFechaIni(event) {
+    this.dateModel = event;
+    let day = ('0' + this.dateModel.getDate()).slice(-2);
+    let month = ('0' + this.dateModel.getMonth()).slice(-2);
+    this.local.fecha_inicio = `${day}/${(month)}/${this.dateModel.getFullYear()}`;
+    this.buildForm();
+  }
+
+  setFechaFin(event) {
+    this.dateModel = event;
+    let day = ('0' + this.dateModel.getDate()).slice(-2);
+    let month = ('0' + this.dateModel.getMonth()).slice(-2);
+    this.local.fecha_fin = `${day}/${(month)}/${this.dateModel.getFullYear()}`;
+    this.buildForm();
+  }
+
 }

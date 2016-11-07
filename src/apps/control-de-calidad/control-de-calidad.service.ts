@@ -27,6 +27,9 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/toPromise';
 import { Helpers } from './../../app/helper';
+import {
+  IndicadoresInterface
+} from './IndicadoresInterface.interface';
 
 @Injectable()
 export class ControldecalidadService {
@@ -40,7 +43,10 @@ export class ControldecalidadService {
     private tablaUrlAux2: string = 'http://bromero.inei.com.pe:8000/calidadrecargaTabla02/';
     private tablaUrlAux4: string = 'http://bromero.inei.com.pe:8000/CalidadList/';
     private tablaReporte: string = 'http://bromero.inei.com.pe:8000/tablaReporte/';
-    
+    private tablaIndicador: string = 'http://bromero.inei.com.pe:8000/tablaIndicador/';
+
+    private guardarObservaciones: string = 'http://bromero.inei.com.pe:8000/tablaIndicador2/';
+    private guardarIndicador: string = 'http://bromero.inei.com.pe:8000/tablaIndicador3/';
     
     /*private depaUrl: string = 'http://bromero.inei.com.pe:8090/recargaDepa/';
     private provUrl: string = 'http://bromero.inei.com.pe:8090/recargaProv/';
@@ -74,8 +80,8 @@ export class ControldecalidadService {
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
 
-    getTabla(tipo: string="0", ccdd: string="0", ccpp: string="0", ccdi: string="0" ,zona: string="0"): Observable < Object > {
-        let queryparameters:string = `${tipo}/${ccdd}/${ccpp}/${ccdi}/${zona}/`;
+    getTabla(area:string="0", tipo: string="0", ccdd: string="0", ccpp: string="0", ccdi: string="0" ,zona: string="0"): Observable < Object > {
+        let queryparameters:string = `${area}/${tipo}/${ccdd}/${ccpp}/${ccdi}/${zona}/`;
         let url:string = this.tablaUrlAux + queryparameters;
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
@@ -101,18 +107,29 @@ export class ControldecalidadService {
     getRegistro(url:string=''): Observable < Object > {
         let tablaUrlAux3 = this.tablaUrlAux2 + url;
         if(url!=''){
-            return this.http.get(tablaUrlAux3).map(this.extractData)
+            return this.http.get(tablaUrlAux3).map(this.extractData).catch(this.handleError)
         }else{
-            return this.http.get(this.tablaUrlAux).map(this.extractData)
+            return this.http.get(tablaUrlAux3).map(this.extractData).catch(this.handleError)
         }        
+    }
+
+    obtenerIndicadores(area: string="",ubigeo: string="", zona: string="", aeu: string=""){
+        let queryparameters:string = `${area}/${ubigeo}/${zona}/${aeu}/`;
+        let url:string = this.tablaIndicador + queryparameters;
+        return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
 
     guardarObservacion(data): Observable < Object > {
         let body = JSON.stringify(data);
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.tablaUrlAux4, body, options)
-            .map(Helpers.extractData)
-            .catch(Helpers.handleError);
+        return this.http.post(this.guardarObservaciones, body, options).map(Helpers.extractData).catch(Helpers.handleError);
+    }
+
+    guardarIndicadores(data): Observable < Object > {
+        let body = JSON.stringify(data);
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        return this.http.post(this.guardarIndicador, body, options).map(Helpers.extractData).catch(Helpers.handleError);
     }
 }

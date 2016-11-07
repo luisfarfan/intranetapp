@@ -70,7 +70,6 @@ class Croquisylistadostabular {
   private seccionAux: boolean = false;
   private aeuAux: boolean = false;
   private distrito: boolean = false;
-  private descarga: Object;
   private registros: Object;
   private registros2: Object;
   private registro: RegistroInterface;
@@ -258,12 +257,6 @@ class Croquisylistadostabular {
       this.urlProcesar = this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/0/';
     }
     alert("PROCESANDO GENERACION DE CROQUIS Y LISTADO TABULAR: " + this.urlProcesar)
-  }
-
-  descargarZip(tipo) {
-    this.croquisylistadostabular.getZip(this.ccdd, this.ccpp, this.ccdi,this.zona,tipo).subscribe(res => {
-        res;
-    })
   }
 
 }

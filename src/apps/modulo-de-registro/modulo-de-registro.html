@@ -44,15 +44,219 @@
 	</div>
 </div>
 <div *ngIf="accion_editlocal || accion_addlocal">
-	<div class="row">
-		<div class="col-lg-12">
-			<section class="widget" widget>
-				<header>
-					REGISTRAR LOCAL
-				</header>
-				<div class="widget-body">
-					<form (ngSubmit)="onSubmit()">
+
+	<section class="widget" widget>
+		<header>
+			REGISTRAR LOCAL
+		</header>
+		<div class="widget-body">
+			<form>
+				<fieldset class="scheduler-border">
+					<legend class="scheduler-border">Etapa y Curso</legend>
+					<div class="row">
+						<div class="col-xs-6">
+							<label for="etapa">Etapa Censal</label>
+							<select name="" id="etapa" class="form-control">
+							<option value="0">Censo Experimental</option>
+							<option value="1">Empadronamiento</option>
+						</select>
+						</div>
+						<div class="col-xs-6">
+							<label for="curso">Curso</label>
+							<select name="" id="curso" class="form-control">
+							<option value="0">Jefes Distritales</option>
+							<option value="1">Instructores DNCE</option>
+							<option value="2">Jefes de de Zona</option>
+						</select>
+						</div>
+					</div>
+				</fieldset>
+				<fieldset class="scheduler-border">
+					<legend class="scheduler-border">Dirección</legend>
+					<div class="row">
+						<div class="col-xs-2">
+							<label for="tipo_de_via">Tipo de Vía</label>
+							<select name="" id="tipo_de_via" class="form-control">
+							<option value="0">ALAMEDA</option>
+							<option value="1">AVENIDA</option>
+							<option value="2">BAJADA</option>
+						</select>
+						</div>
+						<div class="col-xs-3">
+							<label for="nombre_de_via">Nombre de Vía(Dirección)</label>
+							<input type="text" id="nombre_de_via" class="form-control" placeholder="Nombre de Vía">
+						</div>
+						<div class="col-xs-2">
+							<label for="referencia">Referencia</label>
+							<input type="text" id="referencia" class="form-control" placeholder="Referencia">
+						</div>
+						<div class="col-xs-1">
+							<label for="numero">N°</label>
+							<input type="text" id="numero" class="form-control" placeholder="N°">
+						</div>
+						<div class="col-xs-1">
+							<label for="km">KM</label>
+							<input type="text" id="km" class="form-control" placeholder="KM">
+						</div>
+						<div class="col-xs-1">
+							<label for="mz">MZ</label>
+							<input type="text" id="mz" class="form-control" placeholder="MZ">
+						</div>
+						<div class="col-xs-1">
+							<label for="lote">Lote</label>
+							<input type="text" id="lote" class="form-control" placeholder="Lote">
+						</div>
+						<div class="col-xs-1">
+							<label for="piso">Piso</label>
+							<input type="text" id="piso" class="form-control" placeholder="Piso">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-3">
+							<label for="tel_fijo">Teléfono Fijo</label>
+							<input type="text" id="tel_fijo" class="form-control" placeholder="Teléfono Fijo">
+						</div>
+						<div class="col-xs-3">
+							<label for="tel_cel">Teléfono Celular</label>
+							<input type="text" id="tel_cel" class="form-control" placeholder="Teléfono Celular">
+						</div>
+					</div>
+				</fieldset>
+				<fieldset class="scheduler-border">
+					<legend class="scheduler-border">Programación y Capácidad de Local</legend>
+					<div class="row">
+						<div class="col-xs-4">
+							<label for="nombre_de_via">Fecha Inicio</label>
+							<div class="input-group">
+								<input type="text" [textMask]="{mask: mask_date}" placeholder="DD/MM/YYYY" #fecha_inicio_input class="form-control">
+								<span (click)="showPopup(1)" class="input-group-addon" style="width: 15%"><i class="glyphicon glyphicon-calendar"></i></span>
+							</div>
+						</div>
+						<div class="col-xs-4">
+							<label for="fecha_fin">Fecha Fin</label>
+							<div class="input-group">
+								<input type="text" [textMask]="{mask: mask_date}" placeholder="DD/MM/YYYY" #fecha_fin_input class="form-control">
+								<span (click)="showPopup(1)" class="input-group-addon" style="width: 15%"><i class="glyphicon glyphicon-calendar"></i></span>
+							</div>
+						</div>
+						<div class="col-xs-2">
+							<label for="turno_uso_local">Turno de Uso de Local</label>
+							<select name="" id="turno_uso_local" class="form-control">
+							<option value="0">MAÑANA</option>
+							<option value="1">TARDE</option>
+							<option value="2">NOCHE</option>
+						</select>
+						</div>
+						<div class="col-xs-2">
+							<label for="capacidad_local">Capacidad de Local</label>
+							<input type="text" id="capacidad_local" class="form-control">
+						</div>
+					</div>
+				</fieldset>
+				<fieldset class="scheduler-border">
+					<legend class="scheduler-border">Datos de Funcionario del INEI</legend>
+					<div class="row">
+						<div class="col-xs-3">
+							<label for="nombre_funcionario">Nombres Completos</label>
+							<input type="text" id="nombre_funcionario" class="form-control">
+						</div>
+						<div class="col-xs-3">
+							<label for="email_funcionario">Email</label>
+							<input type="text" id="email_funcionario" class="form-control">
+						</div>
+						<div class="col-xs-3">
+							<label for="telefono">Teléfono</label>
+							<input type="text" id="telefono" class="form-control">
+						</div>
+						<div class="col-xs-3">
+							<label for="celular">Celular</label>
+							<input type="text" id="celular" class="form-control">
+						</div>
+					</div>
+				</fieldset>
+				<fieldset class="scheduler-border">
+					<legend class="scheduler-border">Datos del Responsable del Local</legend>
+					<div class="row">
+						<div class="col-xs-3">
+							<label for="nombre_responsable">Nombres Completo</label>
+							<input type="text" id="nombre_funcionario" class="form-control">
+						</div>
+						<div class="col-xs-3">
+							<label for="email_responsable">Email</label>
+							<input type="text" id="email_funcionario" class="form-control">
+						</div>
+						<div class="col-xs-3">
+							<label for="telefono_responsable">Teléfono</label>
+							<input type="text" id="telefono" class="form-control">
+						</div>
+						<div class="col-xs-3">
+							<label for="celular_responsable">Celular</label>
+							<input type="text" id="celular" class="form-control">
+						</div>
+					</div>
+				</fieldset>
+				<fieldset class="scheduler-border">
+					<legend class="scheduler-border">Ambientes</legend>
+					<div class="row">
+						<div class="col-xs-3">
+							<div class="input-group">
+								<md-checkbox>
+									Aulas
+								</md-checkbox>
+								<div class="col-xs-3 col-sm-3">
+									<input type="text" placeholder="cant" class="form-control">
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-3">
+							<div class="input-group">
+								<md-checkbox>
+									Auditorios
+								</md-checkbox>
+								<div class="col-xs-3 col-sm-3">
+									<input type="text" placeholder="cant" class="form-control">
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-3">
+							<div class="input-group">
+								<md-checkbox>
+									Sala de Reuniones
+								</md-checkbox>
+								<div class="col-xs-3 col-sm-3">
+									<input type="text" placeholder="cant" class="form-control">
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-3">
+							<div class="input-group">
+								<md-checkbox>
+									Oficina Administrativa
+								</md-checkbox>
+								<div class="col-xs-3 col-sm-3">
+									<input type="text" placeholder="cant" class="form-control">
+								</div>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+				<fieldset>
+					<div class="pull-left">
+						<button md-raised-button style="background-color:#2196f3; color: white">GUARDAR</button>
+						<button md-raised-button style="background-color:#2196f3; color: white">REGISTRAR</button>
+						<button md-raised-button color="warn">BORRAR</button>
+					</div>
+					<div class="pull-right">
+						<button md-raised-button color="warn">REGISTRAR AULAS</button>
+					</div>
+				</fieldset>
+			</form>
+
+
+
+			<!--<form (ngSubmit)="onSubmit()">
 						<div [formGroup]="localForm" class="row">
+							
 							<div class="col-lg-4">
 								<div class="form-group">
 									<label for="distrito">Local</label>
@@ -86,8 +290,8 @@
 							<div class="col-lg-2">
 								<div class="form-group">
 									<label for="distrito">Fecha Inicio</label>
-									<input type="text" [textMask]="{mask: mask_date}" placeholder="DD/MM/YYYY" #fecha_inicio_input formControlName="fecha_inicio"
-										class="form-control">
+									<input type="text" [textMask]="{mask: mask_date}" (focus)="showPopup(1)" placeholder="DD/MM/YYYY" #fecha_inicio_input formControlName="fecha_inicio"
+													class="form-control">
 								</div>
 								<div *ngIf="formErrors.fecha_inicio" class="alert alert-danger">
 									{{ formErrors.fecha_inicio }}
@@ -103,7 +307,8 @@
 							<div class="col-lg-2">
 								<div class="form-group">
 									<label for="distrito">Fecha Fin</label>
-									<input type="text" [textMask]="{mask: mask_date}" formControlName="fecha_fin" placeholder="DD/MM/YYYY" class="form-control">
+									<input type="text" [textMask]="{mask: mask_date}" formControlName="fecha_fin" placeholder="DD/MM/YYYY" (focus)="showPopup(2)"
+													class="form-control">
 								</div>
 								<div *ngIf="formErrors.fecha_fin" class="alert alert-danger">
 									{{ formErrors.fecha_fin }}
@@ -188,11 +393,9 @@
 						</div>
 						<button [disabled]="(!localForm.valid || !selectsInfraestructuras) || submitted" md-raised-button color="accent">Guardar</button>
 						<button type="button" data-toggle="modal" data-target="#myModal" [disabled]="!selectedLocal" md-raised-button color="accent">Registrar Aulas</button>
-					</form>
-				</div>
-			</section>
+					</form>-->
 		</div>
-	</div>
+	</section>
 
 </div>
 <div *ngIf="alert_nofindlocales" class="alert alert-danger">
@@ -206,7 +409,7 @@
 			<input #gb type="text" pInputText size="50" style="float:left" placeholder="Buscador">
 		</div>
 		<p-dataTable class="table table-hover table-mc-light-blue" [globalFilter]="gb" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)"
-			[value]="search_locales" selectionMode="single" [(selection)]="selectedLocal">
+						[value]="search_locales" selectionMode="single" [(selection)]="selectedLocal">
 			<p-column field="nombre_local" header="Nombre Local"></p-column>
 			<p-column field="referencia" header="Referencia"></p-column>
 			<p-column field="telefono_local" header="Telefono Local"></p-column>
@@ -302,7 +505,7 @@
 				</div>
 				<div class="row">
 					<p-dataTable class="table table-hover table-mc-light-blue" [value]="aulasbylocal" (onRowSelect)="onRowSelect2($event)" (onRowUnselect)="onRowUnSelect2($event)"
-						selectionMode="single" [(selection)]="selectedAula">
+									selectionMode="single" [(selection)]="selectedAula">
 						<p-column field="num_aula" header="N° Aula"></p-column>
 						<p-column field="capacidad" header="Capacidad"></p-column>
 						<p-column field="capacidad" header="Mobiliario c/p"></p-column>
@@ -320,6 +523,19 @@
 		</div>
 
 		<!--/.Content-->
+	</div>
+</div>
+
+
+<div class="modal fade" id="datepickermodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-sm" role="document">
+		<!--Content-->
+		<div class="modal-content">
+			<div class="modal-body" style="padding:0px">
+				<datepicker class="popup" *ngIf="showDatepicker" [(ngModel)]="dateModel" [showWeeks]="true" (ngModelChange)="setFechaIni($event)"></datepicker>
+				<datepicker class="popup" *ngIf="showDatepicker2" [(ngModel)]="dateModel2" [showWeeks]="true" (ngModelChange)="setFechaFin($event)"></datepicker>
+			</div>
+		</div>
 	</div>
 </div>
 <!-- /.Live preview-->

@@ -36,6 +36,15 @@ import {
   Reporte05Interface
 } from './reporte05.interface';
 import {
+  Reporte06Interface
+} from './reporte06.interface';
+import {
+  Reporte07Interface
+} from './reporte07.interface';
+import {
+  Reporte08Interface
+} from './reporte08.interface';
+import {
   ZonaInterface
 } from './zona.interface';
 import {
@@ -91,14 +100,17 @@ class Reportes {
   private zonas: ZonaInterface;
   private thisAux: any;
 
-  private reporteDepa: boolean = true ;
-  private reporteDepa01: boolean = false ;  
+  private reporteDepa: boolean = true;
+  private reporteDepa01: boolean = false;
 
   private reporte01: boolean = true;
   private reporte02: boolean = false;
   private reporte03: boolean = false;
   private reporte04: boolean = false;
   private reporte05: boolean = false;
+  private reporte06: boolean = false;
+  private reporte07: boolean = false;
+  private reporte08: boolean = false;
 
   private tipo: string = '';
 
@@ -107,6 +119,9 @@ class Reportes {
   private datareporte03: Reporte03Interface;
   private datareporte04: Reporte04Interface;
   private datareporte05: Reporte05Interface;
+  private datareporte06: Reporte06Interface;
+  private datareporte07: Reporte07Interface;
+  private datareporte08: Reporte08Interface;
 
   constructor(private reportes: ReportesService, private elementRef: ElementRef, private domSanitizer: DomSanitizer) {
     this.cargarDepa()
@@ -130,6 +145,9 @@ class Reportes {
     this.datareporte03 = null;
     this.datareporte04 = null;
     this.datareporte05 = null;
+    this.datareporte06 = null;
+    this.datareporte07 = null;
+    this.datareporte08 = null;
     if (this.ccdd != 0) {
       this.reportes.getProvincias(ccdd, ccpp).subscribe(res => {
         this.provincias = <ProvinciaInterface>res;
@@ -151,6 +169,9 @@ class Reportes {
     this.datareporte03 = null;
     this.datareporte04 = null;
     this.datareporte05 = null;
+    this.datareporte06 = null;
+    this.datareporte07 = null;
+    this.datareporte08 = null;
     if (this.ccpp != 0) {
       this.reportes.getDistritos(this.ccdd, ccpp, "0").subscribe(res => {
         this.distritos = <DistritoInterface>res;
@@ -188,6 +209,9 @@ class Reportes {
     if (this.reporte03) {
       this.tipo = '2';
     }
+    if (this.reporte06) {
+      this.tipo = '5';
+    }
     this.reportes.getTabla(this.tipo, this.ccdd, this.ccpp, this.ccdi).subscribe(res => {
       this.tabledata = true;
       if (this.reporte01) {
@@ -199,30 +223,44 @@ class Reportes {
       if (this.reporte03) {
         this.datareporte03 = <Reporte03Interface>res;
       }
-
+      if (this.reporte06) {
+        this.datareporte06 = <Reporte06Interface>res;
+      }
     })
   }
 
   cargarTablaAux() {
-    this.tipo='3';
+    this.tipo = '3';
     if (this.reporte04) {
       this.tipo = '3';
+    }
+    if (this.reporte07) {
+      this.tipo = '6';
     }
     this.reportes.getTabla(this.tipo, this.ccdd, this.ccpp, '0').subscribe(res => {
       if (this.reporte04) {
         this.datareporte04 = <Reporte04Interface>res;
       }
+      if (this.reporte07) {
+        this.datareporte07 = <Reporte07Interface>res;
+      }
     })
   }
 
   cargarTablaAux2() {
-    this.tipo='4';
+    this.tipo = '4';
     if (this.reporte05) {
       this.tipo = '4';
+    }
+    if (this.reporte08) {
+      this.tipo = '7';
     }
     this.reportes.getTabla(this.tipo, this.ccdd, this.ccpp, '0').subscribe(res => {
       if (this.reporte05) {
         this.datareporte05 = <Reporte05Interface>res;
+      }
+      if (this.reporte08) {
+        this.datareporte08 = <Reporte08Interface>res;
       }
     })
   }
@@ -231,57 +269,43 @@ class Reportes {
     Helpers.descargarExcel(id, nom);
   }
 
-  elegirReporte(reporte) {    
-    if (reporte == "0") {
-      this.reporte01 = true;
-      this.reporte02 = false;
-      this.reporte03 = false;
-      this.reporte04 = false;
-      this.reporte05 = false;
+  elegirReporte(reporte) {
+    this.reporte01 = false;
+    this.reporte02 = false;
+    this.reporte03 = false;
+    this.reporte04 = false;
+    this.reporte05 = false;
+    this.reporte06 = false;
+    this.reporte07 = false;
+    this.reporte08 = false;
+    this.reporteDepa = false;
+    this.reporteDepa01 = false;
+    if (reporte == "0" || reporte == "1" || reporte == "2" || reporte == "5") {
+      switch (reporte) {
+        case "0":          this.reporte01 = true;          break;
+        case "1":          this.reporte02 = true;          break;
+        case "2":          this.reporte03 = true;          break;
+        case "5":          this.reporte06 = true;          break;
+      }
       this.cargarTabla(this.ccdi);
       this.reporteDepa = true;
       this.reporteDepa01 = true;
     }
-    if (reporte == "1") {
-      this.reporte01 = false;
-      this.reporte02 = true;
-      this.reporte03 = false;
-      this.reporte04 = false;
-      this.reporte05 = false;
-      this.cargarTabla(this.ccdi);
-      this.reporteDepa = true;
-      this.reporteDepa01 = true;
-    }
-    if (reporte == "2") {
-      this.reporte01 = false;
-      this.reporte02 = false;
-      this.reporte03 = true;
-      this.reporte04 = false;
-      this.reporte05 = false;
-      this.cargarTabla(this.ccdi);
-      this.reporteDepa = true;
-      this.reporteDepa01 = true;
-    }
-    if (reporte == "3") {
-      this.reporte01 = false;
-      this.reporte02 = false;
-      this.reporte03 = false;
-      this.reporte04 = true;
-      this.reporte05 = false;
+    if (reporte == "3" || reporte == "6") {
+      switch (reporte) {
+        case "3":          this.reporte04 = true;          break;
+        case "6":          this.reporte07 = true;          break;
+      }
       this.cargarTablaAux();
-      this.reporteDepa = false;
       this.reporteDepa01 = true;
     }
-    if (reporte == "4") {
-      this.reporte01 = false;
-      this.reporte02 = false;
-      this.reporte03 = false;
-      this.reporte04 = false;
-      this.reporte05 = true;
+    if (reporte == "4" || reporte == "7") {
+      switch (reporte) {
+        case "4":          this.reporte05 = true;          break;
+        case "7":          this.reporte08 = true;          break;
+      }
       this.cargarTablaAux2();
-      this.reporteDepa = false;
-      this.reporteDepa01 = false;
-    }    
+    }
   }
 }
 

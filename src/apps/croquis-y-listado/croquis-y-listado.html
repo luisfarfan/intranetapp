@@ -1,5 +1,4 @@
 <h1 class="page-title">SISTEMA INTEGRADO DE SEGMENTACIÓN - <span class="fw-semi-bold">CROQUIS Y LISTADOS</span></h1>
-
 <!-- Content area -->
 <div class="row">
     <div class="col-lg-12">
@@ -9,7 +8,7 @@
                     <label for="lDepartamento"><h5> DEPARTAMENTO</h5></label>
                     <select class="form-control" name="departamentos" (change)="cargarProvincias($event.target.value)">
                         <option value="0">TODOS</option>
-                        <option *ngFor="let el of departamentos" value="{{ el.CCDD }}">{{ el.DEPARTAMENTO }}</option>
+                        <option *ngFor="let el of departamentos" value="{{ el.CCDD }}">{{ el.CCDD }} {{ el.DEPARTAMENTO }}</option>
                     </select>
                 </div>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -17,7 +16,7 @@
                     <label for="lProvincia"><h5> PROVINCIA</h5></label>
                     <select class="form-control" name="provincias" (change)="cargarDistritos($event.target.value)">
                         <option value="0">TODOS</option>
-                        <option *ngFor="let e of provincias" value="{{ e.CCPP }}">{{ e.PROVINCIA }}</option>
+                        <option *ngFor="let e of provincias" value="{{ e.CCPP }}">{{ e.CCPP }} {{ e.PROVINCIA }}</option>
                     </select>
                 </div>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -25,7 +24,7 @@
                     <label for="lDistrito"><h5> DISTRITO</h5></label>
                     <select class="form-control" name="distritos" (change)="cargarZonas($event.target.value)">
                         <option value="0">TODOS</option>
-                        <option *ngFor="let e of distritos" value="{{ e.CCDI }}">{{ e.DISTRITO }}</option>
+                        <option *ngFor="let e of distritos" value="{{ e.CCDI }}">{{ e.CCDI }} {{ e.DISTRITO }}</option>
                     </select>
                 </div>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -81,7 +80,7 @@
                     <p-column *ngIf="urbanoZona" field="ZONA" header="ZONA" [sortable]="true"></p-column>
                     <p-column field="NUM_SEC" header="NRO. DE SECCIONES" [sortable]="true"></p-column>
                     <p-column *ngIf="urbanoZona" field="NUM_AEU" header="NRO. DE AEUs" [sortable]="true"></p-column>
-                    <p-column *ngIf="ruralZona" field="NUM_AEU" header="NRO. DE AERs" [sortable]="true"></p-column> 
+                    <p-column *ngIf="ruralZona" field="NUM_AERS" header="NRO. DE AERs" [sortable]="true"></p-column> 
                     <p-column field="EST_CROQUIS" styleClass="col-button" header="ESTADO">
                         <template let-col let-car="rowData" pTemplate type="body">
                             <span [ngSwitch]="car[col.field]">
@@ -119,8 +118,8 @@
                             <div class="btn-group" style="position:absolute">
                                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fa fa-download"> </i></button>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" [href]=urlSeccion download> SECCION</a>
-                                    <a class="dropdown-item" [href]=urlEmpadronador download> AER</a>
+                                    <a class="dropdown-item" [href]=urlSeccionRural download> SECCION</a>
+                                    <a class="dropdown-item" [href]=urlEmpadronadorRural download> AER</a>
                                 </div>
                             </div>
                         </template>
@@ -131,11 +130,11 @@
     </div>
 </div>
 
-<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div class="modal fade bd-example-modal-lg" id="modal_calidad" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-full">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" (click)="destruir()" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 <h4 align="center" class="modal-title" id="myModalLabel">CROQUIS Y LISTADO</h4>
@@ -150,12 +149,12 @@
                                 <label for="lDis"><h5>{{nombreDist}}</h5></label>
                                 <div class="form-group">                                    
                                     <label for="lSeccion"><h5> SECCIÓN</h5></label>
-                                    <select *ngIf="urbanoZona" class="form-control" name="seccion" (change)="getRegistro($event.target.value)">
+                                    <select id="combo_urbano" *ngIf="urbanoZona" class="form-control" name="seccion" (change)="getRegistro($event.target.value)">
                                         <option value="0">ZONA</option>
                                         <option value="1">SECCIÓN</option>
                                         <option value="2">AEU</option>                        
                                     </select>
-                                    <select *ngIf="ruralZona" class="form-control" name="seccion" (change)="getRegistro($event.target.value)">
+                                    <select id="combo_rural" *ngIf="ruralZona" class="form-control" name="seccion" (change)="getRegistro($event.target.value)">
                                         <option value="1">SECCIÓN</option>
                                         <option value="2">AER</option>                        
                                     </select>
@@ -194,15 +193,15 @@
                             <table *ngIf="ruralZona" border="2" class="table table-bordered table-lg mt-lg mb-0" id="tablaCroAux" class="scroll">
                                 <thead>
                                     <tr>
-                                        <th *ngIf="seccionAux" width="10%">Sección</th>
-                                        <th *ngIf="aeuAux" width="10%">Nro. de AER</th>
+                                        <th width="10%">Sección</th>
+                                        <th *ngIf="aeuAuxRural" width="10%">Nro. de AER</th>
                                         <th width="11%">Estado</th>
                                     </tr>
                                 </thead>
                                 <tbody><!-- max-height="500px">-->
                                     <tr *ngFor="let re1 of registros2">
-                                        <td align="center" *ngIf="seccionAux" (click)="cambiarPdfSeccion(re1.SECCION)">{{re1.SECCION}}</td>
-                                        <td align="center" *ngIf="aeuAux" (click)="cambiarPdfAeu(re1.SECCION,re1.AEU_FINAL)">{{re1.AEU_FINAL}}</td>
+                                        <td align="center" (click)="cambiarPdfSeccion(re1.NUM_SEC)">{{re1.NUM_SEC}}</td>
+                                        <td align="center" *ngIf="aeuAuxRural" (click)="cambiarPdfAeu(re1.NUM_SEC,re1.NUM_AERS)">{{re1.NUM_AERS}}</td>
                                         <td align="center"> <span class="btn btn-success">EXITOSO</span> </td>
                                         <!--<td>
                                             <span [ngSwitch]="[re1.EST_CROQUIS]">
@@ -229,3 +228,4 @@
         </div>
     </div>
 </div>
+<ng2-toasty></ng2-toasty>

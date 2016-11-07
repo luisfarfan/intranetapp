@@ -24,7 +24,7 @@ export class SistemasService {
         url = pk != null ? `${this.api}${pk}/` : this.api;
         return this.http.get(url)
             .map(Helpers.extractData)
-            .catch(Helpers.extractData);
+            .catch(Helpers.handleError);
     }
 
     add(data): Observable<Object> {

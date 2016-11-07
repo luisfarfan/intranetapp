@@ -37,12 +37,8 @@ export class ReportesService {
     private distrito = new DistritoInterface();
     private area = new AreaInterface();
     private zona = new ZonaInterface();
-    //private validLogin = this.loginservice.isValidSession();
-    //private errorLogin = false;
 
     constructor(private reportesservice: ReportesService, private router: Router) {
-        //if (this.validLogin) {
-            this.router.navigate(['reportes'])
-        //}
+        this.router.navigate(['reportes'])
     }
 }

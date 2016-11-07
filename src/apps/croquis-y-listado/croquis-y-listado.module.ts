@@ -32,13 +32,17 @@ import {
 import {
   DepartamentoInterface
 } from './departamento.interface';
-import {Helpers} from './../../app/helper';
+import { Helpers } from './../../app/helper';
 import {
   RegistroInterface
 } from './registro.interface';
+import {
+  RegistroInterfaceRural
+} from './registrorural.interface';
 import 'jszip';
-import {DomSanitizer} from "@angular/platform-browser";
-import {DataTableModule,SharedModule,ButtonModule} from 'primeng/primeng';
+import { DomSanitizer } from "@angular/platform-browser";
+import { DataTableModule, SharedModule, ButtonModule } from 'primeng/primeng';
+import { ToastyModule, ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
 
 
 declare var jQuery;
@@ -46,7 +50,7 @@ declare var jQuery;
 
 @Component({
   templateUrl: 'croquis-y-listado.html',
-  styles:[`.intro { 
+  styles: [`.intro { 
     background-color: #A9E2F3;
   }`],
   providers: [CroquisylistadoService]
@@ -58,12 +62,12 @@ class Croquisylistado {
   private ccpp: any;
   private ccdi: any;
   private zona: any = 0;
-  private urbanoZona :boolean=true;
-  private ruralZona :boolean=false;
-  private verDistrito: boolean=false;
+  private urbanoZona: boolean = true;
+  private ruralZona: boolean = false;
+  private verDistrito: boolean = false;
   private seccion: any = 0;
   private aeu: any = 0;
-  private area: string="0";
+  private area: string = "0";
   private verZona = false;
   private url: string = '';
   private urlCroquis: any;
@@ -72,8 +76,8 @@ class Croquisylistado {
   private tabledata: boolean = false;
   private seccionAux: boolean = false;
   private aeuAux: boolean = false;
+  private aeuAuxRural: boolean = false;
   private distrito: boolean = false;
-  private descarga: Object;
   private registros: Object;
   private registros2: Object;
   private registro: RegistroInterface;
@@ -81,19 +85,27 @@ class Croquisylistado {
   private provincias: ProvinciaInterface;
   private distritos: DistritoInterface;
   private zonas: ZonaInterface;
-  private thisAux: any;
-  
-  private nombreDepa: string="";
-  private nombreDist: string="";
-  private nombreProv: string="";
 
-  private urlSeccion:any="";
-  private urlEmpadronador:any="";
-  
-  constructor(private croquisylistado: CroquisylistadoService, private elementRef: ElementRef, private domSanitizer: DomSanitizer) {
+  private nombreDepa: string = "";
+  private nombreDist: string = "";
+  private nombreProv: string = "";
+
+  private urlSeccion: any = "";
+  private urlEmpadronador: any = "";
+
+  private urlSeccionRural: any = "";
+  private urlEmpadronadorRural: any = "";
+
+  constructor(private croquisylistado: CroquisylistadoService, 
+              private elementRef: ElementRef, 
+              private domSanitizer: DomSanitizer,
+              private toastyService: ToastyService, 
+              private toastyConfig: ToastyConfig) {
     this.cargarDepa()
     this.cargarTabla("0", "0", "0", "0", "0")
     this.registro = this.model
+    this.toastyConfig.theme = 'bootstrap';
+    this.toastyConfig.position = "center-center";
   }
 
   model = new RegistroInterface();
@@ -108,7 +120,7 @@ class Croquisylistado {
     this.ccdd = ccdd;
     this.distrito = false;
     this.verZona = false;
-    this.verDistrito=false;
+    this.verDistrito = false;
     if (this.ccdd != 0) {
       this.croquisylistado.getProvincias(ccdd, ccpp).subscribe(res => {
         this.provincias = <ProvinciaInterface>res;
@@ -126,7 +138,7 @@ class Croquisylistado {
     this.ccpp = ccpp;
     this.distrito = false;
     this.verZona = false;
-    this.verDistrito=false;
+    this.verDistrito = false;
     if (this.ccpp != 0) {
       this.croquisylistado.getDistritos(this.ccdd, ccpp, "0").subscribe(res => {
         this.distritos = <DistritoInterface>res;
@@ -144,8 +156,8 @@ class Croquisylistado {
     this.verZona = false;
     let ubigeo = this.ccdd + this.ccpp + ccdi;
     this.distrito = true;
-    if(this.area=="1"){
-      this.verDistrito=true;
+    if (this.area == "1") {
+      this.verDistrito = true;
     }
     if (this.ccdi != 0) {
       this.croquisylistado.getZonas(ubigeo).subscribe(res => {
@@ -158,24 +170,24 @@ class Croquisylistado {
       this.cargarTabla("2", this.ccdd, this.ccpp, "0", "0")
     }
   }
-  
-  cambiarArea(area: string){
-    this.distrito=false;
+
+  cambiarArea(area: string) {
+    this.distrito = false;
     this.area = area;
-    this.verDistrito=false;
-    this.verZona=false;
-    if(this.area=="0"){
-      this.urbanoZona=true;
-      this.ruralZona=false;      
-    }else{
-      this.urbanoZona=false;
-      this.ruralZona=true;
+    this.verDistrito = false;
+    this.verZona = false;
+    if (this.area == "0") {
+      this.urbanoZona = true;
+      this.ruralZona = false;
+    } else {
+      this.urbanoZona = false;
+      this.ruralZona = true;
     }
     this.cargarDepa()
-    this.cargarTabla("0","0","0","0","0") //se debe cambiar el query para cada area (urbana / rural)
-    this.provincias=null;
-    this.distritos=null;
-    this.zonas=null;   
+    this.cargarTabla("0", "0", "0", "0", "0")
+    this.provincias = null;
+    this.distritos = null;
+    this.zonas = null;
   }
 
   cargarAeu(zona: string) {
@@ -191,89 +203,115 @@ class Croquisylistado {
   }
 
   cargarTabla(tipo: string, ccdd: string, ccpp: string, ccdi: string, zona: string) {
-    if(this.area=="0"){
-      this.croquisylistado.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
-        this.tabledata = true;
-        this.registros = <RegistroInterface>res;
-        this.nombreDepa = this.registros[0].DEPARTAMENTO;
-        this.nombreProv = this.registros[0].PROVINCIA;
-        this.nombreDist = this.registros[0].DISTRITO;
-      })
-    }else{
-      this.croquisylistado.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
-        this.tabledata = true;
-        this.registros = <RegistroInterface>res;//null;
-      })
-    }    
+    this.croquisylistado.getTabla(this.area, tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
+      this.tabledata = true;
+      this.registros = <RegistroInterface>res;
+      this.nombreDepa = this.registros[0].DEPARTAMENTO;
+      this.nombreProv = this.registros[0].PROVINCIA;
+      this.nombreDist = this.registros[0].DISTRITO;
+    })
   }
 
-  getRegistro(tipo_cro) {    
+  destruir(){
+    jQuery('#modal_calidad').modal('show');
+    if(this.area=="0"){
+      jQuery("#combo_urbano").val('0');
+    }else{
+      jQuery("#combo_rural").val('1');
+    }
+  }
+
+  getRegistro(tipo_cro) {
     this.tipo_cro = tipo_cro;
-    if (this.tipo_cro == 0) {
-      this.seccionAux = false;
-      this.aeuAux = false;
-      this.getRuta();
+    if (this.area == "0") {
+      if (this.tipo_cro == 0) {
+        this.seccionAux = false;
+        this.aeuAux = false;
+        this.getRuta();
+      }
+      if (this.tipo_cro == 1) {
+        this.seccionAux = true;
+        this.aeuAux = false;
+        this.cambiarPdfSeccion(1);
+      }
+      if (this.tipo_cro == 2) {
+        this.seccionAux = true;
+        this.aeuAux = true;
+        this.cambiarPdfAeu(1, 1);
+      }
+      this.url = this.area + '/' + this.tipo_cro + '/' + this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/' + this.zona + '/';
+      this.croquisylistado.getRegistro(this.url).subscribe((data) => {
+        this.registros2 = <RegistroInterface>data;
+      })
+    }else{
+      if (this.tipo_cro == 0) {
+        this.aeuAuxRural = false;
+        this.getRuta();
+      }
+      if (this.tipo_cro == 1) {
+        this.aeuAuxRural = false;
+        this.cambiarPdfSeccion("01-02");
+      }
+      if (this.tipo_cro == 2) {
+        this.aeuAuxRural = true;
+        this.cambiarPdfAeu("01-02","001-007");
+      }
+      this.url = this.area + '/' + this.tipo_cro + '/' + this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/' + "0" + '/';
+      this.croquisylistado.getRegistro(this.url).subscribe((data) => {
+        this.registros2 = <RegistroInterfaceRural>data;
+      })
     }
-    if (this.tipo_cro == 1) {
-      this.seccionAux = true;
-      this.aeuAux = false;
-      this.cambiarPdfSeccion(1);
-    }
-    if (this.tipo_cro == 2) {
-      this.seccionAux = true;
-      this.aeuAux = true;
-      this.cambiarPdfAeu(1, 1);
-    }
-    this.url = this.tipo_cro + '/' + this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/' + this.zona + '/';
-    this.croquisylistado.getRegistro(this.url).subscribe((data) => {
-      this.registros2 = <RegistroInterface>data;
-    })       
   }
 
   getRuta() {
-    let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona;
     let ubigeo = this.ccdd + this.ccpp + this.ccdi;
-    if(this.area=="0"){
+    if (this.area == "0") {
+      let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona;
       this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/urbano/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
-    }else{
-      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/rural/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
-    } 
-    this.urlSeccion = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://172.16.2.205:8000/descargarPdf/${ubigeo}/${this.zona}/1/${this.area}/`);
-    this.urlEmpadronador = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://172.16.2.205:8000/descargarPdf/${ubigeo}/${this.zona}/2/${this.area}/`);
+      this.urlSeccion = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://172.16.2.205:8000/descargarPdf/${ubigeo}/${this.zona}/1/${this.area}/`);
+      this.urlEmpadronador = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://172.16.2.205:8000/descargarPdf/${ubigeo}/${this.zona}/2/${this.area}/`);
+    } else {
+      let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + '-01-02' ;
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/rural/${ubigeo}/${urlCroquisAux}.pdf`);
+      this.urlSeccionRural = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://172.16.2.205:8000/descargarPdf/${ubigeo}/0/1/${this.area}/`);
+      this.urlEmpadronadorRural = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://172.16.2.205:8000/descargarPdf/${ubigeo}/0/2/${this.area}/`);      
+    }
   }
 
   cambiarPdfSeccion(seccion) {
     this.seccion = seccion;
-    let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona + ('00' + this.seccion).slice(-3);
     let ubigeo = this.ccdd + this.ccpp + this.ccdi;
-    if(this.area=="0"){
+    if (this.area == "0") {
+      let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona + ('00' + this.seccion).slice(-3);
       this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/urbano/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
-    }else{
-      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/rural/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    } else {
+      let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + '-' + this.seccion;
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/rural/${ubigeo}/${urlCroquisAux}.pdf`);
     }
     jQuery('#tablaCroAux tr').click(function () {
-        jQuery('#tablaCroAux tr').each(function(){
-          jQuery(this).removeClass('intro')
-        })
-        jQuery(this).addClass('intro');
+      jQuery('#tablaCroAux tr').each(function () {
+        jQuery(this).removeClass('intro')
+      })
+      jQuery(this).addClass('intro');
     });
   }
 
   cambiarPdfAeu(seccion, aeu) {
     this.seccion = seccion;
     this.aeu = aeu;
-    let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona + ('00' + this.seccion).slice(-3) + this.aeu;
     let ubigeo = this.ccdd + this.ccpp + this.ccdi;
-    if(this.area=="0"){
+    if (this.area == "0") {
+      let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona + ('00' + this.seccion).slice(-3) + this.aeu;
       this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/urbano/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
-    }else{
-      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/rural/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    } else {
+      let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + '-' + this.seccion + '-' + this.aeu;
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/rural/${ubigeo}/${urlCroquisAux}.pdf`);
     }
     jQuery('#tablaCroAux tr').click(function () {
-        jQuery('#tablaCroAux tr').each(function(){
-          jQuery(this).removeClass('intro')
-        })
-        jQuery(this).addClass('intro');
+      jQuery('#tablaCroAux tr').each(function () {
+        jQuery(this).removeClass('intro')
+      })
+      jQuery(this).addClass('intro');
     });
   }
 
@@ -288,13 +326,25 @@ class Croquisylistado {
     } else {
       this.urlProcesar = this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/' + this.area + '/' + '/0/';
     }
-    alert("PROCESANDO GENERACION DE CROQUIS Y LISTADO: " + this.urlProcesar)
+    let toastOptions1: ToastOptions = {
+                            title: 'PROCESANDO',
+                            msg: this.urlProcesar,
+                            showClose: true,
+                            timeout: 5000,
+    };
+    this.addToast(toastOptions1 , 'info');
   }
 
-  descargarZip(tipo) {
-    this.croquisylistado.getZip(this.ccdd, this.ccpp, this.ccdi,this.zona,tipo).subscribe(res => {
-        res;
-    })
+  addToast(options: ToastOptions, tipo: string = 'default') {
+        let toastOptions: ToastOptions = options
+        switch (tipo) {
+            case 'default': this.toastyService.default(toastOptions); break;
+            case 'info': this.toastyService.info(toastOptions); break;
+            case 'success': this.toastyService.success(toastOptions); break;
+            case 'wait': this.toastyService.wait(toastOptions); break;
+            case 'error': this.toastyService.error(toastOptions); break;
+            case 'warning': this.toastyService.warning(toastOptions); break;
+        }
   }
 
 }
@@ -305,7 +355,7 @@ const routes: Routes = [{
 }];
 
 @NgModule({
-  imports: [CommonModule, RouterModule.forChild(routes), FormsModule, DataTableModule,SharedModule,ButtonModule],
+  imports: [CommonModule, RouterModule.forChild(routes), FormsModule, DataTableModule, SharedModule, ButtonModule, ToastyModule.forRoot()],
   declarations: [Croquisylistado]
 })
 export default class CroquisylistadoModule { }

@@ -20,7 +20,6 @@ import {
 import {
   FormsModule
 } from '@angular/forms';
-
 import {
   ZonaInterface
 } from './zona.interface';
@@ -37,15 +36,22 @@ import { Helpers } from './../../app/helper';
 import {
   RegistroInterface
 } from './registro.interface';
+import {
+  RegistroInterfaceRural
+} from './registrorural.interface';
 import 'jszip';
 import { DomSanitizer } from "@angular/platform-browser";
-import { DataTableModule, SharedModule, ButtonModule } from 'primeng/primeng';
+import { DataTableModule, SharedModule, ButtonModule, ConfirmDialogModule } from 'primeng/primeng';
+import { ToastyModule, ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
 import {
   Reporte01Interface
 } from './reporte01.interface';
 import {
   Reporte03Interface
 } from './reporte03.interface';
+import {
+  IndicadoresInterface
+} from './IndicadoresInterface.interface';
 
 declare var jQuery;
 
@@ -59,14 +65,18 @@ declare var jQuery;
 
 class Controldecalidad {
 
+
   private ccdd: any;
   private ccpp: any;
   private ccdi: any;
   private zona: any = 0;
-  private area: string="0";
+  private area: string = "0";
 
-  private urbanoZona :boolean=true;
-  private ruralZona :boolean=false;
+  private urbanoZona: boolean = true;
+  private ruralZona: boolean = false;
+
+
+  private confirmacion: Object;
 
   private tipo_cro: number = 0;
   private contador: number = 0;
@@ -82,8 +92,10 @@ class Controldecalidad {
   private provincias: ProvinciaInterface;
   private distritos: DistritoInterface;
   private zonas: ZonaInterface;
+  private indicadores: IndicadoresInterface;
   private seccionAux: boolean = false;
   private aeuAux: boolean = false;
+  private aeuAuxRural: boolean = false;
   private abc: boolean = true;
   private verZonaPrevia: boolean = false;
   private tablaaa: any;
@@ -99,12 +111,32 @@ class Controldecalidad {
   private datareporte03: Reporte03Interface;
   private tipo: string = '';
 
-  private verDistrito: boolean=false;
+  private nombreDepa: string = "";
+  private nombreDist: string = "";
+  private nombreProv: string = "";
 
-  constructor(private controldecalidadservice: ControldecalidadService, private elementRef: ElementRef, private domSanitizer: DomSanitizer) {
+  private verDistrito: boolean = false;
+
+  private toastOptions1: ToastOptions = {
+    title: 'Guardado',
+    msg: `¡Guardado exitoso!`,
+    showClose: true,
+    timeout: 5000,
+  };
+
+  private toastOptions2: ToastOptions = {
+    title: 'Guardado',
+    msg: `¡Guardado erróneo!`,
+    showClose: true,
+    timeout: 5000,
+  };
+
+  constructor(private controldecalidadservice: ControldecalidadService, private elementRef: ElementRef, private domSanitizer: DomSanitizer, private toastyService: ToastyService, private toastyConfig: ToastyConfig) {
     this.cargarDepaInicial()
     this.cargarTabla("0", "0", "0", "0", "0")
     this.registro = this.model
+    this.toastyConfig.theme = 'bootstrap';
+    this.toastyConfig.position = "center-center";
   }
 
   model = new RegistroInterface();
@@ -126,7 +158,7 @@ class Controldecalidad {
   cargarProvincias(ccdd: string, ccpp: string = "0") {
     this.ccdd = ccdd;
     this.distrito = false;
-    this.verDistrito=false;
+    this.verDistrito = false;
     this.verZona = false;
     this.verZonaPrevia = false;
     if (this.ccdd != 0) {
@@ -143,7 +175,7 @@ class Controldecalidad {
   }
 
   cargarDistritos(ccpp: string) {
-    this.verDistrito=false;
+    this.verDistrito = false;
     this.ccpp = ccpp;
     this.distrito = false;
     this.verZona = false;
@@ -160,22 +192,22 @@ class Controldecalidad {
     }
   }
 
-  cambiarArea(area: string){
-    this.verDistrito=false;
+  cambiarArea(area: string) {
+    this.verDistrito = false;
     this.verZona = false;
     this.area = area;
-    if(this.area=="0"){
-      this.urbanoZona=true;
-      this.ruralZona=false;
-    }else{
-      this.urbanoZona=false;
-      this.ruralZona=true;
+    if (this.area == "0") {
+      this.urbanoZona = true;
+      this.ruralZona = false;
+    } else {
+      this.urbanoZona = false;
+      this.ruralZona = true;
     }
     this.cargarDepa()
-    this.cargarTabla("0","0","0","0","0") //se debe cambiar el query para cada area (urbana / rural)
-    this.provincias=null;
-    this.distritos=null;
-    this.zonas=null;   
+    this.cargarTabla("0", "0", "0", "0", "0") //se debe cambiar el query para cada area (urbana / rural)
+    this.provincias = null;
+    this.distritos = null;
+    this.zonas = null;
   }
 
   cargarZonas(ccdi: string) {
@@ -184,8 +216,8 @@ class Controldecalidad {
     let ubigeo = this.ccdd + this.ccpp + ccdi;
     this.distrito = true;
     if (this.ccdi != 0) {
-      if(this.area=="1"){        
-        this.verDistrito=true;
+      if (this.area == "1") {
+        this.verDistrito = true;
       }
       this.controldecalidadservice.getZonas(ubigeo).subscribe(res => {
         this.zonas = <ZonaInterface>res;
@@ -193,7 +225,7 @@ class Controldecalidad {
       this.verZonaPrevia = true;
       this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
     } else {
-      this.verDistrito=false;
+      this.verDistrito = false;
       this.zonas = null;
       this.distrito = false;
       this.verZonaPrevia = false;
@@ -214,63 +246,101 @@ class Controldecalidad {
   }
 
   cargarTabla(tipo: string, ccdd: string, ccpp: string, ccdi: string, zona: string) {
-    if(this.area=="0"){
-      this.controldecalidadservice.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
+    this.controldecalidadservice.getTabla(this.area, tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
+      if (this.area == "0") {
         this.registros = <RegistroInterface>res;
-      })
-    }else{
-      this.controldecalidadservice.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
-        this.registros = <RegistroInterface>res;//null;
-      })
-    }
-  }
-
-  getRegistro(tipo_cro) {
-    this.tipo_cro = tipo_cro;
-    if (this.tipo_cro == 0) {
-      this.obser = false;
-      this.seccionAux = false;
-      this.aeuAux = false;
-      this.getRuta();
-    }
-    if (this.tipo_cro == 1) {
-      this.obser = false;
-      this.seccionAux = true;
-      this.aeuAux = false;
-      this.cambiarPdfSeccion(1);
-    }
-    if (this.tipo_cro == 2) {
-      this.obser = true;
-      this.seccionAux = true;
-      this.aeuAux = true;
-      this.cambiarPdfAeu(1, 1);
-    }
-    this.url = this.tipo_cro + '/' + this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/' + this.zona + '/';
-    this.controldecalidadservice.getRegistro(this.url).subscribe((data) => {
-      this.registros2 = <RegistroInterface>data;
+      } else {
+        this.registros = <RegistroInterfaceRural>res;
+      }
+      this.nombreDepa = this.registros[0].DEPARTAMENTO;
+      this.nombreProv = this.registros[0].PROVINCIA;
+      this.nombreDist = this.registros[0].DISTRITO;
     })
   }
 
-  getRuta() {
-    let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona;
-    let ubigeo = this.ccdd + this.ccpp + this.ccdi;
+  destruir(){
+    jQuery('#modal_calidad').modal('show');
     if(this.area=="0"){
-      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/urbano/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+      jQuery("#combo_urbano").val('0');
     }else{
-      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/rural/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
-    } 
+      jQuery("#combo_rural").val('1');
+    }
+  }  
+
+  getRegistro(tipo_cro) {
+    this.tipo_cro = tipo_cro;
+    if (this.area == "0") {
+      if (this.tipo_cro == 0) {
+        this.obser = false;
+        this.seccionAux = false;
+        this.aeuAux = false;
+        this.getRuta();
+      }
+      if (this.tipo_cro == 1) {
+        this.obser = false;
+        this.seccionAux = true;
+        this.aeuAux = false;
+        this.cambiarPdfSeccion(1);
+      }
+      if (this.tipo_cro == 2) {
+        this.obser = true;
+        this.seccionAux = true;
+        this.aeuAux = true;
+        this.cambiarPdfAeu(1, 1);
+      }
+      this.url = this.area + '/' + this.tipo_cro + '/' + this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/' + this.zona + '/';
+      this.controldecalidadservice.getRegistro(this.url).subscribe((data) => {
+        this.registros2 = <RegistroInterface>data;
+      })
+    } else {
+      console.log(this.tipo_cro);
+      this.url = this.area + '/' + this.tipo_cro + '/' + this.ccdd + '/' + this.ccpp + '/' + this.ccdi + '/' + "0" + '/';
+      this.controldecalidadservice.getRegistro(this.url).subscribe((data) => {
+        this.registros2 = <RegistroInterfaceRural>data;
+        console.log(this.registros2[0].NUM_SEC)
+      })
+      if (this.tipo_cro == 0) {
+        this.aeuAuxRural = false;
+        this.getRuta();
+      }
+      if (this.tipo_cro == 1) {
+        console.log("entro...");
+        this.aeuAuxRural = false;
+        this.obser = false;
+        this.cambiarPdfSeccion(this.registros2[0].NUM_SEC);
+      }
+      if (this.tipo_cro == 2) {
+        this.aeuAuxRural = true;
+        this.obser = true;
+        this.cambiarPdfAeu("01-02", "001-007");
+      }
+    }    
+  }
+
+  getRuta() {
+    let urlCroquisAux;
+    let ubigeo = this.ccdd + this.ccpp + this.ccdi;
+    if (this.area == "0") {
+      urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona;
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/urbano/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    } else {
+      urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.seccion;
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/rural/${ubigeo}/${urlCroquisAux}.pdf`);
+      console.log(this.urlCroquis);
+    }
     this.urlSeccion = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://172.16.2.205:8000/descargarPdf/${ubigeo}/${this.zona}/1/${this.area}/`);
     this.urlEmpadronador = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://172.16.2.205:8000/descargarPdf/${ubigeo}/${this.zona}/2/${this.area}/`);
   }
 
   cambiarPdfSeccion(seccion) {
     this.seccion = seccion;
-    let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona + ('00' + this.seccion).slice(-3);
     let ubigeo = this.ccdd + this.ccpp + this.ccdi;
-    if(this.area=="0"){
+    if (this.area == "0") {
+      let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona + ('00' + this.seccion).slice(-3);
       this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/urbano/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
-    }else{
-      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/rural/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    } else {
+      let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + '-' + this.seccion;
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/rural/${ubigeo}/${urlCroquisAux}.pdf`);
     }
     jQuery('#tablaCroAux tr').click(function () {
       jQuery('#tablaCroAux tr').each(function () {
@@ -283,12 +353,13 @@ class Controldecalidad {
   cambiarPdfAeu(seccion, aeu) {
     this.seccion = seccion;
     this.aeu = aeu;
-    let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona + ('00' + this.seccion).slice(-3) + this.aeu;
     let ubigeo = this.ccdd + this.ccpp + this.ccdi;
-    if(this.area=="0"){
+    if (this.area == "0") {
+      let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona + ('00' + this.seccion).slice(-3) + this.aeu;
       this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/urbano/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
-    }else{
-      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/rural/${ubigeo}/${this.zona}/${urlCroquisAux}.pdf`);
+    } else {
+      let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + '-' + this.seccion + '-' + this.aeu;
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/rural/${ubigeo}/${urlCroquisAux}.pdf`);
     }
     jQuery('#tablaCroAux tr').click(function () {
       jQuery('#tablaCroAux tr').each(function () {
@@ -301,26 +372,76 @@ class Controldecalidad {
   cargarTablaAux() {
     this.controldecalidadservice.getTablaAux('0', this.ccdd, this.ccpp, this.ccdi).subscribe(res => {
       this.datareporte01 = <Reporte01Interface>res;
-      })
+    })
     this.controldecalidadservice.getTablaAux('2', this.ccdd, this.ccpp, this.ccdi).subscribe(res => {
       this.datareporte03 = <Reporte03Interface>res;
-      })        
-  }
-
-  guardarObs(){
-    let ubigeo = this.ccdd + this.ccpp + this.ccdi;
-    var texto = jQuery("textarea#comentario").val();
-    let data = {ubigeo:ubigeo,zona:this.zona,aeu:this.aeu,texto:texto}
-    this.controldecalidadservice.guardarObservacion(data).subscribe(res => {      
     })
   }
 
-  guardarInd(){
-    
+  addToast(options: ToastOptions, tipo: string = 'default') {
+    let toastOptions: ToastOptions = options
+    switch (tipo) {
+      case 'default': this.toastyService.default(toastOptions); break;
+      case 'info': this.toastyService.info(toastOptions); break;
+      case 'success': this.toastyService.success(toastOptions); break;
+      case 'wait': this.toastyService.wait(toastOptions); break;
+      case 'error': this.toastyService.error(toastOptions); break;
+      case 'warning': this.toastyService.warning(toastOptions); break;
+    }
+  }
+
+  guardarObs() {
+    let ubigeo = this.ccdd + this.ccpp + this.ccdi;
+    var texto = jQuery("textarea#comentario").val();
+    let data;
+    if (this.area == "0") {
+      data = { ubigeo: ubigeo, zona: this.zona, aeu: this.aeu, texto: texto, area: this.area }
+    } else {
+      data = { ubigeo: ubigeo, zona: this.zona, aeu: this.aeu.replace("-", "").substring(0, 3), texto: texto, area: this.area }
+    }
+    this.controldecalidadservice.guardarObservacion(data).subscribe(res => {
+      this.confirmacion = res;
+      if (this.confirmacion[0] == "1") {
+        this.addToast(this.toastOptions1, 'success');
+      } else {
+        this.addToast(this.toastOptions2, 'error');
+      }
+    })
+  }
+
+  guardarInd() {
+    let ubigeo = this.ccdd + this.ccpp + this.ccdi;
+    let data;
+    if (this.area == "0") {
+      data = { ubigeo: ubigeo, zona: this.zona, aeu: this.aeu, indicadores: this.indicadores, area: this.area }
+    } else {
+      data = { ubigeo: ubigeo, zona: this.zona, aeu: this.aeu.replace("-", "").substring(0, 3), indicadores: this.indicadores, area: this.area }
+    }
+    this.controldecalidadservice.guardarIndicadores(data).subscribe(res => {
+      this.confirmacion = res;
+      if (this.confirmacion[0] == "1") {
+        this.addToast(this.toastOptions1, 'success');
+      } else {
+        this.addToast(this.toastOptions2, 'error');
+      }
+    })
+  }
+
+  indicadorCalidad() {
+    let ubigeo = this.ccdd + this.ccpp + this.ccdi;
+    if (this.area == "0") {
+      this.controldecalidadservice.obtenerIndicadores(this.area, ubigeo, this.zona, this.aeu).subscribe(res => {
+        this.indicadores = <IndicadoresInterface>res;
+      })
+    } else {
+      this.controldecalidadservice.obtenerIndicadores(this.area, ubigeo, this.zona, this.aeu.replace("-", "").substring(0, 3)).subscribe(res => {
+        this.indicadores = <IndicadoresInterface>res;
+      })
+    }
   }
 
   descargarExcel(id, nom) {
-    Helpers.descargarExcel(id, nom);    
+    Helpers.descargarExcel(id, nom);
   }
 
 }
@@ -331,7 +452,7 @@ const routes: Routes = [{
 }];
 
 @NgModule({
-  imports: [CommonModule, RouterModule.forChild(routes), FormsModule, DataTableModule, SharedModule, ButtonModule],
+  imports: [CommonModule, RouterModule.forChild(routes), FormsModule, DataTableModule, SharedModule, ButtonModule, ToastyModule.forRoot(), ConfirmDialogModule],
   declarations: [Controldecalidad]
 })
 export default class ControldecalidadModule { }

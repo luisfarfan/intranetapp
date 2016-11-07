@@ -36,18 +36,6 @@ export class CroquisylistadoService {
     private tablaUrlAux2: string = 'http://bromero.inei.com.pe:8000/crorecargaTabla02/';
     private tablaUrlZip: string = 'http://bromero.inei.com.pe:8000/crodescargarPdf/';
 
-    /*private depaUrl: string = 'http://bromero.inei.com.pe:8090/recargaDepa/';
-    private provUrl: string = 'http://bromero.inei.com.pe:8090/recargaProv/';
-    private distUrl: string = 'http://bromero.inei.com.pe:8090/recargaDis/';
-    private zonaUrl: string = 'http://bromero.inei.com.pe:8090/recargaZona/';
-    private tablaUrlAux: string = 'http://bromero.inei.com.pe:8090/crorecargaTabla01/';
-    private tablaUrlAux2: string = 'http://bromero.inei.com.pe:8090/crorecargaTabla02/';
-    private tablaUrlZip: string = 'http://bromero.inei.com.pe:8090/crodescargarPdf/';*/
-
-    getCargaDepaInicial(): Observable < Object >{
-        return this.http.get(this.depaUrl).map(this.extractData).catch(this.handleError)
-    }
-
     getDepartamentos(): Observable < Object > {
         return this.http.get(this.depaUrl).map(this.extractData).catch(this.handleError)
     }
@@ -70,8 +58,8 @@ export class CroquisylistadoService {
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
 
-    getTabla(tipo: string="0", ccdd: string="0", ccpp: string="0", ccdi: string="0" ,zona: string="0"): Observable < Object > {
-        let queryparameters:string = `${tipo}/${ccdd}/${ccpp}/${ccdi}/${zona}/`;
+    getTabla(area: string="",tipo: string="0", ccdd: string="0", ccpp: string="0", ccdi: string="0" ,zona: string="0"): Observable < Object > {
+        let queryparameters:string = `${area}/${tipo}/${ccdd}/${ccpp}/${ccdi}/${zona}/`;
         let url:string = this.tablaUrlAux + queryparameters;
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }

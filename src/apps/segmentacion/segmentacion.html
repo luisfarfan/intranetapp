@@ -8,7 +8,7 @@
                     <label for="lDepartamento"><h5> DEPARTAMENTO</h5></label>
                     <select class="form-control" name="departamentos" (change)="cargarProvincias($event.target.value)">
                         <option value="0">TODOS</option>
-                        <option *ngFor="let el of departamentos" value="{{ el.CCDD }}">{{ el.DEPARTAMENTO }}</option>
+                        <option *ngFor="let el of departamentos" value="{{ el.CCDD }}">{{ el.CCDD }} {{ el.DEPARTAMENTO }}</option>
                     </select>
                 </div>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -16,7 +16,7 @@
                     <label for="lProvincia"><h5> PROVINCIA</h5></label>
                     <select class="form-control" name="provincias" (change)="cargarDistritos($event.target.value)">
                         <option value="0">TODOS</option>
-                        <option *ngFor="let e of provincias" value="{{ e.CCPP }}">{{ e.PROVINCIA }}</option>
+                        <option *ngFor="let e of provincias" value="{{ e.CCPP }}">{{ e.CCPP }} {{ e.PROVINCIA }}</option>
                     </select>
                 </div>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -24,7 +24,7 @@
                     <label for="lDistrito"><h5> DISTRITO</h5></label>
                     <select class="form-control" name="distritos" (change)="cargarZonas($event.target.value)">
                         <option value="0">TODOS</option>
-                        <option *ngFor="let e1 of distritos" value="{{ e1.CCDI }}">{{ e1.DISTRITO }}</option>
+                        <option *ngFor="let e1 of distritos" value="{{ e1.CCDI }}">{{ e1.CCDI }} {{ e1.DISTRITO }}</option>
                     </select>
                 </div>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -43,13 +43,6 @@
                         <option *ngFor="let er of zonas" value="{{ er.UBIGEO }}">{{ er.ZONA }}</option>
                     </select>
                 </div>
-                <!--<div *ngIf="ruralZona" class="form-group">
-                    <label for="lSeccion"><h5> SECCION</h5></label>
-                    <select class="form-control" name="seccion" (change)="cargarAeu($event.target.value)">
-                        <option value="0">TODOS</option>
-                        <option *ngFor="let er1 of secciones" value="{{ er.UBIGEO }}">{{ er.ZONA }}</option>
-                    </select>
-                </div>-->
             </form>
 
             <form action="" class="inline">                
@@ -86,7 +79,7 @@
                     <p-column *ngIf="urbanoZona" field="ZONA" header="ZONA" [sortable]="true"></p-column>                    
                     <p-column field="NUM_SEC" header="NRO. DE SECCIONES" [sortable]="true"></p-column>
                     <p-column *ngIf="urbanoZona" field="NUM_AEU" header="NRO. DE AEUs" [sortable]="true"></p-column>
-                    <p-column *ngIf="ruralZona" field="NUM_AEU" header="NRO. DE AERs" [sortable]="true"></p-column> 
+                    <p-column *ngIf="ruralZona" field="NUM_AERS" header="NRO. DE AERs" [sortable]="true"></p-column> 
                     <p-column field="EST_SEG" styleClass="col-button" header="ESTADO">
                         <template let-col let-car="rowData" pTemplate type="body">
                             <span [ngSwitch]="car[col.field]">
@@ -102,3 +95,4 @@
         </section>
     </div>
 </div>
+<ng2-toasty></ng2-toasty>
