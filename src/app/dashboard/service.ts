@@ -37,7 +37,7 @@ export class ServiceMenu {
   }
 
   getMenu(): Observable<Object> {
-    return this.http.get('http://localhost:8000/api/menu/').map(Helpers.extractData)
+    return this.http.get('http://bromero.inei.com.pe:8050/api/menu/').map(Helpers.extractData)
   }
 
 }

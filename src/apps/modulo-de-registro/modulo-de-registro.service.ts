@@ -34,14 +34,8 @@ export class RegistroService {
     prov_url: string = `${Settings.HOST_LOCAL()}provincias/`;
     dist_url: string = `${Settings.HOST_LOCAL()}distritos/`;
     local_url: string = `${Settings.HOST_LOCAL()}api/local/`;
-    infra_url: string = `${Settings.HOST_LOCAL()}api/infraestructura/`;
-    infralocal_url: string = `${Settings.HOST_LOCAL()}api/infraestructuralocal/`;
-    localinfra_url: string = `${Settings.HOST_LOCAL()}localesinfra/`;
-    localinfra_ubigeo: string = `${Settings.HOST_LOCAL()}localesinfrabyUbigeo/`;
-
-    aula_url: string = `${Settings.HOST_LOCAL()}api/aula/`;
-    aula_url2: string = `${Settings.HOST_LOCAL()}aulasbylocal/`;
-    infralocal2_url: string = `${Settings.HOST_LOCAL()}infralocal/`;
+    etapa_url: string = `${Settings.HOST_LOCAL()}api/etapa/`;
+    cursos_url: string = `${Settings.HOST_LOCAL()}cursosetapa/`;
 
     constructor(private http: Http) { }
 
@@ -63,22 +57,27 @@ export class RegistroService {
             .catch(Helpers.handleError)
     }
 
-    getLocal(): Observable<Object> {
-        return this.http.get(this.local_url)
-            .map(Helpers.extractData)
-            .catch(Helpers.handleError)
-    }
-    getLocalBy(pklocal): Observable<Object> {
-        return this.http.get(this.localinfra_url + pklocal + '/')
-            .map(Helpers.extractData)
-            .catch(Helpers.handleError)
-    }
-    getLocalbyUbigeo(ubigeo) {
-        return this.http.get(this.localinfra_ubigeo + ubigeo + '/')
+    getEtapa(): Observable<Object> {
+        return this.http.get(this.etapa_url)
             .map(Helpers.extractData)
             .catch(Helpers.handleError)
     }
 
+    getCursosbyEtapa(idetapa: any): Observable<Object> {
+        return this.http.get(`${this.cursos_url}${idetapa}/`)
+            .map(Helpers.extractData)
+            .catch(Helpers.handleError)
+    }
+
+    addLocal(data): Observable<Object> {
+        let body = JSON.stringify(data);
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.post(this.local_url, body, options)
+            .map(Helpers.extractData)
+            .catch(Helpers.handleError);
+    }
     editLocal(pk, data): Observable<Object> {
         let body = JSON.stringify(data);
         let headers = new Headers({ 'Content-Type': 'application/json' });
@@ -89,72 +88,14 @@ export class RegistroService {
             .catch(Helpers.handleError);
     }
 
-    addLocal(data): Observable<Object> {
-        let body = JSON.stringify(data);
-        let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.local_url, body, options)
-            .map(Helpers.extractData)
-            .catch(Helpers.handleError);
-    }
-
-    getInfraestructura(): Observable<Object> {
-        return this.http.get(this.infra_url)
-            .map(Helpers.extractData)
+    deleteLocal(pk): Observable<Object> {
+        let url: string = `${this.local_url}${pk}/`;
+        return this.http.delete(url)
+            .map(() => null)
             .catch(Helpers.handleError)
     }
 
-    addInfraLocal(data): Observable<Object> {
-        let body = JSON.stringify(data);
-        let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.infralocal_url, body, options)
-            .map(Helpers.extractData)
-            .catch(Helpers.handleError);
-    }
-    editInfraLocal(pk, data): Observable<Object> {
-        let body = JSON.stringify(data);
-        let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers });
-        return this.http.put(this.infralocal_url + pk + '/', body, options)
-            .map(Helpers.extractData)
-            .catch(Helpers.handleError);
-    }
 
-    addAula(data) {
-        let body = JSON.stringify(data);
-        let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers });
-        return this.http.post(this.aula_url, body, options)
-            .map(Helpers.extractData)
-            .catch(Helpers.handleError);
-    }
-
-    getAula(pk): Observable<Object> {
-        return this.http.get(this.aula_url2 + pk + '/')
-            .map(Helpers.extractData)
-            .catch(Helpers.handleError)
-    }
-
-    getInfraestructuraLocal(local, infra) {
-        let url = `${this.infralocal2_url}${local}/${infra}/`
-        return this.http.get(url)
-            .map(Helpers.extractData)
-            .catch(Helpers.handleError)
-    }
-    deleteAula(pk){
-        return this.http.delete(this.aula_url + pk + '/')
-            .map(_=>null)
-            .catch(Helpers.handleError)
-    }
-    editAula(pk, data): Observable<Object> {
-        let body = JSON.stringify(data);
-        let headers = new Headers({ 'Content-Type': 'application/json' });
-        let options = new RequestOptions({ headers: headers });
-        return this.http.put(this.aula_url + pk + '/', body, options)
-            .map(Helpers.extractData)
-            .catch(Helpers.handleError);
-    }
 
 
 }

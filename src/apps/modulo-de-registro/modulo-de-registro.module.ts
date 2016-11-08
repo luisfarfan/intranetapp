@@ -23,6 +23,7 @@ import { DataTableModule, SharedModule } from 'primeng/primeng';
 import { MaterialModule } from '@angular/material';
 import { TypeaheadModule } from 'ng2-bootstrap/components/typeahead';
 import { ToastyModule } from 'ng2-toasty';
+import { ConfirmDialogModule } from 'primeng/primeng';
 import 'ng2-datetime/src/vendor/bootstrap-datepicker/bootstrap-datepicker.min.js';
 import 'ng2-datetime/src/vendor/bootstrap-timepicker/bootstrap-timepicker.min.js';
 import { DatepickerModule } from 'ng2-bootstrap/components/datepicker';

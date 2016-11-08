@@ -6,6 +6,8 @@ import { RegistroService } from './modulo-de-registro.service'
 import { Local, Aula } from './local';
 import { Infraestructura } from './infraestructura';
 import { ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
+import { NgForm } from '@angular/forms';
+import { ConfirmationService } from 'primeng/primeng';
 import { CustomValidators } from 'ng2-validation';
 import { dateValidator, FechaisMayor } from './../CustomValidators';
 declare var jQuery: any;
@@ -26,51 +28,29 @@ export class RegistroComponent implements OnInit {
 
   @ViewChild('fecha_inicio_input') fecha_inicio_input
   public mask_date = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/]
+  // Filtros variables
+  departamentos: Array<Object> = [];
+  provincias: Array<Object> = [];
+  distritos: Array<Object> = [];
+  etapas: Array<Object> = [];
+  cursos: Array<Object> = [];
+
+  //arrays variables, set variables
+  tipo_de_via: Array<Object> = [
+    { via: 'AVENIDA', 'P20': 1, P20_NOMBRE: 'AV.' },
+    { via: 'CALLE', 'P20': 2, P20_NOMBRE: 'CAL.' },
+    { via: 'JIRON', 'P20': 3, P20_NOMBRE: 'JR.' },
+    { via: 'PASAJE', 'P20': 4, P20_NOMBRE: 'PSJ.' },
+    { via: 'CARRETERA', 'P20': 5, P20_NOMBRE: 'CARR.' },
+    { via: 'OTRO', 'P20': 6, P20_NOMBRE: 'OTRO.' },
+  ];
+  tipo_de_via_selected: Object = {};
+
   local = new Local();
-  aula = new Aula();
-  deleteaula: boolean = false;
-  infraestructuras: any;
-  accion_addlocal: boolean = false;
-  accion_editlocal: boolean = false;
-  registrarAula: boolean = false;
-  selectsInfraestructuras: boolean = false;
-  aulasbylocal: any;
-  selectedAula: any;
-  // Ubigeo data
-  departamentos: Array<Object> = []
-  selectedLocal: any;
-  alert_nofindlocales: boolean = false;
-  provincias: Array<Object> = []
-  distritos: Array<Object> = []
-  selectedDepartamento: any;
-  selectedProvincia: any;
-  selectedDistrito: any;
-  _infraestucturas: any;
-  infraestucturas: any;
-  infraSelected: Array<Object>;
-  search_locales: Object;
-  submitted: boolean = false;
-  searchedlocales: boolean = false;
-  max_aulas: boolean = false;
 
   // Form
-
   localForm: FormGroup;
-  formErrors = {
-    'nombre_local': '',
-    'fecha_inicio': '',
-    'direccion': '',
-    'referencia': '',
-    'total_pea': '',
-    'total_aulas_max': '',
-    'funcionario_nombre': '',
-    'funcionario_email': '',
-    'funcionario_celular': '',
-    'contacto_nombre': '',
-    'contacto_email': '',
-    'contacto_celular': '',
-    'telefono_local': '',
-  };
+  formErrors: Object = {};
   constructor(
     private registroservice: RegistroService,
     private fb: FormBuilder,
@@ -82,75 +62,11 @@ export class RegistroComponent implements OnInit {
 
   ngOnInit() {
     this.getDepartamentos();
+    this.getEtapas();
     this.local = new Local();
     this.buildForm();
-    this.getInfraestructura();
-  }
 
-  accionAddLocal() {
-    this.accion_editlocal = false;
-    this.accion_addlocal = true;
-    this.registrarAula = false;
   }
-  onRowSelect(e) {
-    this.accion_addlocal = false;
-    this.accion_editlocal = true;
-    this.registrarAula = true;
-    this.local = this.selectedLocal
-    console.log(this.selectedLocal);
-    this.buildForm();
-    //console.log(this.selectedLocal, this.local)
-    for (let i in this.infraestructuras) {
-      for (let p in this.selectedLocal.infraestructuras) {
-        if (this.selectedLocal.infraestructuras[p].desc_infraestructura == this.infraestructuras[i].desc_infraestructura) {
-          this.infraestructuras[i].estado1 = this.selectedLocal.infraestructuras[p].estado;
-        }
-      }
-    }
-    this.getAulas();
-    //console.log(this.infraestructuras);
-    this.aulasbylocal = this.selectedLocal.aulas;
-  }
-
-  onRowUnselect(e) {
-    console.log(this.search_locales)
-    //this.accion_addlocal = false;
-    this.buildForm();
-    this.localForm.reset();
-    for (let k in this.infraestructuras) {
-      this.infraestructuras[k].estado1 = '';
-    }
-  }
-
-  getInfraestructura() {
-    this.registroservice.getInfraestructura().subscribe(infra => {
-      for (let key in infra) {
-        if (infra[key].desc_infraestructura == "SS.HH") {
-          infra[key].estado = ['SI', 'NO']
-        } else {
-          infra[key].estado = ['MALO', 'BUENO', 'REGULAR']
-        }
-        infra[key].estado1 = '';
-      }
-      this.infraestructuras = infra;
-    });
-  }
-
-  validEstadosInfraestructuras() {
-    let count = 0;
-    for (let k in this.infraestructuras) {
-      if (this.infraestructuras[k].estado1 == '' || this.infraestructuras[k].estado1 == 0) {
-        count++;
-      }
-    }
-    count > 0 ? this.selectsInfraestructuras = false : this.selectsInfraestructuras = true;
-  }
-
-  setEstadoInfra(val, i) {
-    this.infraestructuras[i].estado1 = val;
-    this.validEstadosInfraestructuras();
-  }
-
   addToast(options: ToastOptions, tipo: string = 'default') {
     // Just add default Toast with title only
     // Or create the instance of ToastOptions
@@ -164,169 +80,171 @@ export class RegistroComponent implements OnInit {
       case 'warning': this.toastyService.warning(toastOptions); break;
     }
   }
-  onSubmit() {
-    let ubigeo: string = `${this.selectedDepartamento}${this.selectedProvincia}${this.selectedDistrito}`
-    console.log(this.infraestucturas);
-    let post: Object;
-    let res: any;
-    this.submitted = true;
-    this.local = this.localForm.value;
-    this.local.ubigeo = ubigeo
-    let toastOptions: ToastOptions = { title: 'Agregar', msg: 'Local Agregado con Éxito', showClose: true, timeout: 5000, };
-
-    if (this.accion_addlocal) {
-      this.registroservice.addLocal(this.local).subscribe(response => {
-        res = response;
-        for (let key in this.infraestructuras) {
-          post = { id_local: res.id_local, id_infraestructura: this.infraestructuras[key].id_infraestructura, estado: this.infraestructuras[key].estado1 }
-          this.registroservice.addInfraLocal(post).subscribe(_ => console.log(_))
-        }
-        this.addToast(toastOptions, 'success');
-        setTimeout(_ => {
-          this.accion_editlocal = false
-          this.accion_editlocal = true
-          this.submitted = true;
-          this.localForm.reset();
-        }, 2000)
-        this.submitted = false;
-        console.log(this.submitted)
-      }
-      )
-    }
-    else if (this.accion_editlocal) {
-      for (let key in this.infraestructuras) {
-        this.registroservice.editLocal(this.selectedLocal.id_local, this.local).subscribe(_ => true)
-        this.registroservice.getInfraestructuraLocal(this.selectedLocal.id_local, this.infraestructuras[key].id_infraestructura).subscribe(res => {
-          let data = { estado: this.infraestructuras[key].estado1 }
-          console.log(res[0].id_infraestructuralocal, this.infraestructuras[key])
-          this.registroservice.editInfraLocal(res[0].id_infraestructuralocal, data).subscribe(_ => true)
-        }
-        )
-      }
-      this.findLocales();
-      toastOptions.title = 'Editar'
-      toastOptions.msg = 'Registro Editado con Éxito'
-      this.addToast(toastOptions, 'success');
-      setTimeout(_ => {
-        this.accion_editlocal = false
-        this.submitted = true;
-        this.localForm.reset();
-      }, 2000)
-      this.submitted = false;
-      console.log(this.submitted)
-    }
-
-  }
-
   buildForm() {
     this.localForm = this.fb.group({
-      'nombre_local': [this.local.nombre_local, [Validators.required, Validators.minLength(10), Validators.maxLength(200),]
+      'cursos': [this.local.cursos, [Validators.required],
       ],
-      'fecha_inicio': [this.local.fecha_inicio, [Validators.required, dateValidator(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]
+      'tipo_via': [this.local.tipo_via, [Validators.required],
       ],
-      'fecha_fin': [this.local.fecha_fin, [Validators.required, dateValidator(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)]
+      'nombre_via': [this.local.nombre_via, [Validators.required],
       ],
-      'direccion': [this.local.direccion, [Validators.required, Validators.minLength(10), Validators.maxLength(200)],
+      'referencia': [this.local.referencia, [Validators.required],
       ],
-      'referencia': [this.local.referencia, [Validators.required, Validators.minLength(10), Validators.maxLength(200)],
+      'n_direccion': [this.local.n_direccion, [Validators.required],
       ],
-      'total_pea': [this.local.total_pea, [Validators.required],
+      'km_direccion': [this.local.km_direccion, [Validators.required],
       ],
-      'total_aulas_max': [this.local.total_aulas_max, [Validators.required, CustomValidators.number],
+      'mz_direccion': [this.local.mz_direccion, [Validators.required],
       ],
-      'funcionario_nombre': [this.local.funcionario_nombre, [Validators.required, Validators.minLength(10), Validators.maxLength(200)],
+      'lote_direccion': [this.local.lote_direccion, [Validators.required],
       ],
-      'funcionario_email': [this.local.funcionario_email, [Validators.required, Validators.minLength(10), Validators.maxLength(200)],
+      'piso_direccion': [this.local.piso_direccion, [Validators.required],
       ],
-      'funcionario_celular': [this.local.funcionario_celular, [Validators.required, Validators.minLength(8), Validators.maxLength(9)],
+      'telefono_local_fijo': [this.local.telefono_local_fijo, [Validators.required],
       ],
-      'contacto_nombre': [this.local.contacto_nombre, [Validators.required, Validators.minLength(10), Validators.maxLength(200)],
+      'telefono_local_celular': [this.local.telefono_local_celular, [Validators.required],
       ],
-      'contacto_email': [this.local.contacto_email, [Validators.required, Validators.minLength(10), Validators.maxLength(200)],
+      'fecha_inicio': [this.local.fecha_inicio, [Validators.required],
       ],
-      'contacto_celular': [this.local.contacto_celular, [Validators.required, Validators.minLength(9), Validators.maxLength(9)],
+      'fecha_fin': [this.local.fecha_fin, [Validators.required],
       ],
-      'telefono_local': [this.local.telefono_local, [Validators.required, Validators.minLength(9), Validators.maxLength(9)],
+      'turno_uso_local': [this.local.turno_uso_local, [Validators.required],
+      ],
+      'capacidad_local': [this.local.capacidad_local, [Validators.required],
+      ],
+      'funcionario_nombre': [this.local.funcionario_nombre, [Validators.required],
+      ],
+      'funcionario_email': [this.local.funcionario_email, [Validators.required],
+      ],
+      'funcionario_telefono': [this.local.funcionario_telefono, [Validators.required],
+      ],
+      'funcionario_celular': [this.local.funcionario_celular, [Validators.required],
+      ],
+      'responsable_nombre': [this.local.responsable_nombre, [Validators.required],
+      ],
+      'responsable_email': [this.local.responsable_email, [Validators.required],
+      ],
+      'responsable_telefono': [this.local.responsable_telefono, [Validators.required],
+      ],
+      'responsable_celular': [this.local.responsable_celular, [Validators.required],
+      ],
+      'amb_aula': [this.local.amb_aula, [Validators.required],
+      ],
+      'amb_aula_cant': [this.local.amb_aula_cant, [Validators.required],
+      ],
+      'amb_auditorio': [this.local.amb_auditorio, [Validators.required],
+      ],
+      'amb_auditorio_cant': [this.local.amb_auditorio_cant, [Validators.required],
+      ],
+      'amb_salareuniones': [this.local.amb_salareuniones, [Validators.required],
+      ],
+      'amb_salareuniones_cant': [this.local.amb_salareuniones_cant, [Validators.required],
+      ],
+      'amb_oficinaadm': [this.local.amb_oficinaadm, [Validators.required],
+      ],
+      'amb_oficinaadm_cant': [this.local.amb_oficinaadm_cant, [Validators.required],
       ],
     });
     this.localForm.valueChanges.subscribe(
       data => this.onValueChanged(data)
     )
     this.onValueChanged();
-    console.log(this.local);
   }
   validationMessages = {
-    'nombre_local': {
-      'required': 'Nombre Local es requerido',
-      'minlength': 'Nombre de Local muy corto.',
-      'maxlength': 'Nombre de local paso del maximo permitido.',
+    'cursos': {
+      'required': 'Este campo es requerido'
     },
-    'fecha_fin': {
-      'required': 'Fecha fin es requerido',
-      'dateValidator': 'Fecha no valida'
+    'tipo_via': {
+      'required': 'Este campo es requerido'
     },
-    'fecha_inicio': {
-      'required': 'Fecha inicio es requerido',
-      'dateValidator': 'Fecha no valida'
-    },
-    'direccion': {
-      'required': 'Dirección es requerido',
-      'minlength': 'Nombre de Local muy corto.',
-      'maxlength': 'Nombre de local paso del maximo permitido.',
+    'nombre_via': {
+      'required': 'Este campo es requerido'
     },
     'referencia': {
-      'required': 'Referencia es requerida',
-      'minlength': 'Referencia muy corto.',
-      'maxlength': 'Referencia paso del maximo permitido.',
+      'required': 'Este campo es requerido'
     },
-    'total_pea': {
-      'required': 'Total PEA es requerido',
-      'minlength': 'Total PEA muy corto.',
-      'maxlength': 'Total PEA paso del maximo permitido.',
+    'n_direccion': {
+      'required': 'Este campo es requerido'
     },
-    'total_aulas_max': {
-      'required': 'Total Aulas Máximo is required.',
-      'minlength': 'Total Aulas Máximo muy corto.',
-      'maxlength': 'Total Aulas Máximo paso del maximo permitido.',
+    'km_direccion': {
+      'required': 'Este campo es requerido'
+    },
+    'mz_direccion': {
+      'required': 'Este campo es requerido'
+    },
+    'lote_direccion': {
+      'required': 'Este campo es requerido'
+    },
+    'piso_direccion': {
+      'required': 'Este campo es requerido'
+    },
+    'telefono_local_fijo': {
+      'required': 'Este campo es requerido'
+    },
+    'telefono_local_celular': {
+      'required': 'Este campo es requerido'
+    },
+    'fecha_inicio': {
+      'required': 'Este campo es requerido'
+    },
+    'fecha_fin': {
+      'required': 'Este campo es requerido'
+    },
+    'turno_uso_local': {
+      'required': 'Este campo es requerido'
+    },
+    'capacidad_local': {
+      'required': 'Este campo es requerido'
     },
     'funcionario_nombre': {
-      'required': 'Funcionario nombre es requerido.',
-      'minlength': 'Funcionario nombre muy corto.',
-      'maxlength': 'Funcionario nombre paso del maximo permitido.',
+      'required': 'Este campo es requerido'
     },
     'funcionario_email': {
-      'required': 'Funcionario email is required.',
-      'minlength': 'Funcionario email muy corto.',
-      'maxlength': 'Funcionario email paso del maximo permitido.',
+      'required': 'Este campo es requerido'
+    },
+    'funcionario_telefono': {
+      'required': 'Este campo es requerido'
     },
     'funcionario_celular': {
-      'required': 'Funcionario Celular is required.',
-      'minlength': 'Funcionario Celular muy corto.',
-      'maxlength': 'Funcionario Celular paso del maximo permitido.',
+      'required': 'Este campo es requerido'
     },
-    'contacto_nombre': {
-      'required': 'Contacto Nombre is required.',
-      'minlength': 'Contacto Nombre muy corto.',
-      'maxlength': 'Contacto Nombre paso del maximo permitido.',
+    'responsable_nombre': {
+      'required': 'Este campo es requerido'
     },
-    'contacto_email': {
-      'required': 'Contacto Email is required.',
-      'minlength': 'Contacto Email muy corto.',
-      'maxlength': 'Contacto Email paso del maximo permitido.',
+    'responsable_email': {
+      'required': 'Este campo es requerido'
     },
-    'contacto_celular': {
-      'required': 'Contacto Celular is required.',
-      'minlength': 'Contacto Celular muy corto.',
-      'maxlength': 'Contacto Celular paso del maximo permitido.',
+    'responsable_telefono': {
+      'required': 'Este campo es requerido'
     },
-    'telefono_local': {
-      'required': 'Teléfono Local is required.',
-      'minlength': 'Teléfono Local muy corto.',
-      'maxlength': 'Teléfono Local paso del maximo permitido.',
+    'responsable_celular': {
+      'required': 'Este campo es requerido'
+    },
+    'amb_aula': {
+      'required': 'Este campo es requerido'
+    },
+    'amb_aula_cant': {
+      'required': 'Este campo es requerido'
+    },
+    'amb_auditorio': {
+      'required': 'Este campo es requerido'
+    },
+    'amb_auditorio_cant': {
+      'required': 'Este campo es requerido'
+    },
+    'amb_salareuniones': {
+      'required': 'Este campo es requerido'
+    },
+    'amb_salareuniones_cant': {
+      'required': 'Este campo es requerido'
+    },
+    'amb_oficinaadm': {
+      'required': 'Este campo es requerido'
     },
   };
 
   onValueChanged(data?: any) {
+    this.formErrors = new Local();
     if (!this.localForm) { return; }
     const form = this.localForm;
 
@@ -342,6 +260,8 @@ export class RegistroComponent implements OnInit {
         }
       }
     }
+    console.log(this.formErrors);
+    console.log(form);
   }
 
   getDepartamentos() {
@@ -361,68 +281,23 @@ export class RegistroComponent implements OnInit {
     })
   }
 
-  findLocales() {
-    this.accion_addlocal = false;
-    this.accion_editlocal = false;
-    console.log(this.submitted = false)
-    let ubigeo: string = `${this.selectedDepartamento}${this.selectedProvincia}${this.selectedDistrito}`
-    this.registroservice.getLocalbyUbigeo(ubigeo).subscribe(data => {
-      this.search_locales = data;
-      if (!this.search_locales || Helpers.lengthobj(this.search_locales) == 0) {
-        this.alert_nofindlocales = true;
-      } else {
-        this.alert_nofindlocales = false;
-        this.searchedlocales = true;
-      }
+  getEtapas() {
+    this.registroservice.getEtapa().subscribe(etapas => this.etapas = <Object[]>etapas);
+  }
+
+  getCursosByEtapa(value: any) {
+    this.registroservice.getCursosbyEtapa(value).subscribe(cursos => this.cursos = <Object[]>cursos);
+  }
+
+  onSubmit() {
+    let data = Helpers.booleanToNumber(this.localForm.value);
+    console.log(data);
+    this.registroservice.addLocal(data).subscribe(res => {
+      let toastOptions: ToastOptions = { title: 'Agregar', msg: 'Local Agregado con Éxito', showClose: true, timeout: 5000, };
+      console.log(res)
+      this.addToast(toastOptions, 'success');
+      this.localForm.reset();
     });
-    this.validEstadosInfraestructuras();
-  }
-
-  addAula() {
-    this.aula.id_local = this.local.id_local
-    let data = Helpers.booleanToYesNo(this.aula)
-    if (this.selectedAula) {
-      this.registroservice.editAula(this.selectedAula.id_aula, data).subscribe(_ => {
-        this.aula = new Aula();
-        this.getAulas();
-      })
-    } else {
-      if (this.selectedLocal.total_aulas_max <= Helpers.lengthobj(this.aulasbylocal)) {
-        this.max_aulas = true;
-        this.aula = new Aula();
-        this.getAulas();
-      } else {
-        this.registroservice.addAula(data).subscribe(
-          _ => {
-            this.aula = new Aula();
-            this.getAulas();
-          }
-        )
-      }
-
-    }
-  }
-
-  getAulas() {
-    this.registroservice.getAula(this.local.id_local).subscribe(aulasbylocal => {
-      this.aulasbylocal = aulasbylocal
-    })
-  }
-  onRowSelect2(e) {
-    this.deleteaula = true;
-    this.aula = <Aula>Helpers.YesNoToboolean(this.selectedAula);
-  }
-  onRowUnSelect2(e) {
-    this.deleteaula = false;
-    this.aula = new Aula();
-  }
-  deleteAula() {
-    this.registroservice.deleteAula(this.selectedAula.id_aula).subscribe(_ => {
-      this.getAulas()
-      this.aula = new Aula();
-      this.deleteaula = false;
-    })
-
   }
 
   showPopup(num: any) {
@@ -441,7 +316,7 @@ export class RegistroComponent implements OnInit {
     let day = ('0' + this.dateModel.getDate()).slice(-2);
     let month = ('0' + this.dateModel.getMonth()).slice(-2);
     this.local.fecha_inicio = `${day}/${(month)}/${this.dateModel.getFullYear()}`;
-    this.buildForm();
+
   }
 
   setFechaFin(event) {
@@ -449,7 +324,6 @@ export class RegistroComponent implements OnInit {
     let day = ('0' + this.dateModel.getDate()).slice(-2);
     let month = ('0' + this.dateModel.getMonth()).slice(-2);
     this.local.fecha_fin = `${day}/${(month)}/${this.dateModel.getFullYear()}`;
-    this.buildForm();
-  }
 
+  }
 }

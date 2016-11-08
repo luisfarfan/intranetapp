@@ -43,30 +43,29 @@
 		</section>
 	</div>
 </div>
-<div *ngIf="accion_editlocal || accion_addlocal">
+<div>
 
 	<section class="widget" widget>
 		<header>
 			REGISTRAR LOCAL
 		</header>
 		<div class="widget-body">
-			<form>
+			<form [formGroup]="localForm" (ngSubmit)="onSubmit()">
 				<fieldset class="scheduler-border">
 					<legend class="scheduler-border">Etapa y Curso</legend>
 					<div class="row">
 						<div class="col-xs-6">
 							<label for="etapa">Etapa Censal</label>
-							<select name="" id="etapa" class="form-control">
-							<option value="0">Censo Experimental</option>
-							<option value="1">Empadronamiento</option>
+							<select id="etapa" class="form-control" (change)="getCursosByEtapa($event.target.value)">
+								<option selected>Seleccione</option>
+							<option *ngFor="let e of etapas" [value]="e.id_etapa" >{{ e.nombre_etapa }}</option>	
 						</select>
 						</div>
 						<div class="col-xs-6">
 							<label for="curso">Curso</label>
-							<select name="" id="curso" class="form-control">
-							<option value="0">Jefes Distritales</option>
-							<option value="1">Instructores DNCE</option>
-							<option value="2">Jefes de de Zona</option>
+							<select name="cursos" formControlName="cursos" id="curso" class="form-control">
+								<option selected>Seleccione</option>
+							<option *ngFor="let e of cursos" [value]="e.cursos" >{{ e.nombre_curso }}</option>	
 						</select>
 						</div>
 					</div>
@@ -76,49 +75,48 @@
 					<div class="row">
 						<div class="col-xs-2">
 							<label for="tipo_de_via">Tipo de Vía</label>
-							<select name="" id="tipo_de_via" class="form-control">
-							<option value="0">ALAMEDA</option>
-							<option value="1">AVENIDA</option>
-							<option value="2">BAJADA</option>
+							<select name="tipo_via" formControlName="tipo_via" id="tipo_de_via" class="form-control">
+								<option selected>Seleccione</option>
+							<option *ngFor="let tp of tipo_de_via" [value]="tp.P20">{{ tp.via }}</option>
 						</select>
 						</div>
 						<div class="col-xs-3">
 							<label for="nombre_de_via">Nombre de Vía(Dirección)</label>
-							<input type="text" id="nombre_de_via" class="form-control" placeholder="Nombre de Vía">
+							<input type="text" formControlName="nombre_via" name="nombre_via" id="nombre_de_via" class="form-control" placeholder="Nombre de Vía">
 						</div>
 						<div class="col-xs-2">
 							<label for="referencia">Referencia</label>
-							<input type="text" id="referencia" class="form-control" placeholder="Referencia">
+							<input type="text" id="referencia" formControlName="referencia" name="referencia" class="form-control" placeholder="Referencia">
 						</div>
 						<div class="col-xs-1">
 							<label for="numero">N°</label>
-							<input type="text" id="numero" class="form-control" placeholder="N°">
+							<input type="text" id="numero" formControlName="n_direccion" name="n_direccion" class="form-control" placeholder="N°">
 						</div>
 						<div class="col-xs-1">
 							<label for="km">KM</label>
-							<input type="text" id="km" class="form-control" placeholder="KM">
+							<input type="text" id="km" formControlName="km_direccion" name="nombre_via" class="form-control" placeholder="KM">
 						</div>
 						<div class="col-xs-1">
 							<label for="mz">MZ</label>
-							<input type="text" id="mz" class="form-control" placeholder="MZ">
+							<input type="text" id="mz" formControlName="mz_direccion" name="mz_direccion" class="form-control" placeholder="MZ">
 						</div>
 						<div class="col-xs-1">
 							<label for="lote">Lote</label>
-							<input type="text" id="lote" class="form-control" placeholder="Lote">
+							<input type="text" id="lote" formControlName="lote_direccion" name="lote_direccion" class="form-control" placeholder="Lote">
 						</div>
 						<div class="col-xs-1">
 							<label for="piso">Piso</label>
-							<input type="text" id="piso" class="form-control" placeholder="Piso">
+							<input type="text" id="piso" formControlName="piso_direccion" name="piso_direccion" class="form-control" placeholder="Piso">
 						</div>
 					</div>
 					<div class="row">
 						<div class="col-xs-3">
 							<label for="tel_fijo">Teléfono Fijo</label>
-							<input type="text" id="tel_fijo" class="form-control" placeholder="Teléfono Fijo">
+							<input type="text" id="tel_fijo" formControlName="telefono_local_fijo" name="telefono_local_fijo" class="form-control" placeholder="Teléfono Fijo">
 						</div>
 						<div class="col-xs-3">
 							<label for="tel_cel">Teléfono Celular</label>
-							<input type="text" id="tel_cel" class="form-control" placeholder="Teléfono Celular">
+							<input type="text" id="tel_cel" formControlName="telefono_local_celular" name="telefono_local_celular" class="form-control" placeholder="Teléfono Celular">
 						</div>
 					</div>
 				</fieldset>
@@ -128,20 +126,20 @@
 						<div class="col-xs-4">
 							<label for="nombre_de_via">Fecha Inicio</label>
 							<div class="input-group">
-								<input type="text" [textMask]="{mask: mask_date}" placeholder="DD/MM/YYYY" #fecha_inicio_input class="form-control">
+								<input type="text" formControlName="fecha_inicio" name="fecha_inicio" [textMask]="{mask: mask_date}" placeholder="DD/MM/YYYY" #fecha_inicio_input class="form-control">
 								<span (click)="showPopup(1)" class="input-group-addon" style="width: 15%"><i class="glyphicon glyphicon-calendar"></i></span>
 							</div>
 						</div>
 						<div class="col-xs-4">
 							<label for="fecha_fin">Fecha Fin</label>
 							<div class="input-group">
-								<input type="text" [textMask]="{mask: mask_date}" placeholder="DD/MM/YYYY" #fecha_fin_input class="form-control">
-								<span (click)="showPopup(1)" class="input-group-addon" style="width: 15%"><i class="glyphicon glyphicon-calendar"></i></span>
+								<input type="text" formControlName="fecha_fin" name="fecha_fin" [textMask]="{mask: mask_date}" placeholder="DD/MM/YYYY" #fecha_fin_input class="form-control">
+								<span (click)="showPopup(2)" class="input-group-addon" style="width: 15%"><i class="glyphicon glyphicon-calendar"></i></span>
 							</div>
 						</div>
 						<div class="col-xs-2">
 							<label for="turno_uso_local">Turno de Uso de Local</label>
-							<select name="" id="turno_uso_local" class="form-control">
+							<select formControlName="turno_uso_local" name="turno_uso_local" id="turno_uso_local" class="form-control">
 							<option value="0">MAÑANA</option>
 							<option value="1">TARDE</option>
 							<option value="2">NOCHE</option>
@@ -149,7 +147,7 @@
 						</div>
 						<div class="col-xs-2">
 							<label for="capacidad_local">Capacidad de Local</label>
-							<input type="text" id="capacidad_local" class="form-control">
+							<input type="text" formControlName="capacidad_local" name="capacidad_local" id="capacidad_local" class="form-control">
 						</div>
 					</div>
 				</fieldset>
@@ -158,19 +156,19 @@
 					<div class="row">
 						<div class="col-xs-3">
 							<label for="nombre_funcionario">Nombres Completos</label>
-							<input type="text" id="nombre_funcionario" class="form-control">
+							<input type="text"formControlName="funcionario_nombre" name="funcionario_nombre"  id="nombre_funcionario" class="form-control">
 						</div>
 						<div class="col-xs-3">
 							<label for="email_funcionario">Email</label>
-							<input type="text" id="email_funcionario" class="form-control">
+							<input type="text" formControlName="funcionario_email" name="funcionario_email" id="email_funcionario" class="form-control">
 						</div>
 						<div class="col-xs-3">
 							<label for="telefono">Teléfono</label>
-							<input type="text" id="telefono" class="form-control">
+							<input type="text" formControlName="funcionario_telefono" name="funcionario_telefono" id="telefono" class="form-control">
 						</div>
 						<div class="col-xs-3">
 							<label for="celular">Celular</label>
-							<input type="text" id="celular" class="form-control">
+							<input type="text" formControlName="funcionario_celular" name="funcionario_celular" id="celular" class="form-control">
 						</div>
 					</div>
 				</fieldset>
@@ -179,19 +177,19 @@
 					<div class="row">
 						<div class="col-xs-3">
 							<label for="nombre_responsable">Nombres Completo</label>
-							<input type="text" id="nombre_funcionario" class="form-control">
+							<input type="text" formControlName="responsable_nombre" name="responsable_nombre" id="nombre_funcionario" class="form-control">
 						</div>
 						<div class="col-xs-3">
 							<label for="email_responsable">Email</label>
-							<input type="text" id="email_funcionario" class="form-control">
+							<input type="text" formControlName="responsable_email" name="responsable_email" id="email_funcionario" class="form-control">
 						</div>
 						<div class="col-xs-3">
 							<label for="telefono_responsable">Teléfono</label>
-							<input type="text" id="telefono" class="form-control">
+							<input type="text" formControlName="responsable_telefono" name="responsable_telefono" id="telefono" class="form-control">
 						</div>
 						<div class="col-xs-3">
 							<label for="celular_responsable">Celular</label>
-							<input type="text" id="celular" class="form-control">
+							<input type="text" formControlName="responsable_celular" name="responsable_celular" id="celular" class="form-control">
 						</div>
 					</div>
 				</fieldset>
@@ -200,41 +198,41 @@
 					<div class="row">
 						<div class="col-xs-3">
 							<div class="input-group">
-								<md-checkbox>
+								<md-checkbox formControlName="amb_aula" name="amb_aula">
 									Aulas
 								</md-checkbox>
 								<div class="col-xs-3 col-sm-3">
-									<input type="text" placeholder="cant" class="form-control">
+									<input type="text" formControlName="amb_aula_cant" name="amb_aula_cant" placeholder="cant" class="form-control">
 								</div>
 							</div>
 						</div>
 						<div class="col-xs-3">
 							<div class="input-group">
-								<md-checkbox>
+								<md-checkbox formControlName="amb_auditorio" name="amb_auditorio">
 									Auditorios
 								</md-checkbox>
 								<div class="col-xs-3 col-sm-3">
-									<input type="text" placeholder="cant" class="form-control">
+									<input type="text" formControlName="amb_auditorio_cant" name="amb_auditorio_cant" placeholder="cant" class="form-control">
 								</div>
 							</div>
 						</div>
 						<div class="col-xs-3">
 							<div class="input-group">
-								<md-checkbox>
+								<md-checkbox formControlName="amb_salareuniones" name="amb_salareuniones">
 									Sala de Reuniones
 								</md-checkbox>
 								<div class="col-xs-3 col-sm-3">
-									<input type="text" placeholder="cant" class="form-control">
+									<input type="text" formControlName="amb_salareuniones_cant" name="amb_salareuniones_cant" placeholder="cant" class="form-control">
 								</div>
 							</div>
 						</div>
 						<div class="col-xs-3">
 							<div class="input-group">
-								<md-checkbox>
+								<md-checkbox formControlName="amb_oficinaadm" name="amb_oficinaadm">
 									Oficina Administrativa
 								</md-checkbox>
 								<div class="col-xs-3 col-sm-3">
-									<input type="text" placeholder="cant" class="form-control">
+									<input type="text" formControlName="amb_oficinaadm_cant" name="amb_oficinaadm_cant" placeholder="cant" class="form-control">
 								</div>
 							</div>
 						</div>
@@ -242,9 +240,9 @@
 				</fieldset>
 				<fieldset>
 					<div class="pull-left">
-						<button md-raised-button style="background-color:#2196f3; color: white">GUARDAR</button>
-						<button md-raised-button style="background-color:#2196f3; color: white">REGISTRAR</button>
-						<button md-raised-button color="warn">BORRAR</button>
+						<button md-raised-button [disabled]="!localForm.valid" color="warn">GUARDAR</button>
+						<button md-raised-button [disabled]="!localForm.valid" color="warn">REGISTRAR</button>
+						<button md-raised-button [disabled]="!localForm.valid" color="warn">BORRAR</button>
 					</div>
 					<div class="pull-right">
 						<button md-raised-button color="warn">REGISTRAR AULAS</button>
@@ -422,110 +420,6 @@
 </md-card>
 <!-- /.Live preview-->
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg" role="document">
-		<!--Content-->
-		<div class="modal-content">
-			<!--Header-->
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-				<h4 class="modal-title" id="myModalLabel">Registro de Aulas</h4>
-			</div>
-			<!--Body-->
-			<div class="modal-body">
-				<div class="row">
-					<div class="col-md-3">
-						<div class="form-group">
-							<label>Nro Aula</label>
-							<input [(ngModel)]="aula.num_aula" name="num_aula" type="text" class="form-control" id="">
-						</div>
-						<div class="form-group">
-							<label for="email">Capacidad</label>
-							<input [(ngModel)]="aula.capacidad" name="capacidad" type="text" class="form-control" id="">
-						</div>
-						<div class="form-group">
-							<label for="email">Mobiliario</label>
-							<input [(ngModel)]="aula.mobiliario" name="mobiliario" type="text" class="form-control" id="">
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="form-group">
-							<md-checkbox [(ngModel)]="aula.internet" name="internet">
-								Internet
-							</md-checkbox>
-						</div>
-
-						<div class="form-group">
-							<md-checkbox [(ngModel)]="aula.pizarra" name="pizarra">
-								Pizarra
-							</md-checkbox>
-						</div>
-
-						<div class="form-group">
-							<md-checkbox [(ngModel)]="aula.unipersonales" name="unipersonales">
-								Unipersonales
-							</md-checkbox>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="form-group">
-							<md-checkbox [(ngModel)]="aula.audio" name="audio">
-								Audio
-							</md-checkbox>
-						</div>
-						<div class="form-group">
-							<md-checkbox [(ngModel)]="aula.proyector" name="proyector">
-								Proyector
-							</md-checkbox>
-						</div>
-
-					</div>
-					<div class="col-md-3">
-						<div class="form-group">
-							<label for="">Mesas</label>
-							<input [(ngModel)]="aula.mesas" class="form-control" name="mesas" type="number">
-						</div>
-
-						<div class="form-group">
-							<label for="">C.Bipersonales</label>
-							<input [(ngModel)]="aula.bipersonales" class="form-control" name="bipersonales" type="number">
-						</div>
-						<div class="form-group">
-							<label for="">Sillas</label>
-							<input [(ngModel)]="aula.sillas" class="form-control" name="sillas" type="number">
-						</div>
-					</div>
-				</div>
-				<button md-raised-button (click)="addAula()" color="accent">Añadir</button>
-				<button [hidden]="!deleteaula" md-raised-button (click)="deleteAula()" color="accent">Eliminar</button>
-				<div *ngIf="max_aulas" class="alert alert-danger">
-					<strong>Ya no puede agregar mas aulas.</strong>
-				</div>
-				<div class="row">
-					<p-dataTable class="table table-hover table-mc-light-blue" [value]="aulasbylocal" (onRowSelect)="onRowSelect2($event)" (onRowUnselect)="onRowUnSelect2($event)"
-									selectionMode="single" [(selection)]="selectedAula">
-						<p-column field="num_aula" header="N° Aula"></p-column>
-						<p-column field="capacidad" header="Capacidad"></p-column>
-						<p-column field="capacidad" header="Mobiliario c/p"></p-column>
-						<p-column field="internet" header="internet"></p-column>
-						<p-column field="audio" header="audio"></p-column>
-						<p-column field="proyector" header="Proyector"></p-column>
-						<p-column field="pizarra" header="Pizarra"></p-column>
-						<p-column field="mesas" header="Mesas"></p-column>
-						<p-column field="bipersonales" header="Bipersonales"></p-column>
-						<p-column field="sillas" header="Sillas"></p-column>
-					</p-dataTable>
-				</div>
-			</div>
-			<!--Footer-->
-		</div>
-
-		<!--/.Content-->
-	</div>
-</div>
-
 
 <div class="modal fade" id="datepickermodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-sm" role="document">
@@ -539,3 +433,4 @@
 	</div>
 </div>
 <!-- /.Live preview-->
+<ng2-toasty></ng2-toasty>
