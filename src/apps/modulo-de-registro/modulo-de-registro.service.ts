@@ -34,6 +34,7 @@ export class RegistroService {
     prov_url: string = `${Settings.HOST_LOCAL()}provincias/`;
     dist_url: string = `${Settings.HOST_LOCAL()}distritos/`;
     local_url: string = `${Settings.HOST_LOCAL()}api/local/`;
+    localubigeo_url: string = `${Settings.HOST_LOCAL()}localubigeo/`;
     etapa_url: string = `${Settings.HOST_LOCAL()}api/etapa/`;
     cursos_url: string = `${Settings.HOST_LOCAL()}cursosetapa/`;
 
@@ -94,6 +95,15 @@ export class RegistroService {
             .map(() => null)
             .catch(Helpers.handleError)
     }
+
+    getLocal(param): Observable<Object> {
+        let url: string = `${this.localubigeo_url}${param}/`;
+        return this.http.get(url)
+            .map(Helpers.extractData)
+            .catch(Helpers.handleError)
+    }
+
+}
 
 
 

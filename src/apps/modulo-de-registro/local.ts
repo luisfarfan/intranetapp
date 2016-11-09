@@ -1,7 +1,7 @@
 export class Local {
     constructor(
         public id_local: string = '',
-        public cursos: number = 0,
+        public id_curso: string = '',
         public ubigeo: string = '',
         public nombre_local: string = '',
         public tipo_via: string = '',
