@@ -163,11 +163,11 @@ export class Helpers {
         return object
     }
 
-    public static NumberToBoolean(object: Object) {
+    public static NumberToBoolean(object: Object, keyparams: Array<string>) {
         for (let key in object) {
             if (!object.hasOwnProperty(key)) continue;
-            if (typeof object[key] != "boolean") {
-                object[key] == "1" ? object[key] = true : object[key] = false;
+            for (let keyparam in keyparams) {
+                object[keyparams[keyparam]] == "1" ? object[keyparams[keyparam]] = true : object[keyparams[keyparam]] = false;
             }
         }
         return object

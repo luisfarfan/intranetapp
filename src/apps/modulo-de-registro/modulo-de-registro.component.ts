@@ -102,6 +102,7 @@ export class RegistroComponent implements OnInit {
   ngOnInit() {
     this.getDepartamentos();
     this.getEtapas();
+    this.getCursosByEtapa();
     this.local = new Local();
     this.buildForm();
 
@@ -169,7 +170,7 @@ export class RegistroComponent implements OnInit {
       ],
       'amb_aula': [this.local.amb_aula, [],
       ],
-      'amb_aula_cant': [this.local.amb_aula, [],
+      'amb_aula_cant': [this.local.amb_aula_cant, [],
       ],
       'amb_auditorio': [this.local.amb_auditorio, [],
       ],
@@ -339,6 +340,8 @@ export class RegistroComponent implements OnInit {
   getProvincias() {
     this.registroservice.getProvincias(this.selectedDepartamento).subscribe(provincias => {
       this.provincias = <Array<Object>>provincias;
+      this.distritos = [];
+      this.getDistritos();
       console.log(this.selectedDepartamento);
     })
   }
@@ -352,7 +355,7 @@ export class RegistroComponent implements OnInit {
     this.registroservice.getEtapa().subscribe(etapas => this.etapas = <Object[]>etapas);
   }
 
-  getCursosByEtapa(value: any) {
+  getCursosByEtapa(value: any = '1') {
     this.registroservice.getCursosbyEtapa(value).subscribe(cursos => this.cursos = <Object[]>cursos);
   }
   accionAddLocal() {
@@ -404,9 +407,11 @@ export class RegistroComponent implements OnInit {
   }
 
   setLocalForm() {
-    this.local = this.selectedLocal;
+    this.local = <Local>Helpers.NumberToBoolean(this.selectedLocal, ['amb_aula', 'amb_auditorio', 'amb_salareuniones', 'amb_oficinaadm']);
+    console.log(this.local);
     this.buildForm();
     jQuery('#locales_finded').modal('hide');
+    this.addLocal = true;
     this.editLocal = true;
   }
 

@@ -57,7 +57,7 @@
 							<label for="etapa">Etapa Censal</label>
 							<select id="etapa" class="form-control" (change)="getCursosByEtapa($event.target.value)">
 								<option selected>Seleccione</option>
-							<option *ngFor="let e of etapas" [value]="e.id_etapa" >{{ e.nombre_etapa }}</option>	
+							<option *ngFor="let e of etapas" [selected]="e.id_etapa == 1"  [value]="e.id_etapa" >{{ e.nombre_etapa }}</option>	
 						</select>
 						</div>
 						<div class="col-xs-6" [class.has-danger]="formErrors.id_curso">
@@ -221,7 +221,7 @@
 								<md-checkbox formControlName="amb_aula" name="amb_aula">
 									Aulas
 								</md-checkbox>
-								<div class="col-xs-3 col-sm-3">
+								<div *ngIf="localForm.controls.amb_aula.value" class="col-xs-3 col-sm-3">
 									<input [class.form-control-danger]="formErrors.amb_aula_cant" type="text" formControlName="amb_aula_cant" name="amb_aula_cant"
 													placeholder="cant" class="form-control">
 								</div>
@@ -232,7 +232,7 @@
 								<md-checkbox formControlName="amb_auditorio" name="amb_auditorio">
 									Auditorios
 								</md-checkbox>
-								<div class="col-xs-3 col-sm-3">
+								<div *ngIf="localForm.controls.amb_auditorio.value" class="col-xs-3 col-sm-3">
 									<input [class.form-control-danger]="formErrors.amb_auditorio_cant" type="text" formControlName="amb_auditorio_cant" name="amb_auditorio_cant"
 													placeholder="cant" class="form-control">
 								</div>
@@ -243,7 +243,7 @@
 								<md-checkbox formControlName="amb_salareuniones" name="amb_salareuniones">
 									Sala de Reuniones
 								</md-checkbox>
-								<div class="col-xs-3 col-sm-3">
+								<div *ngIf="localForm.controls.amb_salareuniones.value" class="col-xs-3 col-sm-3">
 									<input type="text" [class.form-control-danger]="formErrors.amb_salareuniones_cant" formControlName="amb_salareuniones_cant"
 													name="amb_salareuniones_cant" placeholder="cant" class="form-control">
 								</div>
@@ -254,7 +254,7 @@
 								<md-checkbox formControlName="amb_oficinaadm" name="amb_oficinaadm">
 									Oficina Administrativa
 								</md-checkbox>
-								<div class="col-xs-3 col-sm-3">
+								<div *ngIf="localForm.controls.amb_oficinaadm.value" class="col-xs-3 col-sm-3">
 									<input type="text" [class.form-control-danger]="formErrors.amb_oficinaadm_cant" formControlName="amb_oficinaadm_cant" name="amb_oficinaadm_cant"
 													placeholder="cant" class="form-control">
 								</div>
@@ -269,153 +269,10 @@
 						<button md-raised-button [disabled]="!localForm.valid" color="warn">BORRAR</button>
 					</div>
 					<div class="pull-right">
-						<button md-raised-button color="warn">REGISTRAR AULAS</button>
+						<button type="button" data-toggle="modal" data-target="#modalaula" md-raised-button color="warn">REGISTRAR AULAS</button>
 					</div>
 				</fieldset>
 			</form>
-
-
-
-			<!--<form (ngSubmit)="onSubmit()">
-						<div [formGroup]="localForm" class="row">
-							
-							<div class="col-lg-4">
-								<div class="form-group">
-									<label for="distrito">Local</label>
-									<input formControlName="nombre_local" type="text" class="form-control">
-								</div>
-								<div *ngIf="formErrors.nombre_local" class="alert alert-danger">
-									{{ formErrors.nombre_local }}
-								</div>
-								<div class="form-group">
-									<label for="distrito">Dirección</label>
-									<input type="text" formControlName="direccion" class="form-control">
-								</div>
-								<div *ngIf="formErrors.direccion" class="alert alert-danger">
-									{{ formErrors.direccion }}
-								</div>
-								<div class="form-group">
-									<label for="distrito">Referencia</label>
-									<input type="text" formControlName="referencia" class="form-control">
-								</div>
-								<div *ngIf="formErrors.referencia" class="alert alert-danger">
-									{{ formErrors.referencia }}
-								</div>
-								<div class="form-group">
-									<label for="distrito">Teléfono</label>
-									<input type="text" formControlName="telefono_local" class="form-control">
-								</div>
-								<div *ngIf="formErrors.telefono_local" class="alert alert-danger">
-									{{ formErrors.telefono_local }}
-								</div>
-							</div>
-							<div class="col-lg-2">
-								<div class="form-group">
-									<label for="distrito">Fecha Inicio</label>
-									<input type="text" [textMask]="{mask: mask_date}" (focus)="showPopup(1)" placeholder="DD/MM/YYYY" #fecha_inicio_input formControlName="fecha_inicio"
-													class="form-control">
-								</div>
-								<div *ngIf="formErrors.fecha_inicio" class="alert alert-danger">
-									{{ formErrors.fecha_inicio }}
-								</div>
-								<div class="form-group">
-									<label for="distrito">#Aulas</label>
-									<input type="text" formControlName="total_aulas_max" class="form-control">
-								</div>
-								<div *ngIf="formErrors.total_aulas_max" class="alert alert-danger">
-									{{ formErrors.total_aulas_max }}
-								</div>
-							</div>
-							<div class="col-lg-2">
-								<div class="form-group">
-									<label for="distrito">Fecha Fin</label>
-									<input type="text" [textMask]="{mask: mask_date}" formControlName="fecha_fin" placeholder="DD/MM/YYYY" (focus)="showPopup(2)"
-													class="form-control">
-								</div>
-								<div *ngIf="formErrors.fecha_fin" class="alert alert-danger">
-									{{ formErrors.fecha_fin }}
-								</div>
-								<div class="form-group">
-									<label for="distrito">TotalPEA</label>
-									<input type="text" formControlName="total_pea" class="form-control">
-								</div>
-								<div *ngIf="formErrors.total_pea" class="alert alert-danger">
-									{{ formErrors.total_pea }}
-								</div>
-							</div>
-							<div class="col-lg-4">
-								<tabset [justified]="true">
-									<tab heading="Funcionario">
-										<div class="form-group">
-											<label for="distrito">Nombre</label>
-											<input formControlName="funcionario_nombre" placeholder="Nombre" type="text" class="form-control">
-										</div>
-										<div *ngIf="formErrors.funcionario_nombre" class="alert alert-danger">
-											{{ formErrors.funcionario_nombre }}
-										</div>
-										<div class="form-group">
-											<label for="distrito">Funcionario Email</label>
-											<input formControlName="funcionario_email" placeholder="Funcionario Email" type="text" class="form-control">
-										</div>
-										<div *ngIf="formErrors.funcionario_email" class="alert alert-danger">
-											{{ formErrors.funcionario_email }}
-										</div>
-										<div class="form-group">
-											<label for="distrito">Celular</label>
-											<input formControlName="funcionario_celular" placeholder="Funcionario Celular" type="text" class="form-control">
-										</div>
-										<div *ngIf="formErrors.funcionario_celular" class="alert alert-danger">
-											{{ formErrors.funcionario_celular }}
-										</div>
-									</tab>
-									<tab heading="Contacto">
-										<div class="form-group">
-											<label for="distrito">Contacto Nombre</label>
-											<input formControlName="contacto_nombre" placeholder="Contacto Nombre" type="text" class="form-control">
-										</div>
-										<div *ngIf="formErrors.contacto_nombre" class="alert alert-danger">
-											{{ formErrors.contacto_nombre }}
-										</div>
-										<div class="form-group">
-											<label for="distrito">Email</label>
-											<input formControlName="contacto_email" placeholder="Contacto Email" type="text" class="form-control">
-										</div>
-										<div *ngIf="formErrors.contacto_email" class="alert alert-danger">
-											{{ formErrors.contacto_email }}
-										</div>
-										<div class="form-group">
-											<label for="distrito">Celular</label>
-											<input formControlName="contacto_celular" placeholder="Contacto Celular" type="text" class="form-control">
-										</div>
-										<div *ngIf="formErrors.contacto_celular" class="alert alert-danger">
-											{{ formErrors.contacto_celular }}
-										</div>
-									</tab>
-								</tabset>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-lg-12">
-								<section class="widget" widget>
-									<header>INFRAESTRUCTURA DE LOCAL</header>
-									<div class="widget-body">
-										<div class="row">
-											<div *ngFor="let infra of infraestructuras; let i=index" class="col-lg-3">
-												<div class="form-group">
-													<label>{{ infra.desc_infraestructura }} <span class="text-danger">(*)</span></label>
-													<select [(ngModel)]="infra.estado1" name="{{'estado'+i}}" (ngModelChange)="setEstadoInfra($event,i)" class="form-control">
-										<option value="0">Seleccione</option>
-										<option *ngFor="let est of infra.estado" [value]="est">{{ est }}</option></select>
-												</div>
-											</div>
-										</div>
-									</div>
-								</section>
-							</div>
-						</div>
-						<button [disabled]="(!localForm.valid || !selectsInfraestructuras) || submitted" md-raised-button color="accent">Guardar</button>
-						<button type="button" data-toggle="modal" data-target="#myModal" [disabled]="!selectedLocal" md-raised-button color="accent">Registrar Aulas</button>
-					</form>-->
 		</div>
 	</section>
 
@@ -480,5 +337,98 @@
 	</div>
 </div>
 
+<div id="modalaula" class="modal fade" role="dialog">
+	<div class="modal-dialog modal-lg">
 
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Registrar Aula</h4>
+			</div>
+			<div class="modal-body">
+				<form>
+					<fieldset class="scheduler-border">
+						<legend class="scheduler-border">Ambiente</legend>
+						<div class="row">
+							<div class="col-xs-4 col-xs-offset-2">
+								<label for="etapa">Ambiente</label>
+								<select id="etapa" class="form-control">
+								<option selected>Sala de Reuniones</option>	
+						</select>
+							</div>
+						</div>
+					</fieldset>
+					<fieldset class="scheduler-border">
+						<div class="row">
+							<div class="col-xs-3">
+								<label for="mesas">Mesas</label>
+								<input type="text" name="nombre_via" id="nombre_de_via" class="form-control" placeholder="Nombre de Vía">
+							</div>
+							<div class="col-xs-3">
+								<label for="mesas">Sillas</label>
+								<input type="text" name="nombre_via" id="nombre_de_via" class="form-control" placeholder="Nombre de Vía">
+							</div>
+							<div class="col-xs-3">
+								<label for="mesas">Carpetas Individuales</label>
+								<input type="text" name="nombre_via" id="nombre_de_via" class="form-control" placeholder="Nombre de Vía">
+							</div>
+							<div class="col-xs-3">
+								<label for="mesas">Carpetas Bipersonales</label>
+								<input type="text" name="nombre_via" id="nombre_de_via" class="form-control" placeholder="Nombre de Vía">
+							</div>
+						</div>
+					</fieldset>
+					<fieldset class="scheduler-border">
+						<div class="row">
+							<div class="col-xs-3">
+								<label for="mesas">N°</label>
+								<input type="text" name="nombre_via" id="nombre_de_via" class="form-control" placeholder="Nombre de Vía">
+							</div>
+							<div class="col-xs-3">
+								<label for="mesas">Piso</label>
+								<input type="text" name="nombre_via" id="nombre_de_via" class="form-control" placeholder="Nombre de Vía">
+							</div>
+							<div class="col-xs-3">
+								<label for="mesas">Puerta de Acceso</label>
+								<input type="text" name="nombre_via" id="nombre_de_via" class="form-control" placeholder="Nombre de Vía">
+							</div>
+							<div class="col-xs-3">
+								<label for="mesas">Capacidad Ambiente</label>
+								<input type="text" name="nombre_via" id="nombre_de_via" class="form-control" placeholder="Nombre de Vía">
+							</div>
+						</div>
+					</fieldset>
+					<fieldset class="scheduler-border">
+						<div class="row">
+							<div class="col-xs-4">
+								<md-checkbox name="amb_salareuniones">
+									Puerta con chapa
+								</md-checkbox>
+							</div>
+							<div class="col-xs-4">
+								<md-checkbox name="amb_salareuniones">
+									Pestillo y candado
+								</md-checkbox>
+							</div>
+							<div class="col-xs-4">
+								<md-checkbox name="amb_salareuniones">
+									No Tiene
+								</md-checkbox>
+							</div>
+						</div>
+					</fieldset>
+					<fieldset>
+						<div class="pull-left">
+							<!--<button md-raised-button [disabled]="!localForm.valid && !editLocal" color="warn">GUARDAR</button>-->
+							<button md-raised-button [disabled]="!localForm.valid && !editLocal" color="warn">REGISTRAR</button>
+							<button md-raised-button [disabled]="!localForm.valid" color="warn">BORRAR</button>
+						</div>
+					</fieldset>
+				</form>
+			</div>
+		</div>
+	</div>
+
+</div>
 <ng2-toasty></ng2-toasty>

@@ -37,6 +37,7 @@ export class RegistroService {
     localubigeo_url: string = `${Settings.HOST_LOCAL()}localubigeo/`;
     etapa_url: string = `${Settings.HOST_LOCAL()}api/etapa/`;
     cursos_url: string = `${Settings.HOST_LOCAL()}cursosetapa/`;
+    aula_url: string = `${Settings.HOST_LOCAL()}api/aula/`;
 
     constructor(private http: Http) { }
 
@@ -100,6 +101,33 @@ export class RegistroService {
         let url: string = `${this.localubigeo_url}${param}/`;
         return this.http.get(url)
             .map(Helpers.extractData)
+            .catch(Helpers.handleError)
+    }
+
+
+    addAula(data): Observable<Object> {
+        let body = JSON.stringify(data);
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+
+        return this.http.post(this.aula_url, body, options)
+            .map(Helpers.extractData)
+            .catch(Helpers.handleError);
+    }
+    editAula(pk, data): Observable<Object> {
+        let body = JSON.stringify(data);
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        let url: string = `${this.aula_url}${pk}/`;
+        return this.http.put(url, body, options)
+            .map(Helpers.extractData)
+            .catch(Helpers.handleError);
+    }
+
+    deleteAula(pk): Observable<Object> {
+        let url: string = `${this.aula_url}${pk}/`;
+        return this.http.delete(url)
+            .map(() => null)
             .catch(Helpers.handleError)
     }
 

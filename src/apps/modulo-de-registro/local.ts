@@ -41,17 +41,26 @@ export class Local {
 
 export class Aula {
     constructor(
+        public id_aula: string = '',
         public id_local: string = '',
-        public num_aula: string = '',
-        public mobiliario: string = '',
-        public internet: boolean = false,
-        public audio: boolean = false,
-        public proyector: boolean = false,
+        public tipo_ambiente: string = '',
+        public mesas_cant: string = '',
+        public sillas_cant: boolean = false,
+        public carpindividuales_cant: boolean = false,
+        public carpbipersonales_cant: boolean = false,
         public pizarra: boolean = false,
-        public mesas: string = '',
-        public sillas: string = '',
-        public unipersonales: boolean = false,
-        public bipersonales: string = '',
+        public n_piso: string = '',
+        public n_puerta: string = '',
+        public uniperscapacidadonales: boolean = false,
+        public puerta: string = '',
+
+        public sshh: boolean = false,
+        public alumbrado: string = '',
+        public pizarra_acrilica: string = '',
+        public pizarra_cemento: boolean = false,
+        public computadora: string = '',
+        public acceso_internet: string = '',
+        
     ) {
     }
 }

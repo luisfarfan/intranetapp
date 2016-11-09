@@ -34,42 +34,52 @@
 
 <div id="add_edit" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
-        <md-card class="demo-card demo-basic">
-            <md-toolbar color="primary">{{ titulo_modal }}</md-toolbar>
-            <md-card-content>
-                <div *ngIf="update">
-                    <form #form="ngForm" (ngSubmit)="editSistema(form)">
-                        <table style="width: 100%" cellspacing="0">
-                            <tr>
-                                <td>
-                                    <md-input placeholder="Nombre" [ngModel]="selectedSistema.nom_sist" name="nom_sist" required [value]="selectedSistema.nom_sist" style="width: 100%"></md-input>
-                                    <md-input placeholder="Codigo" [ngModel]="selectedSistema.codigo_sist" name="codigo_sist" required [value]="selectedSistema.codigo_sist" style="width: 100%"></md-input>
-                                    <md-input placeholder="Descripcion" [ngModel]="selectedSistema.des_sist" name="des_sist" required [value]="selectedSistema.des_sist" style="width: 100%"></md-input>
-                                    <md-checkbox name="flag_activo" [checked]="flag_activo" [ngModel]="flag_activo">Activar?</md-checkbox>
-                                </td>
-                            </tr>
-                        </table>
-                        <button type="button" (click)="deleteSistema()" md-raised-button color="accent">Eliminar</button>
-                        <button md-raised-button color="primary">Editar</button>
-                    </form>
-                </div>
-                <div *ngIf="insert">
-                    <form #f="ngForm" (ngSubmit)="onSubmit(f)">
-                        <table style="width: 100%" cellspacing="0">
-                            <tr>
-                                <td>
-                                    <md-input name="nom_sist" ngModel required placeholder="Nombre" style="width: 100%"></md-input>
-                                    <md-input name="codigo_sist" ngModel required placeholder="Codigo" style="width: 100%"></md-input>
-                                    <md-input name="des_sist" ngModel required placeholder="Descripcion" style="width: 100%"></md-input>
-                                    <md-checkbox name="flag_activo" ngModel [checked]="false">Activar?</md-checkbox>
-                                </td>
-                            </tr>
-                        </table>
-                        <button md-raised-button color="primary">Agregar</button>
-                    </form>
-                </div>
-            </md-card-content>
-        </md-card>
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <md-card class="demo-card demo-basic">
+                <md-toolbar color="primary">{{ titulo_modal }}</md-toolbar>
+                <md-card-content>
+                    <div *ngIf="update">
+                        <form #form="ngForm" (ngSubmit)="editSistema(form)">
+                            <table style="width: 100%" cellspacing="0">
+                                <tr>
+                                    <td>
+                                        <md-input placeholder="Nombre" [ngModel]="selectedSistema.nom_sist" maxlength="20" name="nom_sist" required [value]="selectedSistema.nom_sist"
+                                            style="width: 100%"></md-input>
+                                        <md-input placeholder="Codigo" maxlength="7" [ngModel]="selectedSistema.codigo_sist" name="codigo_sist" required [value]="selectedSistema.codigo_sist"
+                                            style="width: 100%"></md-input>
+                                        <md-input placeholder="Descripcion" maxlength="50" [ngModel]="selectedSistema.des_sist" name="des_sist" required [value]="selectedSistema.des_sist"
+                                            style="width: 100%"></md-input>
+                                        <md-checkbox name="flag_activo" [checked]="flag_activo" [ngModel]="flag_activo">Activar?</md-checkbox>
+                                    </td>
+                                </tr>
+                            </table>
+                            <button type="button" (click)="deleteSistema()" md-raised-button color="accent">Eliminar</button>
+                            <button md-raised-button color="primary">Editar</button>
+                        </form>
+                    </div>
+                    <div *ngIf="insert">
+                        <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+                            <table style="width: 100%" cellspacing="0">
+                                <tr>
+                                    <td>
+                                        <md-input name="nom_sist" ngModel required placeholder="Nombre" style="width: 100%"></md-input>
+                                        <md-input name="codigo_sist" ngModel required placeholder="Codigo" style="width: 100%"></md-input>
+                                        <md-input name="des_sist" ngModel required placeholder="Descripcion" style="width: 100%"></md-input>
+                                        <md-checkbox name="flag_activo" ngModel [checked]="false">Activar?</md-checkbox>
+                                    </td>
+                                </tr>
+                            </table>
+                            <button md-raised-button color="primary">Agregar</button>
+                        </form>
+                    </div>
+                </md-card-content>
+            </md-card>  
+        </div>
+
+
     </div>
 </div>
 <ng2-toasty></ng2-toasty>

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnInit, ElementRef, Output } from '@angular/core';
 import { AppConfig } from '../../app.config';
-import {Helpers} from './../../helper';
-import {Router} from '@angular/router';
+import { Helpers } from './../../helper';
+import { Router } from '@angular/router';
 
 declare var jQuery: any;
 
@@ -12,12 +12,14 @@ declare var jQuery: any;
 export class Navbar implements OnInit {
   @Output() toggleSidebarEvent: EventEmitter<any> = new EventEmitter();
   @Output() toggleChatEvent: EventEmitter<any> = new EventEmitter();
+  private perfil: any;
   $el: any;
   config: any;
 
-  constructor(el: ElementRef, config: AppConfig, private router:Router) {
+  constructor(el: ElementRef, config: AppConfig, private router: Router) {
     this.$el = jQuery(el.nativeElement);
     this.config = config.getConfig();
+    this.getPerfil()
   }
 
   toggleSidebar(state): void {
@@ -26,6 +28,11 @@ export class Navbar implements OnInit {
 
   toggleChat(): void {
     this.toggleChatEvent.emit(null);
+  }
+
+  getPerfil() {
+    let session = Helpers.getJsonSession();
+    this.perfil = session[0].nom_emp_per;
   }
 
   ngOnInit(): void {
@@ -37,7 +44,7 @@ export class Navbar implements OnInit {
           setTimeout(() => {
             $chatNotification.addClass('animated fadeOut')
               .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd' +
-                ' oanimationend animationend', () => {
+              ' oanimationend animationend', () => {
                 $chatNotification.addClass('hide');
               });
           }, 8000);
@@ -46,12 +53,12 @@ export class Navbar implements OnInit {
         .append('<i class="chat-notification-sing animated bounceIn"></i>');
     }, 4000);
 
-    this.$el.find('.input-group-addon + .form-control').on('blur focus', function(e): void {
+    this.$el.find('.input-group-addon + .form-control').on('blur focus', function (e): void {
       jQuery(this).parents('.input-group')
-        [e.type === 'focus' ? 'addClass' : 'removeClass']('focus');
+      [e.type === 'focus' ? 'addClass' : 'removeClass']('focus');
     });
   }
-  logout(){
+  logout() {
     Helpers.logout();
     this.router.navigate(['login']);
   }

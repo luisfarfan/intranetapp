@@ -43,7 +43,7 @@
             <p-column field="anio_proy" header="Año"></p-column>
             <p-column field="des_proy" header="Descripción"></p-column>
             <p-column field="cod_meta" header="Codigo Meta"></p-column>
-            <p-column>
+            <p-column header="Estado">
                 <template let-proj="rowData" pTemplate type="body">
 					<span [ngSwitch]="proj.flag_activo">
                         <span *ngSwitchCase="'1'" class="label label-success">Activo</span>
