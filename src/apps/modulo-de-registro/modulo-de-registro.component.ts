@@ -61,7 +61,9 @@ export class RegistroComponent implements OnInit {
   formErrors = {
     'id_curso': '',
     'tipo_via': '',
+    'nombre_local': '',
     'nombre_via': '',
+    'referencia ': '',
     'n_direccion': '',
     'km_direccion': '',
     'mz_direccion': '',
@@ -90,6 +92,16 @@ export class RegistroComponent implements OnInit {
     'amb_oficinaadm': '',
     'amb_oficinaadm_cant': '',
   };
+
+
+
+  //AULA
+  aulaForm: FormGroup;
+  aula = new Aula();
+  aulas: any;
+  selectedAula: any;
+  tipoambiente: Array<Object> = []
+
   constructor(
     private registroservice: RegistroService,
     private fb: FormBuilder,
@@ -124,25 +136,27 @@ export class RegistroComponent implements OnInit {
     this.localForm = this.fb.group({
       'id_curso': [this.local.id_curso, [Validators.required],
       ],
+      'nombre_local': [this.local.nombre_local, [Validators.required, Validators.maxLength(100)],
+      ],
       'tipo_via': [this.local.tipo_via, [Validators.required],
       ],
-      'nombre_via': [this.local.nombre_via, [Validators.required, Validators.minLength(10), Validators.maxLength(100)],
+      'nombre_via': [this.local.nombre_via, [Validators.required, Validators.maxLength(100)],
       ],
-      'referencia': [this.local.referencia, [Validators.required, Validators.minLength(10), Validators.maxLength(100)],
+      'referencia': [this.local.referencia, [Validators.required],
       ],
       'n_direccion': [this.local.n_direccion, [Validators.required, Validators.minLength(1), Validators.maxLength(4)],
       ],
-      'km_direccion': [this.local.km_direccion, [Validators.required, Validators.minLength(1), Validators.maxLength(5)],
+      'km_direccion': [this.local.km_direccion, [Validators.minLength(1), Validators.maxLength(4), CustomValidators.range([1, 100])],
       ],
-      'mz_direccion': [this.local.mz_direccion, [Validators.required, Validators.minLength(1), Validators.maxLength(3)],
+      'mz_direccion': [this.local.mz_direccion, [Validators.minLength(1), Validators.maxLength(4)],
       ],
-      'lote_direccion': [this.local.lote_direccion, [Validators.required, Validators.minLength(1), Validators.maxLength(3)],
+      'lote_direccion': [this.local.lote_direccion, [Validators.minLength(1), Validators.maxLength(4)],
       ],
-      'piso_direccion': [this.local.piso_direccion, [Validators.required, Validators.minLength(1), Validators.maxLength(2)],
+      'piso_direccion': [this.local.piso_direccion, [Validators.required, Validators.maxLength(1), CustomValidators.range([1, 5])],
       ],
-      'telefono_local_fijo': [this.local.telefono_local_fijo, [Validators.required, Validators.minLength(1), Validators.maxLength(7)],
+      'telefono_local_fijo': [this.local.telefono_local_fijo, [Validators.required, Validators.minLength(7), Validators.maxLength(7)],
       ],
-      'telefono_local_celular': [this.local.telefono_local_celular, [Validators.required, Validators.minLength(1), Validators.maxLength(9)],
+      'telefono_local_celular': [this.local.telefono_local_celular, [Validators.required, Validators.minLength(9), Validators.maxLength(9)],
       ],
       'fecha_inicio': [this.local.fecha_inicio, [Validators.required, dateValidator(/^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$/)],
       ],
@@ -150,23 +164,23 @@ export class RegistroComponent implements OnInit {
       ],
       'turno_uso_local': [this.local.turno_uso_local, [Validators.required],
       ],
-      'capacidad_local': [this.local.capacidad_local, [Validators.required, Validators.minLength(1), Validators.maxLength(5)],
+      'capacidad_local': [this.local.capacidad_local, [Validators.required, CustomValidators.range([1, 9999])],
       ],
       'funcionario_nombre': [this.local.funcionario_nombre, [Validators.required],
       ],
-      'funcionario_email': [this.local.funcionario_email, [Validators.required],
+      'funcionario_email': [this.local.funcionario_email, [Validators.required, CustomValidators.email],
       ],
-      'funcionario_telefono': [this.local.funcionario_telefono, [Validators.required],
+      'funcionario_telefono': [this.local.funcionario_telefono, [Validators.required, Validators.minLength(7), Validators.maxLength(7)],
       ],
-      'funcionario_celular': [this.local.funcionario_celular, [Validators.required],
+      'funcionario_celular': [this.local.funcionario_celular, [Validators.required, Validators.minLength(9), Validators.maxLength(9)],
       ],
       'responsable_nombre': [this.local.responsable_nombre, [Validators.required],
       ],
-      'responsable_email': [this.local.responsable_email, [Validators.required],
+      'responsable_email': [this.local.responsable_email, [Validators.required, CustomValidators.email],
       ],
-      'responsable_telefono': [this.local.responsable_telefono, [Validators.required],
+      'responsable_telefono': [this.local.responsable_telefono, [Validators.required, Validators.minLength(7), Validators.maxLength(7)],
       ],
-      'responsable_celular': [this.local.responsable_celular, [Validators.required],
+      'responsable_celular': [this.local.responsable_celular, [Validators.required, Validators.minLength(9), Validators.maxLength(9)],
       ],
       'amb_aula': [this.local.amb_aula, [],
       ],
@@ -194,101 +208,103 @@ export class RegistroComponent implements OnInit {
     'id_curso': {
       'required': 'Este campo es requerido'
     },
+    'nombre_local': {
+      'required': 'Este campo es requerido',
+      'maxlength': 'Se paso del máximo permitido (100 cáracteres)'
+    },
     'tipo_via': {
       'required': 'Este campo es requerido'
     },
     'nombre_via': {
       'required': 'Este campo es requerido',
-      'minLength': 'No cumple con el minimo permitido',
-      'maxLength': 'No cumple con el máximo permitido'
+      'maxlength': 'Se paso del máximo permitido (100 cáracteres)'
     },
     'referencia': {
       'required': 'Este campo es requerido',
-      'minLength': 'No cumple con el minimo permitido',
-      'maxLength': 'No cumple con el máximo permitido'
     },
     'n_direccion': {
       'required': 'Este campo es requerido',
-      'minLength': 'No cumple con el minimo permitido',
-      'maxLength': 'No cumple con el máximo permitido'
+      'minLength': 'No cumple con el minimo permitido (1 cáracter)',
+      'maxlength': 'Se paso del máximo permitido (4 cáracteres)'
     },
     'km_direccion': {
       'required': 'Este campo es requerido',
-      'minLength': 'No cumple con el minimo permitido',
-      'maxLength': 'No cumple con el máximo permitido'
+      'minLength': 'No cumple con el minimo permitido (1 cáracter)',
+      'maxlength': 'Se paso del máximo permitido (4 cáracteres)',
+      'range': 'El rango permitido es de 1 - 100',
     },
     'mz_direccion': {
       'required': 'Este campo es requerido',
-      'minLength': 'No cumple con el minimo permitido',
-      'maxLength': 'No cumple con el máximo permitido'
+      'minLength': 'No cumple con el minimo permitido (1 cáracter)',
+      'maxlength': 'Se paso del máximo permitido (4 cáracteres)',
     },
     'lote_direccion': {
       'required': 'Este campo es requerido',
-      'minLength': 'No cumple con el minimo permitido',
-      'maxLength': 'No cumple con el máximo permitido'
+      'minLength': 'No cumple con el minimo permitido (1 cáracter)',
+      'maxlength': 'Se paso del máximo permitido (4 cáracteres)',
     },
     'piso_direccion': {
       'required': 'Este campo es requerido',
-      'minLength': 'No cumple con el minimo permitido',
-      'maxLength': 'No cumple con el máximo permitido'
+      'maxlength': 'Se paso del máximo permitido (1 cáracteres)',
+      'range': 'El rango permitido es de 1 - 5',
     },
     'telefono_local_fijo': {
       'required': 'Este campo es requerido',
-      'minLength': 'No cumple con el minimo permitido',
-      'maxLength': 'No cumple con el máximo permitido'
+      'minLength': 'No cumple con el minimo permitido (7 cáracter)',
+      'maxlength': 'Se paso del máximo permitido (7 cáracteres)',
     },
     'telefono_local_celular': {
       'required': 'Este campo es requerido',
-      'minLength': 'No cumple con el minimo permitido',
-      'maxLength': 'No cumple con el máximo permitido'
+      'minLength': 'No cumple con el minimo permitido (9 cáracter)',
+      'maxlength': 'Se paso del máximo permitido (9 cáracteres)'
     },
     'fecha_inicio': {
       'required': 'Este campo es requerido',
-      'minLength': 'No cumple con el minimo permitido',
-      'maxLength': 'No cumple con el máximo permitido'
+      'dateValidator': 'No es una fecha válida',
     },
     'fecha_fin': {
       'required': 'Este campo es requerido',
-      'minLength': 'No cumple con el minimo permitido',
-      'maxLength': 'No cumple con el máximo permitido'
+      'dateValidator': 'No es una fecha válida',
     },
     'turno_uso_local': {
       'required': 'Este campo es requerido',
-      'minLength': 'No cumple con el minimo permitido'
+      'maxlength': 'No cumple con el minimo permitido'
     },
     'capacidad_local': {
       'required': 'Este campo es requerido',
-      'minLength': 'No cumple con el minimo permitido'
+      'maxlength': 'No cumple con el minimo permitido'
     },
     'funcionario_nombre': {
       'required': 'Este campo es requerido',
-      'minLength': 'No cumple con el minimo permitido'
+      'minlength': 'No cumple con el minimo permitido'
     },
     'funcionario_email': {
       'required': 'Este campo es requerido',
-      'minLength': 'No cumple con el minimo permitido'
+      'email': 'Email inválido'
     },
     'funcionario_telefono': {
       'required': 'Este campo es requerido',
-      'minLength': 'No cumple con el minimo permitido'
+      'minlength': 'No cumple con el minimo permitido'
     },
     'funcionario_celular': {
       'required': 'Este campo es requerido',
-      'minLength': 'No cumple con el minimo permitido'
+      'minlength': 'No cumple con el minimo permitido'
     },
     'responsable_nombre': {
       'required': 'Este campo es requerido',
-      'minLength': 'No cumple con el minimo permitido'
+      'minlength': 'No cumple con el minimo permitido'
     },
     'responsable_email': {
       'required': 'Este campo es requerido',
-      'minLength': 'No cumple con el minimo permitido'
+      'email': 'Email inválido'
     },
     'responsable_telefono': {
-      'required': 'Este campo es requerido'
+      'required': 'Este campo es requerido',
+      'minlength': 'No cumple con el minimo permitido'
     },
     'responsable_celular': {
-      'required': 'Este campo es requerido'
+      'required': 'Este campo es requerido',
+      'minlength': 'No cumple con el minimo permitido'
     },
     'amb_aula': {
       'required': 'Este campo es requerido'
@@ -361,6 +377,7 @@ export class RegistroComponent implements OnInit {
   accionAddLocal() {
     this.editLocal = false;
     this.addLocal = true;
+    this.local = new Local();
     this.buildForm();
   }
   onSubmit() {
@@ -429,5 +446,71 @@ export class RegistroComponent implements OnInit {
     let month = ('0' + this.dateModel.getMonth()).slice(-2);
     this.local.fecha_fin = `${day}/${(month + 1)}/${this.dateModel.getFullYear()}`;
     this.buildForm();
+  }
+
+  onSubmitAula() {
+    this.aula.id_local = this.local.id_local;
+    let data = Helpers.booleanToNumber(this.aula);
+    console.log(this.aula);
+    if (this.aula.id_aula != '') {
+      this.registroservice.editAula(this.aula.id_aula, data).subscribe(editado => {
+        console.log(editado)
+        let toastOptions: ToastOptions = { title: 'Editado', msg: 'Aula Editado con Éxito!', showClose: true, timeout: 15000, };
+        this.addToast(toastOptions, 'success');
+        this.aula = new Aula();
+        this.getAulasby();
+      })
+    } else {
+      this.registroservice.addAula(data).subscribe(
+        data => {
+          let toastOptions: ToastOptions = { title: 'Agregado', msg: 'Aula Agregado con Exito!', showClose: true, timeout: 15000, };
+          this.addToast(toastOptions, 'success');
+          this.aula = new Aula();
+          this.getAulasby();
+        }
+      )
+    }
+
+  }
+
+  getAulasby() {
+    this.registroservice.getAula(this.local.id_local).subscribe(data => {
+      this.aulas = data;
+    })
+  }
+
+  openModalAulas() {
+    this.getAulasby();
+    this.tipoambiente = [];
+    if (this.local.amb_aula == true) {
+      this.tipoambiente.push({ 'id': 1, 'texto': 'AULA' })
+    }
+    if (this.local.amb_auditorio == true) {
+      this.tipoambiente.push({ 'id': 2, 'texto': 'AUDITORIO' })
+    }
+    if (this.local.amb_salareuniones == true) {
+      this.tipoambiente.push({ 'id': 3, 'texto': 'SALA DE REUNIONES' })
+    }
+    if (this.local.amb_oficinaadm == true) {
+      this.tipoambiente.push({ 'id': 4, 'texto': 'OFICINA ADMINISTRATIVA' })
+    }
+    jQuery('#modalaula').modal('show');
+  }
+
+  setAula() {
+    let data = Helpers.NumberToBoolean(this.selectedAula, ['puerta_chapa', 'puerta_pestillocandado', 'puerta_notiene', 'sshh', 'alumbrado', 'pizarra_acrilica', 'pizarra_cemento', 'proyector', 'computadora', 'acceso_internet']);
+    this.aula = <Aula>data;
+  }
+
+  limpiar() {
+    this.aula = new Aula();
+  }
+  deleteAula() {
+    this.registroservice.deleteAula(this.selectedAula.id_aula).subscribe(_ => {
+      let toastOptions: ToastOptions = { title: 'Eliminado', msg: 'Aula Eliminado con Éxito!', showClose: true, timeout: 15000, };
+      this.addToast(toastOptions, 'success');
+      this.aula = new Aula();
+      this.getAulasby();
+    })
   }
 }

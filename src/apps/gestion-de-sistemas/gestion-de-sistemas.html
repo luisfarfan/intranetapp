@@ -83,4 +83,9 @@
     </div>
 </div>
 <ng2-toasty></ng2-toasty>
-<p-confirmDialog header="Confirmation" style="z-index: 9999;position: fixed;" icon="fa fa-question-circle" width="425"></p-confirmDialog>
+<p-confirmDialog header="Confirmación" style="z-index: 9999;position: fixed;" icon="fa fa-question-circle" width="425" #cd>
+    <footer>
+        <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+        <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
+    </footer>
+</p-confirmDialog>

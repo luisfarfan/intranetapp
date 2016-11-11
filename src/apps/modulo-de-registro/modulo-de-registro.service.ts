@@ -38,6 +38,7 @@ export class RegistroService {
     etapa_url: string = `${Settings.HOST_LOCAL()}api/etapa/`;
     cursos_url: string = `${Settings.HOST_LOCAL()}cursosetapa/`;
     aula_url: string = `${Settings.HOST_LOCAL()}api/aula/`;
+    aulabylocal_url: String = `${Settings.HOST_LOCAL()}aulabylocal/`;
 
     constructor(private http: Http) { }
 
@@ -104,6 +105,13 @@ export class RegistroService {
             .catch(Helpers.handleError)
     }
 
+    getAula(param = null): Observable<Object> {
+        let url = param != null ? `${this.aulabylocal_url}${param}/` : this.aula_url;
+
+        return this.http.get(url)
+            .map(Helpers.extractData)
+            .catch(Helpers.handleError)
+    }
 
     addAula(data): Observable<Object> {
         let body = JSON.stringify(data);

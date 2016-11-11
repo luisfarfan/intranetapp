@@ -928,6 +928,7 @@ legend.scheduler-border {
     /* To give a bit of padding on the left and right */
     border-bottom: none;
 }
+
 .tree {
     padding: 10px 0;
     font-size: 14px;
@@ -955,5 +956,9 @@ legend.scheduler-border {
 .pull-right {
     position: absolute;
     right: 10px;
+}
 
+.validation-error {
+    color: red;
+    font-size: 90%
 }
