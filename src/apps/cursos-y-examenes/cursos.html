@@ -151,7 +151,9 @@
                         </div>
                     </div>
                     <button [disabled]="!cursocriterioForm.form.valid" md-raised-button color="warn">AÑADIR</button>
-
+                    <div *ngIf="sumaporcentajes" class="alert alert-danger">
+                        <strong>Error!</strong> El porcentaje no puede pasar del 100%!
+                    </div>
                     <div class="table-responsive-vertical shadow-z-1">
                         <!-- Table starts here -->
                         <table id="table" class="table table-hover table-mc-light-blue">

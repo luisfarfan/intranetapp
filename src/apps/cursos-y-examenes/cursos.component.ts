@@ -24,6 +24,7 @@ export class CursosComponent implements OnInit {
   criterio = new Criterio();
   cursocriterio = new CursoCriterio();
   criteriosbycapa: any;
+  sumaporcentajes: boolean = false;
   constructor(
     private fb: FormBuilder,
     private toastyService: ToastyService,
@@ -63,9 +64,20 @@ export class CursosComponent implements OnInit {
     this.editarcurso = false;
   }
   addCriterioCurso() {
-    this.cursocriterio.id_capacitacion = this.selectedCurso.id_capacitacion
-    console.log(this.cursocriterio);
-    this.cursocriterioservice.add(this.cursocriterio).subscribe(_=> this.getCriterioCurso())
+    this.cursocriterio.id_capacitacion = this.selectedCurso.id_capacitacion;
+    let suma: number = 0;
+    for (let k in this.criteriosbycapa) {
+      suma = suma + parseInt(this.criteriosbycapa[k].porcentaje);
+    }
+    console.log(suma);
+    suma = suma + parseInt(this.cursocriterio.porcentaje);
+    console.log(suma);
+    if (suma > 100) {
+      this.sumaporcentajes = true
+    } else {
+      this.cursocriterioservice.add(this.cursocriterio).subscribe(_ => this.getCriterioCurso())
+    }
+
   }
   getCriterioCurso() {
     this.cursocriterioservice.getby(this.selectedCurso.id_capacitacion).subscribe(res => {
