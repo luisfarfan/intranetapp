@@ -20,7 +20,12 @@ import {
 import {
   FormsModule
 } from '@angular/forms';
-
+import {
+    Reporte01Interface
+} from './reporte01.interface';
+import {
+    Reporte02Interface
+} from './reporte02.interface';
 import {
   ZonaInterface
 } from './zona.interface';
@@ -33,14 +38,14 @@ import {
 import {
   DepartamentoInterface
 } from './departamento.interface';
-
+import {
+    PdfInterface
+} from './pdf.interface';
 import {
   RegistroInterface
 } from './registro.interface';
 import {Helpers} from './../../app/helper';
 import {DomSanitizer} from "@angular/platform-browser";
-import {DataTableModule,SharedModule} from 'primeng/primeng';
-
 @Component({
   templateUrl: 'legajo.html',
   providers: [LegajoService]
@@ -62,19 +67,32 @@ class Legajo {
   private distritos: DistritoInterface;
   private zonas: ZonaInterface;
   private tipo: number=0;
-  private guardarZona:boolean=false;
-  private nivel:number=0;
-  
-  constructor(private legajoservice: LegajoService, private elementRef: ElementRef, private domSanitizer: DomSanitizer) {
+  private datareporte01: Reporte01Interface;
+  private datareporte02: Reporte02Interface;
+  private datapaginaspdf: PdfInterface;
+  private tipo: string='';
+  private num: any;
+  private num_pag: any;
+
+
+  constructor(private reportes: LegajoService,private elementRef: ElementRef, private domSanitizer: DomSanitizer) {
     this.cargarDepa()
     this.cargarTabla("0", "0", "0", "0", "0")
     this.registro = this.model
+    //this.cargarTabla("0", "0", "0", "0", "0")
+    this.registro = this.model
   }
+  
+  // constructor(private legajoservice: LegajoService, private elementRef: ElementRef, private domSanitizer: DomSanitizer) {
+  //   this.cargarDepa()
+  //   this.cargarTabla("0", "0", "0", "0", "0")
+  //   this.registro = this.model
+  // }
 
   model = new RegistroInterface();
 
   cargarDepa() {
-    this.legajoservice.getDepartamentos().subscribe(res => {
+    this.reportes.getDepartamentos().subscribe(res => {
       this.departamentos = <DepartamentoInterface>res;
     })
   }
@@ -84,7 +102,7 @@ class Legajo {
     this.distrito = false;
     this.verZona = false;
     if (this.ccdd != 0) {
-      this.legajoservice.getProvincias(ccdd, ccpp).subscribe(res => {
+      this.reportes.getProvincias(ccdd).subscribe(res => {
         this.provincias = <ProvinciaInterface>res;
       })
       this.cargarTabla("1", ccdd, "0", "0", "0")
@@ -101,7 +119,7 @@ class Legajo {
     this.distrito = false;
     this.verZona = false;
     if (this.ccpp != 0) {
-      this.legajoservice.getDistritos(this.ccdd, ccpp, "0").subscribe(res => {
+      this.reportes.getDistritos(this.ccdd, ccpp).subscribe(res => {
         this.distritos = <DistritoInterface>res;
       })
       this.cargarTabla("2", this.ccdd, ccpp, "0", "0")
@@ -118,7 +136,7 @@ class Legajo {
     let ubigeo = this.ccdd + this.ccpp + ccdi;
     this.distrito = true;
     if (this.ccdi != 0) {
-      this.legajoservice.getZonas(ubigeo).subscribe(res => {
+      this.reportes.getZonas(ubigeo).subscribe(res => {
         this.zonas = <ZonaInterface>res;
       })
       this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
@@ -130,7 +148,6 @@ class Legajo {
   }
 
   cargarAeu(zona: string) {
-    this.guardarZona=true;
     this.verZona = true;
     this.zona = zona;
     if (zona != "0") {
@@ -142,11 +159,45 @@ class Legajo {
   }
 
   cargarTabla(tipo: string, ccdd: string, ccpp: string, ccdi: string, zona: string) {
-    this.legajoservice.getTabla(tipo, ccdd, ccpp, ccdi, zona, "0").subscribe(res => {
+    this.reportes.getTabla(tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
       this.tabledata = true;
       this.registros = <RegistroInterface>res;
     })
   }
+
+  cargarTablaAeu(zona: string) {
+    let ubigeo = this.ccdd+this.ccpp+this.ccdi; //
+    this.zona = zona; //
+    this.reportes.getTablaAes(ubigeo,zona).subscribe(res => {
+      this.datareporte01 = <Reporte01Interface>res;
+      console.log(this.datareporte01);
+    })
+
+    if (this.ccdi != 0) {
+      this.reportes.getCantAeus(ubigeo,zona).subscribe(res => {
+        this.num = <ZonaInterface>res;
+      })
+      //this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
+    } else {
+      this.zonas = null;
+      this.distrito = false;
+      //this.cargarTabla("2", this.ccdd, this.ccpp, "0", "0")
+    }
+
+    if (this.ccdi != 0) {
+      this.reportes.getTablaAes(ubigeo,zona).subscribe(res => {
+        this.num_pag = <ZonaInterface>res;
+        console.log(this.datapaginaspdf);
+      })
+      //this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
+    } else {
+      this.zonas = null;
+      this.distrito = false;
+      //this.cargarTabla("2", this.ccdd, this.ccpp, "0", "0")
+    }
+  }
+
+
 
   capturaEvento(event,etiqueta) {
     if (event.key == "Enter") {
@@ -178,22 +229,6 @@ class Legajo {
     return valido
   }
 
-  generarEtiqueta(nivel){
-    let parametro='';
-    if(nivel==0){
-      parametro = this.ccdd + this.ccpp + this.ccdi + this.zona;
-      this.legajoservice.generarEtiqueta(parametro).subscribe(res => {
-        this.cargarTabla("0",this.ccdd,this.ccpp,this.ccdi,this.zona);
-      })
-    }
-    if(nivel==1){
-      
-    }
-    if(nivel==2){
-      
-    }
-  }
-
   descargarExcel(id,nom){
     Helpers.descargarExcel(id,nom);
   }
@@ -206,7 +241,7 @@ const routes: Routes = [{
 }];
 
 @NgModule({
-  imports: [CommonModule, RouterModule.forChild(routes), FormsModule, DataTableModule,SharedModule],
+  imports: [CommonModule, RouterModule.forChild(routes), FormsModule],
   declarations: [Legajo]
 })
 export default class LegajoModule { }

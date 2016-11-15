@@ -73,9 +73,10 @@ export class CursosComponent implements OnInit {
     suma = suma + parseInt(this.cursocriterio.porcentaje);
     console.log(suma);
     if (suma > 100) {
-      this.sumaporcentajes = true
+      this.sumaporcentajes = true;
     } else {
-      this.cursocriterioservice.add(this.cursocriterio).subscribe(_ => this.getCriterioCurso())
+      this.sumaporcentajes = false;
+      this.cursocriterioservice.add(this.cursocriterio).subscribe(_ => this.getCriterioCurso());
     }
 
   }

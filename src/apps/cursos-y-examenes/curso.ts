@@ -3,7 +3,7 @@ export class Curso {
         public id_capacitacion: string = '',
         public titulo_capacitacion: string = '',
         public desc_capacitacion: string = '',
-        public nivel: string = '',
+        public nivel: string = '1',
     ) {
 
     }

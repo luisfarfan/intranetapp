@@ -1,34 +1,60 @@
 <h5 class="page-title">Modulo de <span class="fw-semi-bold">Registro de Cursos y Examénes</span></h5>
-
 <div class="row">
-    <div class="col-lg-6">
+    <div class="col-lg-12">
         <section class="widget" widget>
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="etapa">Etapa</label>
+                        <select class="form-control">
+                            <option selected value="0">Seleccione</option>
+                            <option>Censo</option>
+                            <option>Empadronamiento</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label for="etapa">Cursos</label>
+                        <select class="form-control" [(ngModel)]="selectedCurso" (ngModelChange)="getProvincias()" name="departamento" id="departamento">
+                            <option selected value="0">Seleccione</option>
+                            <option *ngFor="let c of cursos" [value]="c.id_capacitacion">{{ c.titulo_capacitacion }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <button data-toggle="modal" data-target="#myModal2" md-raised-button color="accent">Registrar Evaluación</button>
+                </div>
+            </div>
             <header>Cursos Capacitación</header>
             <div class="widget-body">
-                <button data-toggle="modal" data-target="#myModal" md-fab><md-icon class="md-24">add</md-icon></button>
+                <!--<button data-toggle="modal" data-target="#myModal" md-fab><md-icon class="md-24">add</md-icon></button>-->
                 <button [disabled]="!editarcurso" data-toggle="modal" data-target="#myModal3" md-raised-button color="warn">Editar</button>
-                <p-dataTable [value]="cursos" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" selectionMode="single" [(selection)]="selectedCurso">
+                <p-dataTable [value]="cursos" (onRowSelect)="onRowSelect($event)" (onRowUnselect)="onRowUnselect($event)" selectionMode="single"
+                    [(selection)]="selectedCurso">
                     <p-column field="titulo_capacitacion" header="Titulo Capacitación"></p-column>
                     <p-column field="desc_capacitacion" header="Descripción"></p-column>
-                    <p-column field="nivel" header="Nivel"></p-column>
+                    <p-column>
+                        <template pTemplate type="body">
+                            <span>CENSO EXPERIMENTAL</span>
+                        </template>
+                        </p-column>
                 </p-dataTable>
             </div>
         </section>
     </div>
-
-    <div class="col-lg-6">
+    <!--<div class="col-lg-6">
         <section class="widget" widget>
             <header>Criterios de Evaluación</header>
             <div class="widget-body">
                 <button data-toggle="modal" data-target="#myModal2" md-fab><md-icon class="md-24">add</md-icon></button>
                 <p-dataTable [value]="criterios" selectionMode="single" [(selection)]="selectedCriterio">
-                    <p-column field="desc_examen" header="Titulo Capacitación"></p-column>
+                    <p-column field="desc_examen" header="Criterios"></p-column>
                 </p-dataTable>
             </div>
         </section>
-    </div>
+    </div>-->
 </div>
-
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <!--Content-->
@@ -43,42 +69,39 @@
             <!--Body-->
             <div class="modal-body">
                 <form #cursoForm="ngForm" (ngSubmit)="addCursos()" class="form-horizontal" role="form">
-
                     <div class="form-group row">
                         <label for="normal-field" class="col-md-4  col-form-label text-md-right">Titulo Capacitación</label>
                         <div class="col-md-7 ">
-                            <input type="text" class="form-control" [(ngModel)]="curso.titulo_capacitacion" name="titulo_capacitacion" #titulo_capacitacion="ngModel" placeholder="Titulo Capacitación" required>
+                            <input type="text" class="form-control" [(ngModel)]="curso.titulo_capacitacion" name="titulo_capacitacion" #titulo_capacitacion="ngModel"
+                                placeholder="Titulo Capacitación" required>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="normal-field" class="col-md-4  col-form-label text-md-right">Descripción</label>
                         <div class="col-md-7 ">
-                            <input type="text" [(ngModel)]="curso.desc_capacitacion" name="desc_capacitacion" #desc_capacitacion="ngModel" class="form-control" placeholder="Descripción" required>
+                            <input type="text" [(ngModel)]="curso.desc_capacitacion" name="desc_capacitacion" #desc_capacitacion="ngModel" class="form-control"
+                                placeholder="Descripción" required>
                         </div>
                     </div>
-
-                    <div class="form-group row">
+                    <!--<div class="form-group row hidden">
                         <label for="normal-field" class="col-md-4  col-form-label text-md-right">Nivel</label>
-                        <div class="col-md-7 ">
+                        <div class="col-md-7">
                             <select [(ngModel)]="curso.nivel" #nivel="ngModel" name="nivel" class="form-control" required>
                                 <option value="0">Nivel 0</option>
-                                <option value="1">Nivel 1</option>
+                                <option [selected] value="1">Nivel 1</option>
                                 <option value="2">Nivel 2</option>
                                 <option value="3">Nivel 3</option>
                             </select>
                         </div>
-                    </div>
+                    </div>-->
                     <button [disabled]="!cursoForm.form.valid" md-raised-button color="warn">AÑADIR</button>
                 </form>
             </div>
             <!--Footer-->
         </div>
-
         <!--/.Content-->
     </div>
 </div>
-
-
 <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <!--Content-->
@@ -96,19 +119,21 @@
                     <div class="form-group row">
                         <label for="normal-field" class="col-md-4  col-form-label text-md-right">Descripción</label>
                         <div class="col-md-7 ">
-                            <input type="text" [(ngModel)]="criterio.desc_examen" class="form-control" #desc_examen="ngModel" name="desc_Examen" required placeholder="Descripción de Criterio de Evaluación">
+                            <input type="text" [(ngModel)]="criterio.desc_examen" class="form-control" #desc_examen="ngModel" name="desc_Examen" required
+                                placeholder="Descripción de Criterio de Evaluación">
                         </div>
                     </div>
                     <button [disabled]="!criterioForm.form.valid" md-raised-button color="warn">AÑADIR</button>
                 </form>
+                <p-dataTable [value]="criterios" selectionMode="single" [(selection)]="selectedCriterio">
+                    <p-column field="desc_examen" header="Criterios"></p-column>
+                </p-dataTable>
             </div>
             <!--Footer-->
         </div>
-
         <!--/.Content-->
     </div>
 </div>
-
 <div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <!--Content-->
@@ -126,7 +151,8 @@
                     <div class="form-group row">
                         <label for="normal-field" class="col-md-4  col-form-label text-md-right">Criterio de Evaluación</label>
                         <div class="col-md-7 ">
-                            <select [(ngModel)]="cursocriterio.id_criterio_evaluacion" #id_criterio_evaluacion="ngModel" name="id_criterio_evaluacion" class="form-control" required>
+                            <select [(ngModel)]="cursocriterio.id_criterio_evaluacion" #id_criterio_evaluacion="ngModel" name="id_criterio_evaluacion"
+                                class="form-control" required>
                                 <option *ngFor="let cri of criterios" [value]="cri.id_criterio_evaluacion">{{ cri.desc_examen }}</option>
                             </select>
                         </div>
@@ -134,20 +160,25 @@
                     <div class="form-group row">
                         <label for="normal-field" class="col-md-4  col-form-label text-md-right">Nota Mínima</label>
                         <div class="col-md-7 ">
-                            <input type="text" class="form-control" [(ngModel)]="cursocriterio.nota_minima" name="titulo_capacitacion" #titulo_capacitacion="ngModel" placeholder="Titulo Capacitación" required>
+                            <input type="text" class="form-control" [(ngModel)]="cursocriterio.nota_minima" #nota_minima="ngModel" [range]="[10, 20]"
+                                name="nota_minima" #titulo_capacitacion="ngModel" placeholder="Titulo Capacitación" required>
+                            <div *ngIf="nota_minima.errors?.range" class="alert alert-danger">El rango es de 10 a 20</div>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="normal-field" class="col-md-4  col-form-label text-md-right">Duración</label>
                         <div class="col-md-7 ">
-                            <input type="text" [(ngModel)]="cursocriterio.duracion" name="duracion" #duracion="ngModel" class="form-control" placeholder="Duración" required>
+                            <input type="text" [(ngModel)]="cursocriterio.duracion" name="duracion" #duracion="ngModel" class="form-control" placeholder="Duración"
+                                required>
+                            <div *ngIf="duracion.errors?.range" class="alert alert-danger">Tiene que ser númerico</div>
                         </div>
                     </div>
-
                     <div class="form-group row">
                         <label for="normal-field" class="col-md-4  col-form-label text-md-right">Porcentaje</label>
                         <div class="col-md-7 ">
-                            <input type="text" [(ngModel)]="cursocriterio.porcentaje" name="porcentaje" #porcentaje="ngModel" class="form-control" placeholder="Porcentaje" required>
+                            <input type="text" [(ngModel)]="cursocriterio.porcentaje" name="porcentaje" #porcentaje="ngModel" [range]="[1,100]" class="form-control"
+                                placeholder="Porcentaje" required>
+                            <div *ngIf="porcentaje.errors?.range" class="alert alert-danger">El rango es de 0 a 100</div>
                         </div>
                     </div>
                     <button [disabled]="!cursocriterioForm.form.valid" md-raised-button color="warn">AÑADIR</button>
@@ -181,7 +212,6 @@
             </div>
             <!--Footer-->
         </div>
-
         <!--/.Content-->
     </div>
 </div>

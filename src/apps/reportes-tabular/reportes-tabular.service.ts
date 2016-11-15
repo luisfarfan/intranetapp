@@ -1,3 +1,4 @@
+//Librerias importadas...
 import {
     Injectable
 } from '@angular/core';
@@ -26,71 +27,84 @@ import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class ReportestabularService {
+    
+    //constructor
     constructor(private http: Http) {}
 
-    /*private depaUrl: string = 'http://192.168.200.123:8081/segrecargaDepa/';
-    private provUrl: string = 'http://192.168.200.123:8081/segrecargaProv/';
-    private distUrl: string = 'http://192.168.200.123:8081/segrecargaDis/';
-    private zonaUrl: string = 'http://192.168.200.123:8081/segrecargaZona/';
-    //private tablaUrl: string = 'http://192.168.200.123:8081/segrecargaTabla/';
-    private tablaUrlAux: string = 'http://192.168.200.123:8081/crorecargaTabla01/';
-    private tablaUrlAux2: string = 'http://192.168.200.123:8081/crorecargaTabla02/';*/
-
-    /*private depaUrl: string = 'http://bromero.inei.com.pe:8000/recargaDepa/';
-    private provUrl: string = 'http://bromero.inei.com.pe:8000/recargaProv/';
-    private distUrl: string = 'http://bromero.inei.com.pe:8000/recargaDis/';
-    private zonaUrl: string = 'http://bromero.inei.com.pe:8000/recargaZona/';
-    private tablaUrlAux: string = 'http://bromero.inei.com.pe:8000/crorecargaTabla01/';
-    private tablaUrlAux2: string = 'http://bromero.inei.com.pe:8000/crorecargaTabla02/';
-    private tablaUrlZip: string = 'http://bromero.inei.com.pe:8000/crodescargarPdf/';*/
-
+    //urls de los servicios
     private depaUrl: string = 'http://bromero.inei.com.pe:8000/recargaDepa/';
     private provUrl: string = 'http://bromero.inei.com.pe:8000/recargaProv/';
     private distUrl: string = 'http://bromero.inei.com.pe:8000/recargaDis/';
     private zonaUrl: string = 'http://bromero.inei.com.pe:8000/recargaZona/';
     private tablaReporte: string = 'http://bromero.inei.com.pe:8000/tablaReportetabular/';
     
+    //funcion que obtiene los departamentos
     getCargaDepaInicial(): Observable < Object >{
+        //variable que retorna
         return this.http.get(this.depaUrl).map(this.extractData).catch(this.handleError)
     }
 
+    //funcion que obtiene los departamentos
     getDepartamentos(): Observable < Object > {
+        //variable que retorna
         return this.http.get(this.depaUrl).map(this.extractData).catch(this.handleError)
     }
 
+    //funcion que obtiene los provincias
     getProvincias(ccdd: string, ccpp:string): Observable < Object > {
+        //variable local para unir los parametros
         let queryparameters:string = `${ccdd}/${ccpp}/`;
+        //variable local para la ruta
         let url: string = this.provUrl+queryparameters;
+        //variable que retorna
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
 
+    //funcion que obtiene los distritos
     getDistritos(ccdd: string, ccpp:string, ccdi:string): Observable < Object > {
+        //variable local para unir los parametros
         let queryparameters:string = `${ccdd}/${ccpp}/${ccdi}/`;
+        //variable local para la ruta
         let url: string = this.distUrl + queryparameters;
+        //variable que retorna
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
 
+    //funcion que obtiene los zonas
     getZonas(ubigeo: string): Observable < Object > {
+        //variable local para unir los parametros
         let queryparameters:string = `${ubigeo}/`;
+        //variable local para la ruta
         let url: string = this.zonaUrl + queryparameters;
+        //variable que retorna
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
 
+    //funcion que obtiene la data de la tabla
     getTabla(tipo: string="0", ccdd: string="0", ccpp: string="0", ccdi: string="0"): Observable < Object > {
+        //variable local para unir los parametros
         let queryparameters:string = `${tipo}/${ccdd}${ccpp}${ccdi}/`;
+        //variable local para la ruta
         let url:string = this.tablaReporte + queryparameters;
+        //variable que retorna
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
 
+    //funcion que extrae la data
     private extractData(res: Response) {
+        //se guarda el rsultado en la variable body
         let body = res.json();
+        //variable que retorna
         return body || {};
     }
 
+    //funcion que obtiene la cabecera del error
     private handleError(error: any) {
         let errMsg = (error.message) ? error.message :
             error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+        //muestra el error en consola
         console.error(errMsg);
+        //variable que retorna
         return Observable.throw(errMsg);
     }
 }
