@@ -27,9 +27,9 @@ import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class ReportestabularService {
-    
+
     //constructor
-    constructor(private http: Http) {}
+    constructor(private http: Http) { }
 
     //urls de los servicios
     private depaUrl: string = 'http://bromero.inei.com.pe:8000/recargaDepa/';
@@ -37,33 +37,33 @@ export class ReportestabularService {
     private distUrl: string = 'http://bromero.inei.com.pe:8000/recargaDis/';
     private zonaUrl: string = 'http://bromero.inei.com.pe:8000/recargaZona/';
     private tablaReporte: string = 'http://bromero.inei.com.pe:8000/tablaReportetabular/';
-    
+
     //funcion que obtiene los departamentos
-    getCargaDepaInicial(): Observable < Object >{
+    getCargaDepaInicial(): Observable<Object> {
         //variable que retorna
         return this.http.get(this.depaUrl).map(this.extractData).catch(this.handleError)
     }
 
-    //funcion que obtiene los departamentos
-    getDepartamentos(): Observable < Object > {
+    getDepartamentos(tipo: string = "0"): Observable<Object> {
         //variable que retorna
-        return this.http.get(this.depaUrl).map(this.extractData).catch(this.handleError)
+        let url: string = `${this.depaUrl}${tipo}/`;
+        return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
 
     //funcion que obtiene los provincias
-    getProvincias(ccdd: string, ccpp:string): Observable < Object > {
+    getProvincias(ccdd: string, ccpp: string, tipo: string = "0"): Observable<Object> {
         //variable local para unir los parametros
-        let queryparameters:string = `${ccdd}/${ccpp}/`;
+        let queryparameters: string = `${ccdd}/${ccpp}/${tipo}/`;
         //variable local para la ruta
-        let url: string = this.provUrl+queryparameters;
+        let url: string = this.provUrl + queryparameters;
         //variable que retorna
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
 
     //funcion que obtiene los distritos
-    getDistritos(ccdd: string, ccpp:string, ccdi:string): Observable < Object > {
+    getDistritos(ccdd: string, ccpp: string, ccdi: string, tipo: string = "0"): Observable<Object> {
         //variable local para unir los parametros
-        let queryparameters:string = `${ccdd}/${ccpp}/${ccdi}/`;
+        let queryparameters: string = `${ccdd}/${ccpp}/${ccdi}/${tipo}/`;
         //variable local para la ruta
         let url: string = this.distUrl + queryparameters;
         //variable que retorna
@@ -71,9 +71,9 @@ export class ReportestabularService {
     }
 
     //funcion que obtiene los zonas
-    getZonas(ubigeo: string): Observable < Object > {
+    getZonas(ubigeo: string): Observable<Object> {
         //variable local para unir los parametros
-        let queryparameters:string = `${ubigeo}/`;
+        let queryparameters: string = `${ubigeo}/`;
         //variable local para la ruta
         let url: string = this.zonaUrl + queryparameters;
         //variable que retorna
@@ -81,11 +81,11 @@ export class ReportestabularService {
     }
 
     //funcion que obtiene la data de la tabla
-    getTabla(tipo: string="0", ccdd: string="0", ccpp: string="0", ccdi: string="0"): Observable < Object > {
+    getTabla(tipo: string = "0", ccdd: string = "0", ccpp: string = "0", ccdi: string = "0"): Observable<Object> {
         //variable local para unir los parametros
-        let queryparameters:string = `${tipo}/${ccdd}${ccpp}${ccdi}/`;
+        let queryparameters: string = `${tipo}/${ccdd}${ccpp}${ccdi}/`;
         //variable local para la ruta
-        let url:string = this.tablaReporte + queryparameters;
+        let url: string = this.tablaReporte + queryparameters;
         //variable que retorna
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }

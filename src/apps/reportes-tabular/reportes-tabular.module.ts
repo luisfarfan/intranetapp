@@ -80,17 +80,18 @@ class Reportestabular {
   private tipo_cro: number = 0; //guarda el tipo de croquis
   private tabledata: boolean = false; //
   private distrito: boolean = false; //
+  private area: string = "0";
 
   private registros: Object; //variable que guardara los registros
   private registro: RegistroInterface; //variable que guardara el registro
-  
+
   private departamentos: DepartamentoInterface; //variable que guardara los departamentos
   private provincias: ProvinciaInterface; //variable que guardara las provincias
   private distritos: DistritoInterface; //variable que guardara los distritos
   private zonas: ZonaInterface; //variable que guardara las zonas
 
-  private reporteDepa: boolean = true ; //variable que muestra el reporte
-  private reporteDepa01: boolean = false ; //variable que muestra el reporte 
+  private reporteDepa: boolean = true; //variable que muestra el reporte
+  private reporteDepa01: boolean = false; //variable que muestra el reporte 
 
   private reporte01: boolean = true; //variable que muestra el reporte 01
   private reporte02: boolean = false; //variable que muestra el reporte 02
@@ -109,7 +110,7 @@ class Reportestabular {
   //constructor...
   constructor(private reportestabular: ReportestabularService, private elementRef: ElementRef, private domSanitizer: DomSanitizer) {
     //se llama al metodo cargarDepa()
-    this.cargarDepa();
+    this.cargarDepa(this.area);
     //se asigna el model al registro
     this.registro = this.model;
   }
@@ -118,9 +119,9 @@ class Reportestabular {
   model = new RegistroInterface();
 
   //funcion para cargar los departamentos
-  cargarDepa() {
+  cargarDepa(area) {
     //se llama al servicion getDepartamentos()
-    this.reportestabular.getDepartamentos().subscribe(res => {
+    this.reportestabular.getDepartamentos(area).subscribe(res => {
       //se asigna el valor del res a la variable departamentos
       this.departamentos = <DepartamentoInterface>res;
     })
@@ -267,7 +268,7 @@ class Reportestabular {
   //funcion para cargar la tabla
   cargarTablaAux() {
     //asigna el valor a tipo = 3
-    this.tipo='3';
+    this.tipo = '3';
     //valida el reporte04 (verdadero entra)
     if (this.reporte04) {
       //asigna el valor a tipo = 3
@@ -286,7 +287,7 @@ class Reportestabular {
   //funcion para cargar la tabla
   cargarTablaAux2() {
     //asigna el valor a tipo = 4
-    this.tipo='4';
+    this.tipo = '4';
     //valida el reporte05 (verdadero entra)
     if (this.reporte05) {
       //asigna el valor a tipo = 4
@@ -322,9 +323,9 @@ class Reportestabular {
     if (reporte == "0" || reporte == "1" || reporte == "2") {
       switch (reporte) {
         //tipo de reporte (0 , 1 , 2)
-        case "0":          this.reporte01 = true;          break;
-        case "1":          this.reporte02 = true;          break;
-        case "2":          this.reporte03 = true;          break;
+        case "0": this.reporte01 = true; break;
+        case "1": this.reporte02 = true; break;
+        case "2": this.reporte03 = true; break;
       }
       //se llama al metodo cargarTabla()
       this.cargarTabla(this.ccdi);
@@ -348,7 +349,7 @@ class Reportestabular {
       this.reporte05 = true;
       //se llama al metodo cargarTabla()
       this.cargarTablaAux2();
-    }    
+    }
   }
 
   //funcion para descargar Excel

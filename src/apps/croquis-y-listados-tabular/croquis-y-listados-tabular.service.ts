@@ -30,7 +30,7 @@ import { Helpers } from './../../app/helper';
 export class CroquisylistadostabularService {
 
     //constructor
-    constructor(private http: Http) {}
+    constructor(private http: Http) { }
 
     //variable que guarda el perfil
     private cargo: string = 'DEPARTAMENTAL';
@@ -44,25 +44,26 @@ export class CroquisylistadostabularService {
     private tablaUrlZip: string = 'http://bromero.inei.com.pe:8000/crotabdescargarPdf/';
 
     //funcion que obtiene los departamentos
-    getDepartamentos(): Observable < Object > {
+    getDepartamentos(tipo: string = "0"): Observable<Object> {
         //variable que retorna
-        return this.http.get(this.depaUrl).map(this.extractData).catch(this.handleError)
+        let url: string = `${this.depaUrl}${tipo}/`;
+        return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
 
     //funcion que obtiene los provincias
-    getProvincias(ccdd: string, ccpp:string): Observable < Object > {
+    getProvincias(ccdd: string, ccpp: string, tipo: string = "0"): Observable<Object> {
         //variable local para unir los parametros
-        let queryparameters:string = `${ccdd}/${ccpp}/`;
+        let queryparameters: string = `${ccdd}/${ccpp}/${tipo}/`;
         //variable local para la ruta
-        let url: string = this.provUrl+queryparameters;
+        let url: string = this.provUrl + queryparameters;
         //variable que retorna
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
 
     //funcion que obtiene los distritos
-    getDistritos(ccdd: string, ccpp:string, ccdi:string): Observable < Object > {
+    getDistritos(ccdd: string, ccpp: string, ccdi: string, tipo: string = "0"): Observable<Object> {
         //variable local para unir los parametros
-        let queryparameters:string = `${ccdd}/${ccpp}/${ccdi}/`;
+        let queryparameters: string = `${ccdd}/${ccpp}/${ccdi}/${tipo}/`;
         //variable local para la ruta
         let url: string = this.distUrl + queryparameters;
         //variable que retorna
@@ -70,9 +71,9 @@ export class CroquisylistadostabularService {
     }
 
     //funcion que obtiene los zonas
-    getZonas(ubigeo: string): Observable < Object > {
+    getZonas(ubigeo: string): Observable<Object> {
         //variable local para unir los parametros
-        let queryparameters:string = `${ubigeo}/`;
+        let queryparameters: string = `${ubigeo}/`;
         //variable local para la ruta
         let url: string = this.zonaUrl + queryparameters;
         //variable que retorna
@@ -94,7 +95,7 @@ export class CroquisylistadostabularService {
         if (ccdd_s == "0" && ccdd == "0" && tipo == '0') {
             //variable local para unir los parametros
             queryparameters = `${area}/${tipo}/${ccdd_s}/${ccpp_s}/${ccdi_s}/${zona_s}/`;
-        }else{
+        } else {
             //se valida el ccdd_s y tipo
             if (ccdd_s != "00" && tipo == '0') {
                 //se asigna el valor 1 a la variable tipo
@@ -113,26 +114,26 @@ export class CroquisylistadostabularService {
     }
 
     //funcion que obtiene la data del registro
-    getRegistro(url:string=''): Observable < Object > {
+    getRegistro(url: string = ''): Observable<Object> {
         //variable local para la ruta
         let tablaUrlAux3 = this.tablaUrlAux2 + url;
-        if(url!=''){
+        if (url != '') {
             //variable que retorna
             return this.http.get(tablaUrlAux3).map(this.extractData)
-        }else{
+        } else {
             //variable que retorna
             return this.http.get(this.tablaUrlAux).map(this.extractData)
-        }        
+        }
     }
-    
+
     //funcion para zipear
-    getZip(ccdd:string='',ccpp:string='',ccdi:string='',zona:string='',tipo:string=''): Observable <Object> {
+    getZip(ccdd: string = '', ccpp: string = '', ccdi: string = '', zona: string = '', tipo: string = ''): Observable<Object> {
         //variable local para unir los parametros
-        let queryparameters:string = `${ccdd}${ccpp}${ccdi}/${zona}/${tipo}/`;
+        let queryparameters: string = `${ccdd}${ccpp}${ccdi}/${zona}/${tipo}/`;
         //variable local para la ruta
         let tablaUrlAux3 = this.tablaUrlZip + queryparameters;
         //variable que retorna
-        return this.http.get(tablaUrlAux3).map(this.extractData);        
+        return this.http.get(tablaUrlAux3).map(this.extractData);
     }
 
     //funcion que extrae la data
@@ -159,7 +160,7 @@ export class CroquisylistadostabularService {
         //variable que retorna
         return resultado || {};
     }
-    
+
     //funcion que obtiene la cabecera del error
     private handleError(error: any) {
         let errMsg = (error.message) ? error.message :

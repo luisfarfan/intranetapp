@@ -105,7 +105,7 @@ class Croquisylistadostabular {
     private toastyService: ToastyService,
     private toastyConfig: ToastyConfig) {
     //se llama al metodo cargarDepa()
-    this.cargarDepa()
+    this.cargarDepa(this.area)
     //se llama al metodo cargarTabla()
     this.cargarTabla("0", "0", "0", "0", "0")
     //se asigna el model al registro
@@ -120,9 +120,9 @@ class Croquisylistadostabular {
   model = new RegistroInterface();
 
   //funcion para cargar los departamentos
-  cargarDepa() {
+  cargarDepa(area) {
     //se llama al servicion getDepartamentos()
-    this.croquisylistadostabular.getDepartamentos().subscribe(res => {
+    this.croquisylistadostabular.getDepartamentos(area).subscribe(res => {
       //se asigna el valor del res a la variable departamentos
       this.departamentos = <DepartamentoInterface>res;
     })
@@ -139,7 +139,7 @@ class Croquisylistadostabular {
     //se valida si el ccdd es distinto de 0
     if (this.ccdd != 0) {
       //se llama al servicion getProvincias()
-      this.croquisylistadostabular.getProvincias(ccdd, ccpp).subscribe(res => {
+      this.croquisylistadostabular.getProvincias(ccdd, ccpp, this.area).subscribe(res => {
         //se asigna el valor del res a la variable provincias
         this.provincias = <ProvinciaInterface>res;
       })
@@ -168,7 +168,7 @@ class Croquisylistadostabular {
     //se valida si el ccpp es distinto de 0
     if (this.ccpp != 0) {
       //se llama al servicion getDistritos()
-      this.croquisylistadostabular.getDistritos(this.ccdd, ccpp, "0").subscribe(res => {
+      this.croquisylistadostabular.getDistritos(this.ccdd, ccpp, "0", this.area).subscribe(res => {
         //se asigna el valor del res a la variable distritos
         this.distritos = <DistritoInterface>res;
       })
@@ -236,7 +236,7 @@ class Croquisylistadostabular {
       this.ruralZona = true;
     }
     //se llama al metodo cargarDepa()
-    this.cargarDepa()
+    this.cargarDepa(this.area)
     //se llama al metodo cargarTabla()
     this.cargarTabla("0", "0", "0", "0", "0")
     //se pone el valor de las provincias en null
@@ -375,7 +375,8 @@ class Croquisylistadostabular {
     //se asigna el valor de la seccion
     this.seccion = seccion;
     //se asigna el valor del aeu
-    this.aeu = aeu;
+    //this.aeu = aeu;
+    this.aeu = ('00' + aeu).slice(-3);
     //se asigna la url a la variable urlCroquisAux
     let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona + ('00' + this.seccion).slice(-3) + this.aeu;
     //se construye el valor del ubigeo (ccdd + ccpp + ccdi)

@@ -1,5 +1,4 @@
 <h1 class="page-title">SISTEMA INTEGRADO DE SEGMENTACIÓN - <span class="fw-semi-bold">CROQUIS Y LISTADOS TABULAR</span></h1>
-
 <!-- Content area -->
 <div class="row">
     <div class="col-lg-12">
@@ -28,8 +27,7 @@
                 </div>
                 <div class="form-group">
                     <label for="lArea"><h5> ÁREA</h5></label>
-                    <select id="area" class="form-control" name="areas" >
-                        <!--(change)="cambiarArea($event.target.value)">-->
+                    <select id="area" class="form-control" name="areas" (change)="cambiarArea($event.target.value)">
                         <option value="0"> Urbano</option>
                     </select>
                 </div>
@@ -41,12 +39,10 @@
                     </select>
                 </div>
             </form>
-
             <form action="" class="inline">
                 <div *ngIf="distrito" class="col-md-2">
                     <button type="button" (click)="procesarCro()" class="btn btn-primary">Procesar</button>
                 </div>
-
                 <div class="col-md-12" align="left">
                     <hr style="color: black; background-color: black; width:100%;" />
                     <a class="btn btn-primary" (click)="descargarExcel('tablaCroTab', 'CROQUIS_Y_LISTADO')">EXCEL <i class="fa fa-download"></i></a>
@@ -55,7 +51,6 @@
         </section>
     </div>
 </div>
-
 <div class="row">
     <div class="col-lg-12">
         <section class="widget">
@@ -78,7 +73,7 @@
                     <p-column *ngIf="urbanoZona" field="ZONA" header="ZONA" [sortable]="true"></p-column>
                     <p-column field="NUM_SEC" header="NRO. DE SECCIONES" [sortable]="true"></p-column>
                     <p-column *ngIf="urbanoZona" field="NUM_AEU" header="NRO. DE AEUs" [sortable]="true"></p-column>
-                    <p-column *ngIf="ruralZona" field="NUM_AERS" header="NRO. DE AERs" [sortable]="true"></p-column> 
+                    <p-column *ngIf="ruralZona" field="NUM_AERS" header="NRO. DE AERs" [sortable]="true"></p-column>
                     <p-column field="EST_CROQUIS" styleClass="col-button" header="ESTADO">
                         <template let-col let-car="rowData" pTemplate type="body">
                             <span [ngSwitch]="car[col.field]">
@@ -127,7 +122,6 @@
         </section>
     </div>
 </div>
-
 <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-full">
         <div class="modal-content">
@@ -192,7 +186,8 @@
                                         <th width="11%">Estado</th>
                                     </tr>
                                 </thead>
-                                <tbody><!-- max-height="500px">-->
+                                <tbody>
+                                    <!-- max-height="500px">-->
                                     <tr *ngFor="let re1 of registros2">
                                         <td align="center" (click)="cambiarPdfSeccion(re1.NUM_SEC)">{{re1.NUM_SEC}}</td>
                                         <td align="center" *ngIf="aeuAuxRural" (click)="cambiarPdfAeu(re1.NUM_SEC,re1.NUM_AERS)">{{re1.NUM_AERS}}</td>
@@ -218,7 +213,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

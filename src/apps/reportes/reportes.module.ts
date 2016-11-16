@@ -94,7 +94,7 @@ class Reportes {
   private urlCroquis: any; //guarda el url del croquis
   private urlProcesar: any; //guarda el url que se usara en el proceso
   private tipo_cro: number = 0; //guarda el tipo de croquis
-  
+
   private tabledata: boolean = false; //permite ver la tabla
   private seccionAux: boolean = false; //guarda la seccion
   private aeuAux: boolean = false; //guarda el area de empadronamiento urbano
@@ -109,8 +109,8 @@ class Reportes {
   private distritos: DistritoInterface; //variable que guardara los distritos
   private zonas: ZonaInterface; //variable que guardara las zonas
 
-  private reporteDepa: boolean = true ; //variable que muestra el reporte
-  private reporteDepa01: boolean = false ; //variable que muestra el reporte 
+  private reporteDepa: boolean = true; //variable que muestra el reporte
+  private reporteDepa01: boolean = false; //variable que muestra el reporte 
 
   private reporte01: boolean = true; //variable que muestra el reporte 01
   private reporte02: boolean = false; //variable que muestra el reporte 02
@@ -124,7 +124,7 @@ class Reportes {
   private reporte10: boolean = false; //variable que muestra el reporte 10
 
   private tipo: string = ''; //variable que guarda el tipo
-
+  private area: string = "0";
   private datareporte01: Reporte01Interface; //variable que guarda el reporte 01
   private datareporte02: Reporte02Interface; //variable que guarda el reporte 02
   private datareporte03: Reporte03Interface; //variable que guarda el reporte 03
@@ -139,7 +139,7 @@ class Reportes {
   //constructor...
   constructor(private reportes: ReportesService, private elementRef: ElementRef, private domSanitizer: DomSanitizer) {
     //se llama al metodo cargarDepa()
-    this.cargarDepa();
+    this.cargarDepa(this.area);
     //se asigna el model al registro
     this.registro = this.model;
   }
@@ -148,9 +148,9 @@ class Reportes {
   model = new RegistroInterface();
 
   //funcion para cargar los departamentos
-  cargarDepa() {
+  cargarDepa(area) {
     //se llama al servicion getDepartamentos()
-    this.reportes.getDepartamentos().subscribe(res => {
+    this.reportes.getDepartamentos(area).subscribe(res => {
       //se asigna el valor del res a la variable departamentos
       this.departamentos = <DepartamentoInterface>res;
     })
@@ -187,7 +187,7 @@ class Reportes {
     //se valida si el ccdd es departamento a 0
     if (this.ccdd != 0) {
       //se llama al servicion getProvincias()
-      this.reportes.getProvincias(ccdd, ccpp).subscribe(res => {
+      this.reportes.getProvincias(ccdd, ccpp,this.area).subscribe(res => {
         //se asigna el valor del res a la variable provincias
         this.provincias = <ProvinciaInterface>res;
       })
@@ -234,7 +234,7 @@ class Reportes {
     //se valida si el ccpp es distinto de 0
     if (this.ccpp != 0) {
       //se llama al servicio getDistritos()
-      this.reportes.getDistritos(this.ccdd, ccpp, "0").subscribe(res => {
+      this.reportes.getDistritos(this.ccdd, ccpp, this.area).subscribe(res => {
         //se asigna el valor del res a la variable distritos
         this.distritos = <DistritoInterface>res;
       })
@@ -433,12 +433,12 @@ class Reportes {
     if (reporte == "0" || reporte == "1" || reporte == "2" || reporte == "5" || reporte == "8" || reporte == "9") {
       switch (reporte) {
         //tipo de reporte (0 o 1 o 2 o 5 o 8 o 9)
-        case "0":          this.reporte01 = true;          break;
-        case "1":          this.reporte02 = true;          break;
-        case "2":          this.reporte03 = true;          break;
-        case "5":          this.reporte06 = true;          break;
-        case "8":          this.reporte09 = true;          break;
-        case "9":          this.reporte10 = true;          break;
+        case "0": this.reporte01 = true; break;
+        case "1": this.reporte02 = true; break;
+        case "2": this.reporte03 = true; break;
+        case "5": this.reporte06 = true; break;
+        case "8": this.reporte09 = true; break;
+        case "9": this.reporte10 = true; break;
       }
       //se llama al metodo cargarTabla()
       this.cargarTabla(this.ccdi);
@@ -451,8 +451,8 @@ class Reportes {
     if (reporte == "3" || reporte == "6") {
       switch (reporte) {
         //tipo de reporte (3 o 6)
-        case "3":          this.reporte04 = true;          break;
-        case "6":          this.reporte07 = true;          break;
+        case "3": this.reporte04 = true; break;
+        case "6": this.reporte07 = true; break;
       }
       //se llama al metodo cargarTablaAux()
       this.cargarTablaAux();
@@ -463,8 +463,8 @@ class Reportes {
     if (reporte == "4" || reporte == "7") {
       switch (reporte) {
         //tipo de reporte (4 o 7)
-        case "4":          this.reporte05 = true;          break;
-        case "7":          this.reporte08 = true;          break;
+        case "4": this.reporte05 = true; break;
+        case "7": this.reporte08 = true; break;
       }
       //se llama al metodo cargarTablaAux2()
       this.cargarTablaAux2();

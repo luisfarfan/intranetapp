@@ -112,7 +112,7 @@ class Croquisylistado {
     private toastyService: ToastyService,
     private toastyConfig: ToastyConfig) {
     //se llama al metodo cargarDepa()
-    this.cargarDepa()
+    this.cargarDepa(this.area)
     //se llama al metodo cargarTabla()
     this.cargarTabla("0", "0", "0", "0", "0")
     //se asigna el model al registro
@@ -127,9 +127,9 @@ class Croquisylistado {
   model = new RegistroInterface();
 
   //funcion para cargar los departamentos
-  cargarDepa() {
+  cargarDepa(area) {
     //se llama al servicion getDepartamentos()
-    this.croquisylistado.getDepartamentos().subscribe(res => {
+    this.croquisylistado.getDepartamentos(area).subscribe(res => {
       //se asigna el valor del res a la variable departamentos
       this.departamentos = <DepartamentoInterface>res;
     })
@@ -254,7 +254,7 @@ class Croquisylistado {
       this.ruralZona = true;
     }
     //se llama al metodo cargarDepa()
-    this.cargarDepa()
+    this.cargarDepa(this.area)
     //se llama al metodo cargarTabla()
     this.cargarTabla("0", "0", "0", "0", "0")
     //se pone el valor de las provincias en null
@@ -411,6 +411,7 @@ class Croquisylistado {
   //funcion para recargar el archivo .pdf (seccion)
   cambiarPdfSeccion(seccion) {
     //se asigna el valor de la seccion
+    console.log(seccion);
     this.seccion = seccion;
     //se construye el valor del ubigeo (ccdd + ccpp + ccdi) 
     let ubigeo = this.ccdd + this.ccpp + this.ccdi;
@@ -441,9 +442,11 @@ class Croquisylistado {
   //funcion para recargar el archivo .pdf (aeu)
   cambiarPdfAeu(seccion, aeu) {
     //se asigna el valor de la seccion
-    this.seccion = seccion;
+    console.log(seccion, aeu);
+    this.seccion = seccion
     //se asigna el valor del aeu
-    this.aeu = aeu;
+
+    this.aeu = ('00' + aeu).slice(-3);
     //se construye el valor del ubigeo (ccdd + ccpp + ccdi)
     let ubigeo = this.ccdd + this.ccpp + this.ccdi;
     //se valida si el area es igual a 0

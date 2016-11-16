@@ -9,6 +9,7 @@ import { CursosService } from './cursos.service';
 import { CriterioService } from './criterio.service';
 import { Curso, Criterio, CursoCriterio } from './curso';
 import { CursoCriterioService } from './curso_criterio'
+declare var jQuery: any;
 @Component({
   templateUrl: 'cursos.html',
   providers: [CursosService, CriterioService, CursoCriterioService],
@@ -38,9 +39,29 @@ export class CursosComponent implements OnInit {
     this.getCriterios();
   }
 
-  getCursos() {
+  getCursos(by: any = "0") {
     this.cursosservice.get().subscribe(
-      cursos => this.cursos = cursos
+      cursos => {
+        if (by === "0") {
+          this.cursos = [];
+          this.cursos = cursos
+        } else if (by == "1") {
+          this.cursos = [];
+          for (let k in cursos) {
+            if (cursos[k].id_etapa == "1") {
+              this.cursos.push(cursos[k])
+            }
+          }
+        } else if (by == "2") {
+          this.cursos = [];
+          for (let k in cursos) {
+            if (cursos[k].id_etapa == "2") {
+              this.cursos.push(cursos[k])
+            }
+          }
+        }
+
+      }
     )
   }
   getCriterios() {
@@ -52,7 +73,12 @@ export class CursosComponent implements OnInit {
     this.cursosservice.add(this.curso).subscribe(_ => this.getCursos())
   }
   addCriterios() {
-    this.criterioservice.add(this.criterio).subscribe(_ => this.getCriterios());
+    if (this.criterio.id_criterio_evaluacion == '') {
+      this.criterioservice.add(this.criterio).subscribe(_ => this.getCriterios());
+    } else {
+      this.criterioservice.edit(this.criterio.id_criterio_evaluacion, this.criterio).subscribe(_ => this.getCriterios());
+    }
+
   }
 
   onRowSelect(e) {
@@ -63,21 +89,49 @@ export class CursosComponent implements OnInit {
   onRowUnselect(e) {
     this.editarcurso = false;
   }
+
+  onRowSelect2(e) {
+    this.criterio = this.selectedCriterio
+  }
+  onRowUnselect2(e) {
+    this.criterio = new Criterio();
+  }
+
+  openModalAsignCriterio() {
+    jQuery('#myModal3').modal('show');
+    this.cursocriterio = new CursoCriterio();
+    this.sumaporcentajes = false;
+    this.getCriterioCurso();
+  }
   addCriterioCurso() {
     this.cursocriterio.id_capacitacion = this.selectedCurso.id_capacitacion;
     let suma: number = 0;
-    for (let k in this.criteriosbycapa) {
-      suma = suma + parseInt(this.criteriosbycapa[k].porcentaje);
-    }
-    console.log(suma);
-    suma = suma + parseInt(this.cursocriterio.porcentaje);
-    console.log(suma);
-    if (suma > 100) {
-      this.sumaporcentajes = true;
+
+    this.sumaporcentajes = false;
+    if (this.cursocriterio.id_capacitacion_criterio_evaluacion != '') {
+      for (let k in this.criteriosbycapa) {
+        suma = suma + parseInt(this.criteriosbycapa[k].porcentaje);
+      }
+      if (suma > 100) {
+        this.sumaporcentajes = true;
+        this.getCriterioCurso();
+      } else {
+        this.cursocriterioservice.edit(this.cursocriterio.id_capacitacion_criterio_evaluacion, this.cursocriterio).subscribe(_ => this.getCriterioCurso());
+      }
     } else {
-      this.sumaporcentajes = false;
-      this.cursocriterioservice.add(this.cursocriterio).subscribe(_ => this.getCriterioCurso());
+      for (let k in this.criteriosbycapa) {
+        suma = suma + parseInt(this.criteriosbycapa[k].porcentaje);
+      }
+      suma = suma + parseInt(this.cursocriterio.porcentaje);
+      if (suma > 100) {
+        this.sumaporcentajes = true;
+        this.getCriterioCurso();
+      } else {
+        this.cursocriterioservice.add(this.cursocriterio).subscribe(_ => this.getCriterioCurso());
+      }
     }
+
+    this.cursocriterio = new CursoCriterio();
 
   }
   getCriterioCurso() {
@@ -93,5 +147,11 @@ export class CursosComponent implements OnInit {
       console.log(this.criteriosbycapa);
       console.log(this.criterios);
     })
+  }
+  setCriteriosbyCapa(cursocriterio) {
+    this.sumaporcentajes = false;
+    console.log(cursocriterio);
+    this.cursocriterio = cursocriterio;
+    this.cursocriterio.id_criterio_evaluacion = cursocriterio.id_criterio_evaluacion_id;
   }
 }

@@ -4,6 +4,7 @@ export class Curso {
         public titulo_capacitacion: string = '',
         public desc_capacitacion: string = '',
         public nivel: string = '1',
+        public id_etapa: string = '',
     ) {
 
     }
@@ -23,7 +24,7 @@ export class CursoCriterio {
         public id_criterio_evaluacion: string = '',
         public id_capacitacion: string = '',
         public nota_minima: string = '',
-        public duracion: string = '',
+        public duracion: string = '100',
         public hora:string = '',
         public porcentaje:string = ''
     ) {

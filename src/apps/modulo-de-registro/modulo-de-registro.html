@@ -75,7 +75,7 @@
 						<div class="form-group col-xs-3" [class.has-danger]="formErrors.nombre_local">
 							<label class="form-control-label" for="nombre_local">Nombre de Local</label>
 							<input type="text" [class.form-control-danger]="formErrors.nombre_local" id="nombre_local" formControlName="nombre_local"
-											name="nombre_local" class="form-control" placeholder="nombre_local">
+											name="nombre_local" class="form-control">
 							<small *ngIf="formErrors.nombre_local" class="form-text  validation-error">{{ formErrors.nombre_local }}</small>
 						</div>
 						<div class="form-group col-xs-3">
@@ -89,13 +89,13 @@
 						<div class="form-group col-xs-3" [class.has-danger]="formErrors.nombre_via">
 							<label class="form-control-label" for="nombre_de_via">Nombre de Vía(Dirección)</label>
 							<input type="text" [class.form-control-danger]="formErrors.nombre_via" formControlName="nombre_via" name="nombre_via" id="nombre_de_via"
-											class="form-control" placeholder="Nombre de Vía">
+											class="form-control">
 							<small *ngIf="formErrors.nombre_via" class="form-text  validation-error">{{ formErrors.nombre_via }}</small>
 						</div>
 						<div class="form-group col-xs-3" [class.has-danger]="formErrors.referencia">
 							<label for="referencia">Referencia</label>
 							<input type="text" [class.form-control-danger]="formErrors.referencia" id="referencia" formControlName="referencia" name="referencia"
-											class="form-control" placeholder="Referencia">
+											class="form-control">
 							<small *ngIf="formErrors.referencia" class="form-text  validation-error">{{ formErrors.referencia }}</small>
 						</div>
 					</div>
@@ -103,43 +103,43 @@
 						<div class="form-group col-xs-1" [class.has-danger]="formErrors.n_direccion">
 							<label class="form-control-label" for="numero">N° PUERTA</label>
 							<input type="text" [class.form-control-danger]="formErrors.n_direccion" id="numero" formControlName="n_direccion" name="n_direccion"
-											class="form-control" placeholder="N°">
+											class="form-control">
 							<small *ngIf="formErrors.n_direccion" class="form-text  validation-error">{{ formErrors.n_direccion }}</small>
 						</div>
 						<div class="form-group col-xs-1" [class.has-danger]="formErrors.mz_direccion">
 							<label class="form-control-label" class="form-control-label" for="mz">MZ</label>
 							<input type="text" [class.form-control-danger]="formErrors.mz_direccion" id="mz" formControlName="mz_direccion" name="mz_direccion"
-											class="form-control" placeholder="MZ">
+											class="form-control">
 							<small *ngIf="formErrors.mz_direccion" class="form-text  validation-error">{{ formErrors.mz_direccion }}</small>
-						</div>
-						<div class="form-group col-xs-1" [class.has-danger]="formErrors.km_direccion">
-							<label class="form-control-label" for="km">KM</label>
-							<input type="text" [class.form-control-danger]="formErrors.km_direccion" id="km" formControlName="km_direccion" name="nombre_via"
-											class="form-control" placeholder="KM">
-							<small *ngIf="formErrors.km_direccion" class="form-text  validation-error">{{ formErrors.km_direccion }}</small>
 						</div>
 						<div class="form-group col-xs-1" [class.has-danger]="formErrors.lote_direccion">
 							<label class="form-control-label" for="lote">Lote</label>
 							<input type="text" [class.form-control-danger]="formErrors.lote_direccion" id="lote" formControlName="lote_direccion" name="lote_direccion"
-											class="form-control" placeholder="Lote">
+											class="form-control">
 							<small *ngIf="formErrors.lote_direccion" class="form-text  validation-error">{{ formErrors.lote_direccion }}</small>
+						</div>
+						<div class="form-group col-xs-1" [class.has-danger]="formErrors.km_direccion">
+							<label class="form-control-label" for="km">KM</label>
+							<input type="text" [class.form-control-danger]="formErrors.km_direccion" id="km" formControlName="km_direccion" name="nombre_via"
+											class="form-control">
+							<small *ngIf="formErrors.km_direccion" class="form-text  validation-error">{{ formErrors.km_direccion }}</small>
 						</div>
 						<div class="form-group col-xs-1" [class.has-danger]="formErrors.piso_direccion">
 							<label class="form-control-label" for="piso">Piso</label>
 							<input type="text" [class.form-control-danger]="formErrors.piso_direccion" id="piso" formControlName="piso_direccion" name="piso_direccion"
-											class="form-control" placeholder="Piso">
+											class="form-control">
 							<small *ngIf="formErrors.piso_direccion" class="form-text  validation-error">{{ formErrors.piso_direccion }}</small>
 						</div>
 						<div class="form-group col-xs-3" [class.has-danger]="formErrors.telefono_local_fijo">
 							<label class="form-control-label" for="tel_fijo">Teléfono Fijo</label>
 							<input type="text" [class.form-control-danger]="formErrors.telefono_local_fijo" id="tel_fijo" formControlName="telefono_local_fijo"
-											name="telefono_local_fijo" class="form-control" placeholder="Teléfono Fijo">
+											name="telefono_local_fijo" class="form-control">
 							<small *ngIf="formErrors.telefono_local_fijo" class="form-text  validation-error">{{ formErrors.telefono_local_fijo }}</small>
 						</div>
 						<div class="form-group col-xs-3" [class.has-danger]="formErrors.telefono_local_celular">
 							<label class="form-control-label" for="tel_cel">Teléfono Celular</label>
 							<input type="text" [class.form-control-danger]="formErrors.telefono_local_celular" id="tel_cel" formControlName="telefono_local_celular"
-											name="telefono_local_celular" class="form-control" placeholder="Teléfono Celular">
+											name="telefono_local_celular" class="form-control">
 							<small *ngIf="formErrors.telefono_local_celular" class="form-text  validation-error">{{ formErrors.telefono_local_celular }}</small>
 						</div>
 					</div>
@@ -170,6 +170,7 @@
 							<option value="0">MAÑANA</option>
 							<option value="1">TARDE</option>
 							<option value="2">NOCHE</option>
+							<option value="3">TODO EL DIA</option>
 						</select>
 						</div>
 						<div class="form-group col-xs-2" [class.has-danger]="formErrors.capacidad_local">
@@ -183,7 +184,7 @@
 					<legend class="scheduler-border">Datos de Funcionario del INEI</legend>
 					<div class="row">
 						<div class="form-group col-xs-3" [class.has-danger]="formErrors.funcionario_nombre">
-							<label class="form-control-label" for="nombre_funcionario">Nombres Completos</label>
+							<label class="form-control-label" for="nombre_funcionario">Apellidos y Nombres</label>
 							<input [class.form-control-danger]="formErrors.funcionario_nombre" type="text" formControlName="funcionario_nombre" name="funcionario_nombre"
 											id="nombre_funcionario" class="form-control">
 						</div>
@@ -208,7 +209,7 @@
 					<legend class="scheduler-border">Datos del Responsable del Local</legend>
 					<div class="row">
 						<div class="form-group col-xs-3" [class.has-danger]="formErrors.responsable_nombre">
-							<label class="form-control-label" for="nombre_responsable">Nombres Completo</label>
+							<label class="form-control-label" for="nombre_responsable">Apellidos y Nombres</label>
 							<input [class.form-control-danger]="formErrors.responsable_nombre" type="text" formControlName="responsable_nombre" name="responsable_nombre"
 											id="nombre_funcionario" class="form-control">
 						</div>
@@ -334,12 +335,12 @@
 				<div *ngIf="locales">
 					<p-dataTable [value]="locales" selectionMode="single" [(selection)]="selectedLocal">
 						<header>Locales por Ubigeo</header>
-						<p-column field="id_local" header="ID LOCAL"></p-column>
-						<p-column field="ubigeo" header="UBIGEO"></p-column>
+						<p-column field="nombre_local" header="NOMBRE LOCAL"></p-column>
+						<!--<p-column field="ubigeo" header="UBIGEO"></p-column>-->
 						<p-column field="nombre_via" header="NOMBRE VIA"></p-column>
 						<p-column field="referencia" header="REFERENCIA"></p-column>
 						<footer>
-							<button [disabled]="!selectedLocal" md-raised-button color="warn" (click)="setLocalForm()">Editar</button>
+							<button [disabled]="!selectedLocal" md-raised-button color="warn" (click)="setLocalForm()">Agregar Criterios</button>
 						</footer>
 					</p-dataTable>
 				</div>
@@ -363,16 +364,29 @@
 					<fieldset class="scheduler-border">
 						<legend class="scheduler-border">Ambiente</legend>
 						<div class="row">
-							<div class="col-xs-4 col-xs-offset-2">
+							<div class="col-xs-3">
 								<label for="tipo_ambiente">Ambiente</label>
 								<select id="tipo_ambiente" required class="form-control" #tipo_ambiente="ngModel" name="tipo_ambiente" [(ngModel)]="aula.tipo_ambiente">
 									<option [selected]>Seleccione</option>
 								<option *ngFor="let ta of tipoambiente" [value]="ta.id">{{ ta.texto }}</option>	
 						</select>
 							</div>
+							<div class="col-xs-3">
+								<label for="numero">N°</label>
+								<input type="text" #numero="ngModel" name="numero" [(ngModel)]="aula.numero" class="form-control" id="numero">
+							</div>
+							<div class="col-xs-3">
+								<label for="capacidad">Capacidad Ambiente</label>
+								<input type="text" #capacidad="ngModel" name="capacidad" [(ngModel)]="aula.capacidad" id="capacidad" class="form-control">
+							</div>
+							<div class="col-xs-3">
+								<label for="n_piso">Piso</label>
+								<input type="text" #n_piso="ngModel" name="n_piso" [(ngModel)]="aula.n_piso" id="n_piso" class="form-control">
+							</div>
 						</div>
 					</fieldset>
 					<fieldset class="scheduler-border">
+						<legend class="scheduler-border">Mobiliario</legend>
 						<div class="row">
 							<div class="col-xs-3">
 								<label for="mesas">Mesas</label>
@@ -395,22 +409,7 @@
 						</div>
 					</fieldset>
 					<fieldset class="scheduler-border">
-						<div class="row">
-							<div class="col-xs-3">
-								<label for="numero">N°</label>
-								<input type="text" #numero="ngModel" name="numero" [(ngModel)]="aula.numero" class="form-control" id="numero">
-							</div>
-							<div class="col-xs-3">
-								<label for="n_piso">Piso</label>
-								<input type="text" #n_piso="ngModel" name="n_piso" [(ngModel)]="aula.n_piso" id="n_piso" class="form-control">
-							</div>
-							<div class="col-xs-3">
-								<label for="capacidad">Capacidad Ambiente</label>
-								<input type="text" #capacidad="ngModel" name="capacidad" [(ngModel)]="aula.capacidad" id="capacidad" class="form-control">
-							</div>
-						</div>
-					</fieldset>
-					<fieldset class="scheduler-border">
+						<legend class="scheduler-border">Equipamiento</legend>
 						<div class="row">
 							<div class="col-xs-4">
 								<md-checkbox name="puerta_chapa" #puerta_chapa="ngModel" [(ngModel)]="aula.puerta_chapa">
@@ -440,28 +439,40 @@
 								</md-checkbox>
 							</div>
 							<div class="col-xs-4">
-								<md-checkbox name="pizarra_acrilica" #pizarra_acrilica="ngModel" [(ngModel)]="aula.pizarra_acrilica">
-									Pizarra acrilica
+								<md-checkbox>
+									Ventiladores
 								</md-checkbox>
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-xs-3">
-								<md-checkbox name="pizarra_cemento" #pizarra_cemento="ngModel" [(ngModel)]="aula.pizarra_cemento">
-									Pestillo y candado
+							<div class="col-xs-4">
+								<md-checkbox>
+									Aire Acondicionado
 								</md-checkbox>
 							</div>
-							<div class="col-xs-3">
+							<div class="col-xs-4">
+								<md-checkbox name="pizarra_acrilica" #pizarra_acrilica="ngModel" [(ngModel)]="aula.pizarra_acrilica">
+									Pizarra acrilica
+								</md-checkbox>
+							</div>
+							<div class="col-xs-4">
+								<md-checkbox name="pizarra_cemento" #pizarra_cemento="ngModel" [(ngModel)]="aula.pizarra_cemento">
+									Pizarra de Cemento
+								</md-checkbox>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-4">
 								<md-checkbox name="proyector" #proyector="ngModel" [(ngModel)]="aula.proyector">
 									Proyector
 								</md-checkbox>
 							</div>
-							<div class="col-xs-3">
+							<div class="col-xs-4">
 								<md-checkbox name="computadora" #computadora="ngModel" [(ngModel)]="aula.computadora">
 									Computadora
 								</md-checkbox>
 							</div>
-							<div class="col-xs-3">
+							<div class="col-xs-4">
 								<md-checkbox name="acceso_internet" #acceso_internet="ngModel" [(ngModel)]="aula.acceso_internet">
 									Acceso Internet
 								</md-checkbox>
