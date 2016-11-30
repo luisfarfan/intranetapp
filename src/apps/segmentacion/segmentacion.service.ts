@@ -28,10 +28,10 @@ import { Helpers } from './../../app/helper';
 
 @Injectable()
 export class SegmentacionService {
-    
+
     //constructor
     constructor(private http: Http) { }
-    
+
     //variable que guarda el perfil
     private cargo: string = 'DEPARTAMENTAL';
     //urls de los servicios
@@ -47,16 +47,17 @@ export class SegmentacionService {
         return this.http.get(this.depaUrl).map(this.extractData).catch(this.handleError)
     }
 
-    //funcion que obtiene los departamentos
-    getDepartamentos(): Observable<Object> {
+    getDepartamentos(tipo: string = "0"): Observable<Object> {
         //variable que retorna
-        return this.http.get(this.depaUrl).map(this.extractData).catch(this.handleError)
+        let url: string = `${this.depaUrl}${tipo}/`;
+        console.log(url);
+        return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
 
     //funcion que obtiene los provincias
-    getProvincias(ccdd: string, ccpp: string): Observable<Object> {
+    getProvincias(ccdd: string, ccpp: string, tipo: string = "0"): Observable<Object> {
         //variable local para unir los parametros
-        let queryparameters: string = `${ccdd}/${ccpp}/`;
+        let queryparameters: string = `${ccdd}/${ccpp}/${tipo}/`;
         //variable local para la ruta
         let url: string = this.provUrl + queryparameters;
         //variable que retorna
@@ -64,9 +65,9 @@ export class SegmentacionService {
     }
 
     //funcion que obtiene los distritos
-    getDistritos(ccdd: string, ccpp: string, ccdi: string): Observable<Object> {
+    getDistritos(ccdd: string, ccpp: string, tipo: string = "0"): Observable<Object> {
         //variable local para unir los parametros
-        let queryparameters: string = `${ccdd}/${ccpp}/${ccdi}/`;
+        let queryparameters: string = `${ccdd}/${ccpp}/0/${tipo}/`;
         //variable local para la ruta
         let url: string = this.distUrl + queryparameters;
         //variable que retorna
@@ -98,7 +99,7 @@ export class SegmentacionService {
         if (ccdd_s == "0" && ccdd == "0" && tipo == '0') {
             //variable local para unir los parametros
             queryparameters = `${area}/${tipo}/${ccdd_s}/${ccpp_s}/${ccdi_s}/${zona_s}/`;
-        }else{
+        } else {
             //se valida el ccdd_s y tipo
             if (ccdd_s != "00" && tipo == '0') {
                 //se asigna el valor 1 a la variable tipo

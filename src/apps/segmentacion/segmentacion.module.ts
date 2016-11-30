@@ -117,7 +117,7 @@ class Segmentacion {
     //se valida si el ccdd es distinto de 0
     if (this.ccdd != 0) {
       //se llama al servicion getProvincias()
-      this.segmentacionservice.getProvincias(ccdd, ccpp).subscribe(res => {
+      this.segmentacionservice.getProvincias(ccdd, ccpp,this.area).subscribe(res => {
         //se asigna el valor del res a la variable provincias
         this.provincias = <ProvinciaInterface>res;
       })
@@ -146,7 +146,7 @@ class Segmentacion {
     //se valida si el ccpp es distinto de 0
     if (this.ccpp != 0) {
       //se llama al servicion getDistritos()
-      this.segmentacionservice.getDistritos(this.ccdd, ccpp, "0").subscribe(res => {
+      this.segmentacionservice.getDistritos(this.ccdd, ccpp, this.area).subscribe(res => {
         //se asigna el valor del res a la variable distritos
         this.distritos = <DistritoInterface>res;
       })

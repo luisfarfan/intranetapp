@@ -146,9 +146,10 @@ class Croquisylistado {
     //la variable distrito se setea como true
     this.verDistrito = false;
     //se valida si el ccdi es distinto de 0
+    console.log(this.area);
     if (this.ccdd != 0) {
       //se llama al servicion getProvincias()
-      this.croquisylistado.getProvincias(ccdd, ccpp).subscribe(res => {
+      this.croquisylistado.getProvincias(ccdd, ccpp, this.area).subscribe(res => {
         //se asigna el valor del res a la variable provincias
         this.provincias = <ProvinciaInterface>res;
       })
@@ -177,9 +178,10 @@ class Croquisylistado {
     //la variable verDistrito se setea como falso
     this.verDistrito = false;
     //se valida si el ccpp es distinto de 0
+    console.log(this.area);
     if (this.ccpp != 0) {
       //se llama al servicion getDistritos()
-      this.croquisylistado.getDistritos(this.ccdd, ccpp, "0").subscribe(res => {
+      this.croquisylistado.getDistritos(this.ccdd, ccpp, this.area).subscribe(res => {
         //se asigna el valor del res a la variable distritos
         this.distritos = <DistritoInterface>res;
       })
@@ -441,6 +443,7 @@ class Croquisylistado {
 
   //funcion para recargar el archivo .pdf (aeu)
   cambiarPdfAeu(seccion, aeu) {
+    console.log(seccion,aeu);
     //se asigna el valor de la seccion
     console.log(seccion, aeu);
     this.seccion = seccion
@@ -459,7 +462,7 @@ class Croquisylistado {
       //se asigna la url a la variable urlCroquisAux
       let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + '-' + this.seccion + '-' + this.aeu;
       //se asigna la url a la variable urlCroquis
-      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/rural/${ubigeo}/${urlCroquisAux}.pdf`);
+      this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/cpv2017/segm_esp/rural/${ubigeo}/${ubigeo}-${seccion}-${aeu}.pdf`);
     }
     //se declara el metodo del click para la tabla
     jQuery('#tablaCroAux tr').click(function () {

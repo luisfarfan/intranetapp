@@ -60,11 +60,12 @@ export class CroquisylistadoService {
     }
 
     //funcion que obtiene los distritos
-    getDistritos(ccdd: string, ccpp: string, ccdi: string, tipo: string = "0"): Observable<Object> {
+    getDistritos(ccdd: string, ccpp: string, tipo: string = "0"): Observable<Object> {
         //variable local para unir los parametros
-        let queryparameters: string = `${ccdd}/${ccpp}/${ccdi}/${tipo}/`;
+        let queryparameters: string = `${ccdd}/${ccpp}/0/${tipo}/`;
         //variable local para la ruta
         let url: string = this.distUrl + queryparameters;
+        console.log(url);
         //variable que retorna
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
