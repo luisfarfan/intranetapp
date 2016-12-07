@@ -34,13 +34,13 @@ export class CroquisylistadoService {
     //variable que guarda el perfil
     private cargo: string = 'DEPARTAMENTAL';
     //urls de los servicios
-    private depaUrl: string = 'http://bromero.inei.com.pe:8000/recargaDepa/';
-    private provUrl: string = 'http://bromero.inei.com.pe:8000/recargaProv/';
-    private distUrl: string = 'http://bromero.inei.com.pe:8000/recargaDis/';
-    private zonaUrl: string = 'http://bromero.inei.com.pe:8000/recargaZona/';
-    private tablaUrlAux: string = 'http://bromero.inei.com.pe:8000/crorecargaTabla01/';
-    private tablaUrlAux2: string = 'http://bromero.inei.com.pe:8000/crorecargaTabla02/';
-    private tablaUrlZip: string = 'http://bromero.inei.com.pe:8000/crodescargarPdf/';
+    private depaUrl: string = 'http://lfarfan.inei.com.pe:81/recargaDepa/';
+    private provUrl: string = 'http://lfarfan.inei.com.pe:81/recargaProv/';
+    private distUrl: string = 'http://lfarfan.inei.com.pe:81/recargaDis/';
+    private zonaUrl: string = 'http://lfarfan.inei.com.pe:81/recargaZona/';
+    private tablaUrlAux: string = 'http://lfarfan.inei.com.pe:81/crorecargaTabla01/';
+    private tablaUrlAux2: string = 'http://lfarfan.inei.com.pe:81/crorecargaTabla02/';
+    private tablaUrlZip: string = 'http://lfarfan.inei.com.pe:81/crodescargarPdf/';
 
     //funcion que obtiene los departamentos
     getDepartamentos(tipo: string = "0"): Observable<Object> {

@@ -43,8 +43,8 @@ export class LegajoService {
     private tablaUrlAux: string = 'http://127.0.0.1:8000/crorecargaTabla01/';
     private tablaUrlAux2: string = 'http://127.0.0.1:8000/crorecargaTabla02/';*/
 
-    private tablaUrlAux: string = 'http://bromero.inei.com.pe:8000/crorecargaTabla01/';
-    private tablaUrlAux2: string = 'http://bromero.inei.com.pe:8000/crorecargaTabla02/';
+    private tablaUrlAux: string = 'http://lfarfan.inei.com.pe:81/crorecargaTabla01/';
+    private tablaUrlAux2: string = 'http://lfarfan.inei.com.pe:81/crorecargaTabla02/';
     private DepasUrl: string = 'http://172.16.2.185:8000/cargardepas/';
     private ProvinciasUrl: string = 'http://172.16.2.185:8000/cargardeprov/';
     private DistritosUrl: string = 'http://172.16.2.185:8000/cargardistrito/';

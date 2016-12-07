@@ -36,20 +36,20 @@ export class ImpresionesService {
     private tablaUrlAux: string = 'http://192.168.200.123:8081/crorecargaTabla01/';
     private tablaUrlAux2: string = 'http://192.168.200.123:8081/crorecargaTabla02/';*/
 
-    /*private depaUrl: string = 'http://bromero.inei.com.pe:8000/recargaDepa/';
-    private provUrl: string = 'http://bromero.inei.com.pe:8000/recargaProv/';
-    private distUrl: string = 'http://bromero.inei.com.pe:8000/recargaDis/';
-    private zonaUrl: string = 'http://bromero.inei.com.pe:8000/recargaZona/';
-    private tablaUrlAux: string = 'http://bromero.inei.com.pe:8000/crorecargaTabla01/';
-    private tablaUrlAux2: string = 'http://bromero.inei.com.pe:8000/crorecargaTabla02/';
-    private tablaUrlZip: string = 'http://bromero.inei.com.pe:8000/crodescargarPdf/';*/
+    /*private depaUrl: string = 'http://lfarfan.inei.com.pe:81/recargaDepa/';
+    private provUrl: string = 'http://lfarfan.inei.com.pe:81/recargaProv/';
+    private distUrl: string = 'http://lfarfan.inei.com.pe:81/recargaDis/';
+    private zonaUrl: string = 'http://lfarfan.inei.com.pe:81/recargaZona/';
+    private tablaUrlAux: string = 'http://lfarfan.inei.com.pe:81/crorecargaTabla01/';
+    private tablaUrlAux2: string = 'http://lfarfan.inei.com.pe:81/crorecargaTabla02/';
+    private tablaUrlZip: string = 'http://lfarfan.inei.com.pe:81/crodescargarPdf/';*/
 
-    // private depaUrl: string = 'http://bromero.inei.com.pe:8000/recargaDepa/';
-    // private provUrl: string = 'http://bromero.inei.com.pe:8000/recargaProv/';
-    // private distUrl: string = 'http://bromero.inei.com.pe:8000/recargaDis/';
-    // private zonaUrl: string = 'http://bromero.inei.com.pe:8000/recargaZona/';
-    // private aeuUrl: string = 'http://bromero.inei.com.pe:8000/recargaAeu/';
-    private tablaReporte: string = 'http://bromero.inei.com.pe:8000/tablaReporte/';
+    // private depaUrl: string = 'http://lfarfan.inei.com.pe:81/recargaDepa/';
+    // private provUrl: string = 'http://lfarfan.inei.com.pe:81/recargaProv/';
+    // private distUrl: string = 'http://lfarfan.inei.com.pe:81/recargaDis/';
+    // private zonaUrl: string = 'http://lfarfan.inei.com.pe:81/recargaZona/';
+    // private aeuUrl: string = 'http://lfarfan.inei.com.pe:81/recargaAeu/';
+    private tablaReporte: string = 'http://lfarfan.inei.com.pe:81/tablaReporte/';
     // private a: string = 'http://172.16.2.185:8000/impresionesaeus/'; #cargardepas
     private cargardepas: string = 'http://172.16.2.185:8000/cargardepas/'; //cargardeprov
     private cargarprov: string = 'http://172.16.2.185:8000/cargardeprov/'; //cargardistrito

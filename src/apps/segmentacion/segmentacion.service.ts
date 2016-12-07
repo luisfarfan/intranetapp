@@ -35,11 +35,11 @@ export class SegmentacionService {
     //variable que guarda el perfil
     private cargo: string = 'DEPARTAMENTAL';
     //urls de los servicios
-    private depaUrl: string = 'http://bromero.inei.com.pe:8000/recargaDepa/';
-    private provUrl: string = 'http://bromero.inei.com.pe:8000/recargaProv/';
-    private distUrl: string = 'http://bromero.inei.com.pe:8000/recargaDis/';
-    private zonaUrl: string = 'http://bromero.inei.com.pe:8000/recargaZona/';
-    private tablaUrlAux: string = 'http://bromero.inei.com.pe:8000/segrecargaTabla01/';
+    private depaUrl: string = 'http://lfarfan.inei.com.pe:81/recargaDepa/';
+    private provUrl: string = 'http://lfarfan.inei.com.pe:81/recargaProv/';
+    private distUrl: string = 'http://lfarfan.inei.com.pe:81/recargaDis/';
+    private zonaUrl: string = 'http://lfarfan.inei.com.pe:81/recargaZona/';
+    private tablaUrlAux: string = 'http://lfarfan.inei.com.pe:81/segrecargaTabla01/';
 
     //funcion que obtiene los departamentos
     getCargaDepaInicial(): Observable<Object> {
