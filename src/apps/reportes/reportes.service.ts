@@ -32,11 +32,11 @@ export class ReportesService {
     constructor(private http: Http) { }
 
     //urls de los servicios
-    private depaUrl: string = 'http://lfarfan.inei.com.pe:81/recargaDepa/';
-    private provUrl: string = 'http://lfarfan.inei.com.pe:81/recargaProv/';
-    private distUrl: string = 'http://lfarfan.inei.com.pe:81/recargaDis/';
-    private zonaUrl: string = 'http://lfarfan.inei.com.pe:81/recargaZona/';
-    private tablaReporte: string = 'http://lfarfan.inei.com.pe:81/tablaReporte/';
+    private depaUrl: string = 'http://172.18.1.40:8000/recargaDepa/';
+    private provUrl: string = 'http://172.18.1.40:8000/recargaProv/';
+    private distUrl: string = 'http://172.18.1.40:8000/recargaDis/';
+    private zonaUrl: string = 'http://172.18.1.40:8000/recargaZona/';
+    private tablaReporte: string = 'http://172.18.1.40:8000/tablaReporte/';
 
     //funcion que obtiene los departamentos
     getDepartamentos(tipo: string = "0"): Observable<Object> {

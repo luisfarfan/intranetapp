@@ -35,18 +35,18 @@ import {
 export class ControldecalidadService {
     constructor(private http: Http) { }
 
-    private depaUrl: string = 'http://lfarfan.inei.com.pe:81/recargaDepa/';
-    private provUrl: string = 'http://lfarfan.inei.com.pe:81/recargaProv/';
-    private distUrl: string = 'http://lfarfan.inei.com.pe:81/recargaDis/';
-    private zonaUrl: string = 'http://lfarfan.inei.com.pe:81/recargaZona/';
-    private tablaUrlAux: string = 'http://lfarfan.inei.com.pe:81/calidadrecargaTabla01/';
-    private tablaUrlAux2: string = 'http://lfarfan.inei.com.pe:81/calidadrecargaTabla02/';
-    private tablaUrlAux4: string = 'http://lfarfan.inei.com.pe:81/CalidadList/';
-    private tablaReporte: string = 'http://lfarfan.inei.com.pe:81/tablaReporte/';
-    private tablaIndicador: string = 'http://lfarfan.inei.com.pe:81/tablaIndicador/';
+    private depaUrl: string = 'http://172.18.1.40:8000/recargaDepa/';
+    private provUrl: string = 'http://172.18.1.40:8000/recargaProv/';
+    private distUrl: string = 'http://172.18.1.40:8000/recargaDis/';
+    private zonaUrl: string = 'http://172.18.1.40:8000/recargaZona/';
+    private tablaUrlAux: string = 'http://172.18.1.40:8000/calidadrecargaTabla01/';
+    private tablaUrlAux2: string = 'http://172.18.1.40:8000/calidadrecargaTabla02/';
+    private tablaUrlAux4: string = 'http://172.18.1.40:8000/CalidadList/';
+    private tablaReporte: string = 'http://172.18.1.40:8000/tablaReporte/';
+    private tablaIndicador: string = 'http://172.18.1.40:8000/tablaIndicador/';
 
-    private guardarObservaciones: string = 'http://lfarfan.inei.com.pe:81/tablaIndicador2/';
-    private guardarIndicador: string = 'http://lfarfan.inei.com.pe:81/tablaIndicador3/';
+    private guardarObservaciones: string = 'http://172.18.1.40:8000/tablaIndicador2/';
+    private guardarIndicador: string = 'http://172.18.1.40:8000/tablaIndicador3/';
 
     /*private depaUrl: string = 'http://bromero.inei.com.pe:8090/recargaDepa/';
     private provUrl: string = 'http://bromero.inei.com.pe:8090/recargaProv/';
