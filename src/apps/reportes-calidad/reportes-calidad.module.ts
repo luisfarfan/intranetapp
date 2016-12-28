@@ -13,8 +13,8 @@ import {
   CommonModule
 } from '@angular/common';
 import {
-  ReportestabularService
-} from './reportes-tabular.service';
+  ReportescalidadService
+} from './reportes-calidad.service';
 import {
   BrowserModule
 } from '@angular/platform-browser';
@@ -57,14 +57,14 @@ import { DataTableModule, SharedModule, ButtonModule } from 'primeng/primeng';
 
 //Declaracion del componente
 @Component({
-  templateUrl: 'reportes-tabular.html',
+  templateUrl: 'reportes-calidad.html',
   styles: [`.intro { 
     background-color: #A9E2F3;
 }`],
-  providers: [ReportestabularService]
+  providers: [ReportescalidadService]
 })
 
-class Reportestabular {
+class Reportescalidad {
 
   //variables globables...
   private ccdd: any; //codigo del departamento
@@ -108,10 +108,11 @@ class Reportestabular {
   private datareporte05: Reporte05Interface; //variable que guarda el reporte 05
 
   //constructor...
-  constructor(private reportestabular: ReportestabularService, private elementRef: ElementRef, private domSanitizer: DomSanitizer) {
+  constructor(private reportestabular: ReportescalidadService, private elementRef: ElementRef, private domSanitizer: DomSanitizer) {
     //se llama al metodo cargarDepa()
     this.cargarDepa(this.area);
     //se asigna el model al registro
+    this.cargarTabla("00", "00", "00")
     this.registro = this.model;
   }
 
@@ -128,7 +129,7 @@ class Reportestabular {
   }
 
   //funcion para cargar los provincias
-  cargarProvincias(ccdd: string, ccpp: string = "0") {
+  cargarProvincias(ccdd: string) {
     //se asigna el valor del codigo del departamento
     this.ccdd = ccdd;
     //la variable distrito se setea como falso
@@ -148,12 +149,13 @@ class Reportestabular {
     //se valida si el ccpp es departamento a 0
     if (this.ccdd != 0) {
       //se llama al servicion getProvincias()
-      this.reportestabular.getProvincias(ccdd, ccpp).subscribe(res => {
+      this.reportestabular.getProvincias(ccdd).subscribe(res => {
         //se asigna el valor del res a la variable provincias
         this.provincias = <ProvinciaInterface>res;
       })
       //se llama al metodo cargarTabla2()
-      this.cargarTabla('0');
+      //this.cargarTablaAux2();
+      this.cargarTabla(this.ccdd, "00", "00");
     } else {
       //se pone el valor de las provincias en null
       this.provincias = null;
@@ -185,12 +187,12 @@ class Reportestabular {
     //se valida si el ccpp es distinto de 0
     if (this.ccpp != 0) {
       //se llama al servicio getDistritos()
-      this.reportestabular.getDistritos(this.ccdd, ccpp, "0").subscribe(res => {
+      this.reportestabular.getDistritos(this.ccdd, ccpp).subscribe(res => {
         //se asigna el valor del res a la variable distritos
         this.distritos = <DistritoInterface>res;
       });
       //se llama al metodo cargarTablaAux()
-      this.cargarTabla('0');
+      this.cargarTabla(this.ccdd, ccpp, "00");
     } else {
       //se pone el valor de los distritos en null
       this.distritos = null;
@@ -215,7 +217,9 @@ class Reportestabular {
       this.reportestabular.getZonas(ubigeo).subscribe(res => {
         //se asigna el valor del res a la variable zonas
         this.zonas = <ZonaInterface>res;
-      })
+      }
+      )
+      this.cargarTabla(this.ccdd, this.ccpp, ccdi);
     } else {
       //se pone el valor de las zonas en null
       this.zonas = null;
@@ -224,140 +228,180 @@ class Reportestabular {
     }
   }
 
-  //funcion para cargar la tabla
-  cargarTabla(ccdi: string) {
-    //se asigna el valor del codigo del distrito
+
+  cargarTabla(ccdd: string, ccpp: string, ccdi: string){
+
+    this.ccdd = ccdd;
+    this.ccpp = ccpp;
     this.ccdi = ccdi;
-    //valida el reporte01 (verdadero entra)
-    if (this.reporte01) {
-      //asigna el valor a tipo = 0
-      this.tipo = '0';
+
+    console.log("este es el departamento");
+    console.log(this.ccdd);
+
+    if (this.ccdd =="00" && this.ccpp=="00" && this.ccdi =="00"){
+      this.reportestabular.getTabla(this.ccdd, this.ccpp, this.ccdi).subscribe(res => {
+            //la variable verZona se setea como true
+            //this.tabledata = true;
+            //se asigna el valor del res a la variable registros
+            this.registros = <RegistroInterface>res;
+            console.log("Esta es la data de registros--> ");
+            console.log(this.registros);
+            //se asigna la data al model (atributo por atributo)
+            // this.nombreDepa = this.registros[0].DEPARTAMENTO;
+            // this.nombreProv = this.registros[0].PROVINCIA;
+            // this.nombreDist = this.registros[0].DISTRITO;
+        }
+      )
     }
-    //valida el reporte02 (verdadero entra)
-    if (this.reporte02) {
-      //asigna el valor a tipo = 1
-      this.tipo = '1';
+    else if (this.ccdd!="00"){
+      this.reportestabular.getTabla(this.ccdd, this.ccpp, this.ccdi).subscribe(res => {
+            console.log("Entro a nivel de provincias")
+            //la variable verZona se setea como true
+            //this.tabledata = true;
+            //se asigna el valor del res a la variable registros
+            this.registros = <RegistroInterface>res;
+            console.log("Esta es la data de registros--> ");
+            console.log(this.registros);
+            //se asigna la data al model (atributo por atributo)
+            // this.nombreDepa = this.registros[0].DEPARTAMENTO;
+            // this.nombreProv = this.registros[0].PROVINCIA;
+            // this.nombreDist = this.registros[0].DISTRITO;
+          }
+      )
+
     }
-    //valida el reporte03 (verdadero entra)
-    if (this.reporte03) {
-      //asigna el valor a tipo = 2
-      this.tipo = '2';
-    }
-    //se llama al servicion getTabla()
 
 
-    this.reportestabular.getTabla(this.tipo, this.ccdd, this.ccpp, this.ccdi).subscribe(res => {
-      //la variable tabledata se setea como true
-      this.tabledata = true;
-      //valida el reporte01 (verdadero entra)
-      if (this.reporte01) {
-        //se asigna el valor del res a la variable datareporte01
-        this.datareporte01 = <Reporte01Interface>res;
-      }
-      //valida el reporte02 (verdadero entra)
-      if (this.reporte02) {
-        //se asigna el valor del res a la variable datareporte02
-        this.datareporte02 = <Reporte02Interface>res;
-      }
-      //valida el reporte03 (verdadero entra)
-      if (this.reporte03) {
-        //se asigna el valor del res a la variable datareporte03
-        this.datareporte03 = <Reporte03Interface>res;
-      }
-    })
+
+
   }
-
-
-  
   //funcion para cargar la tabla
-  cargarTablaAux() {
-    //asigna el valor a tipo = 3
-    this.tipo = '3';
-    //valida el reporte04 (verdadero entra)
-    if (this.reporte04) {
-      //asigna el valor a tipo = 3
-      this.tipo = '3';
-    }
-    //se llama al servicion getTabla()
-    this.reportestabular.getTabla(this.tipo, this.ccdd, this.ccpp, '0').subscribe(res => {
-      //valida el reporte04 (verdadero entra)
-      if (this.reporte04) {
-        //se asigna el valor del res a la variable datareporte04
-        this.datareporte04 = <Reporte04Interface>res;
-      }
-    })
-  }
+  // cargarTabla(ccdi: string) {
+  //   //se asigna el valor del codigo del distrito
+  //   this.ccdi = ccdi;
+  //   //valida el reporte01 (verdadero entra)
+  //   if (this.reporte01) {
+  //     //asigna el valor a tipo = 0
+  //     this.tipo = '0';
+  //   }
+  //   //valida el reporte02 (verdadero entra)
+  //   if (this.reporte02) {
+  //     //asigna el valor a tipo = 1
+  //     this.tipo = '1';
+  //   }
+  //   //valida el reporte03 (verdadero entra)
+  //   if (this.reporte03) {
+  //     //asigna el valor a tipo = 2
+  //     this.tipo = '2';
+  //   }
+  //   //se llama al servicion getTabla()
+  //   this.reportestabular.getTabla(this.tipo, this.ccdd, this.ccpp, this.ccdi).subscribe(res => {
+  //     //la variable tabledata se setea como true
+  //     this.tabledata = true;
+  //     //valida el reporte01 (verdadero entra)
+  //     if (this.reporte01) {
+  //       //se asigna el valor del res a la variable datareporte01
+  //       this.datareporte01 = <Reporte01Interface>res;
+  //     }
+  //     //valida el reporte02 (verdadero entra)
+  //     if (this.reporte02) {
+  //       //se asigna el valor del res a la variable datareporte02
+  //       this.datareporte02 = <Reporte02Interface>res;
+  //     }
+  //     //valida el reporte03 (verdadero entra)
+  //     if (this.reporte03) {
+  //       //se asigna el valor del res a la variable datareporte03
+  //       this.datareporte03 = <Reporte03Interface>res;
+  //     }
+  //   })
+  // }
 
   //funcion para cargar la tabla
-  cargarTablaAux2() {
-    //asigna el valor a tipo = 4
-    this.tipo = '4';
-    //valida el reporte05 (verdadero entra)
-    if (this.reporte05) {
-      //asigna el valor a tipo = 4
-      this.tipo = '4';
-    }
-    //se llama al servicion getTabla()
-    this.reportestabular.getTabla(this.tipo, this.ccdd, this.ccpp, '0').subscribe(res => {
-      //valida el reporte04 (verdadero entra)
-      if (this.reporte05) {
-        //se asigna el valor del res a la variable datareporte05
-        this.datareporte05 = <Reporte05Interface>res;
-      }
-    })
-  }
+  // cargarTablaAux() {
+  //   //asigna el valor a tipo = 3
+  //   this.tipo = '3';
+  //   //valida el reporte04 (verdadero entra)
+  //   if (this.reporte04) {
+  //     //asigna el valor a tipo = 3
+  //     this.tipo = '3';
+  //   }
+  //   //se llama al servicion getTabla()
+  //   this.reportestabular.getTabla(this.tipo, this.ccdd, this.ccpp, '0').subscribe(res => {
+  //     //valida el reporte04 (verdadero entra)
+  //     if (this.reporte04) {
+  //       //se asigna el valor del res a la variable datareporte04
+  //       this.datareporte04 = <Reporte04Interface>res;
+  //     }
+  //   })
+  // }
 
   //funcion para cargar la tabla
-  elegirReporte(reporte) {
-    //asigna el valor a reporte01 = false
-    this.reporte01 = false;
-    //asigna el valor a reporte02 = false
-    this.reporte02 = false;
-    //asigna el valor a reporte03 = false
-    this.reporte03 = false;
-    //asigna el valor a reporte04 = false
-    this.reporte04 = false;
-    //asigna el valor a reporte05 = false
-    this.reporte05 = false;
-    //asigna el valor a reporteDepa = false
-    this.reporteDepa = false;
-    //asigna el valor a reporteDepa01 = false
-    this.reporteDepa01 = false;
-    //valida el reporte (0 o 1 o 2)
-    if (reporte == "0" || reporte == "1" || reporte == "2") {
-      switch (reporte) {
-        //tipo de reporte (0 , 1 , 2)
-        case "0": this.reporte01 = true; break;
-        case "1": this.reporte02 = true; break;
-        case "2": this.reporte03 = true; break;
-      }
+  // cargarTablaAux2() {
+  //   //asigna el valor a tipo = 4
+  //   this.tipo = '4';
+  //   //valida el reporte05 (verdadero entra)
+  //   if (this.reporte05) {
+  //     //asigna el valor a tipo = 4
+  //     this.tipo = '4';
+  //   }
+  //   //se llama al servicion getTabla()
+  //   this.reportestabular.getTabla(this.tipo, this.ccdd, this.ccpp, '0').subscribe(res => {
+  //     //valida el reporte04 (verdadero entra)
+  //     if (this.reporte05) {
+  //       //se asigna el valor del res a la variable datareporte05
+  //       this.datareporte05 = <Reporte05Interface>res;
+  //     }
+  //   })
+  // }
 
-
-
-      //se llama al metodo cargarTabla()
-      this.cargarTabla(this.ccdi);
-      //asigna el valor a reporteDepa = true
-      this.reporteDepa = true;
-      //asigna el valor a reporteDepa01 = true
-      this.reporteDepa01 = true;
-    }
-    //valida el reporte (3)
-    if (reporte == "3") {
-      //asigna el valor a reporte04 = true
-      this.reporte04 = true;
-      //se llama al metodo cargarTabla()
-      this.cargarTablaAux();
-      //asigna el valor a reporteDepa01 = true
-      this.reporteDepa01 = true;
-    }
-    //valida el reporte (4)
-    if (reporte == "4") {
-      //asigna el valor a reporte05 = true
-      this.reporte05 = true;
-      //se llama al metodo cargarTabla()
-      this.cargarTablaAux2();
-    }
-  }
+  //funcion para cargar la tabla
+  // elegirReporte(reporte) {
+  //   //asigna el valor a reporte01 = false
+  //   this.reporte01 = false;
+  //   //asigna el valor a reporte02 = false
+  //   this.reporte02 = false;
+  //   //asigna el valor a reporte03 = false
+  //   this.reporte03 = false;
+  //   //asigna el valor a reporte04 = false
+  //   this.reporte04 = false;
+  //   //asigna el valor a reporte05 = false
+  //   this.reporte05 = false;
+  //   //asigna el valor a reporteDepa = false
+  //   this.reporteDepa = false;
+  //   //asigna el valor a reporteDepa01 = false
+  //   this.reporteDepa01 = false;
+  //   //valida el reporte (0 o 1 o 2)
+  //   if (reporte == "0" || reporte == "1" || reporte == "2") {
+  //     switch (reporte) {
+  //       //tipo de reporte (0 , 1 , 2)
+  //       case "0": this.reporte01 = true; break;
+  //       case "1": this.reporte02 = true; break;
+  //       case "2": this.reporte03 = true; break;
+  //     }
+  //     //se llama al metodo cargarTabla()
+  //     this.cargarTabla(this.ccdi);
+  //     //asigna el valor a reporteDepa = true
+  //     this.reporteDepa = true;
+  //     //asigna el valor a reporteDepa01 = true
+  //     this.reporteDepa01 = true;
+  //   }
+  //   //valida el reporte (3)
+  //   if (reporte == "3") {
+  //     //asigna el valor a reporte04 = true
+  //     this.reporte04 = true;
+  //     //se llama al metodo cargarTabla()
+  //     this.cargarTablaAux();
+  //     //asigna el valor a reporteDepa01 = true
+  //     this.reporteDepa01 = true;
+  //   }
+  //   //valida el reporte (4)
+  //   if (reporte == "4") {
+  //     //asigna el valor a reporte05 = true
+  //     this.reporte05 = true;
+  //     //se llama al metodo cargarTabla()
+  //     this.cargarTablaAux2();
+  //   }
+  // }
 
   //funcion para descargar Excel
   descargarExcel(id, nom) {
@@ -369,7 +413,7 @@ class Reportestabular {
 
 const routes: Routes = [{
   path: '',
-  component: Reportestabular
+  component: Reportescalidad
 }];
 
 //declaracion del NgModule
@@ -377,7 +421,7 @@ const routes: Routes = [{
   //importaciones
   imports: [CommonModule, RouterModule.forChild(routes), FormsModule, DataTableModule, SharedModule, ButtonModule],
   //declaraciones
-  declarations: [Reportestabular]
+  declarations: [Reportescalidad]
 })
 
 //exportaciones

@@ -36,20 +36,20 @@ export class ImpresionesService {
     private tablaUrlAux: string = 'http://192.168.200.123:8081/crorecargaTabla01/';
     private tablaUrlAux2: string = 'http://192.168.200.123:8081/crorecargaTabla02/';*/
 
-    /*private depaUrl: string = 'http://172.18.1.40:8000/recargaDepa/';
-    private provUrl: string = 'http://172.18.1.40:8000/recargaProv/';
-    private distUrl: string = 'http://172.18.1.40:8000/recargaDis/';
-    private zonaUrl: string = 'http://172.18.1.40:8000/recargaZona/';
-    private tablaUrlAux: string = 'http://172.18.1.40:8000/crorecargaTabla01/';
-    private tablaUrlAux2: string = 'http://172.18.1.40:8000/crorecargaTabla02/';
-    private tablaUrlZip: string = 'http://172.18.1.40:8000/crodescargarPdf/';*/
+    /*private depaUrl: string = 'http://lfarfan.inei.com.pe:81/recargaDepa/';
+    private provUrl: string = 'http://lfarfan.inei.com.pe:81/recargaProv/';
+    private distUrl: string = 'http://lfarfan.inei.com.pe:81/recargaDis/';
+    private zonaUrl: string = 'http://lfarfan.inei.com.pe:81/recargaZona/';
+    private tablaUrlAux: string = 'http://lfarfan.inei.com.pe:81/crorecargaTabla01/';
+    private tablaUrlAux2: string = 'http://lfarfan.inei.com.pe:81/crorecargaTabla02/';
+    private tablaUrlZip: string = 'http://lfarfan.inei.com.pe:81/crodescargarPdf/';*/
 
-    // private depaUrl: string = 'http://172.18.1.40:8000/recargaDepa/';
-    // private provUrl: string = 'http://172.18.1.40:8000/recargaProv/';
-    // private distUrl: string = 'http://172.18.1.40:8000/recargaDis/';
-    // private zonaUrl: string = 'http://172.18.1.40:8000/recargaZona/';
-    // private aeuUrl: string = 'http://172.18.1.40:8000/recargaAeu/';
-    private tablaReporte: string = 'http://172.18.1.40:8000/tablaReporte/';
+    // private depaUrl: string = 'http://lfarfan.inei.com.pe:81/recargaDepa/';
+    // private provUrl: string = 'http://lfarfan.inei.com.pe:81/recargaProv/';
+    // private distUrl: string = 'http://lfarfan.inei.com.pe:81/recargaDis/';
+    // private zonaUrl: string = 'http://lfarfan.inei.com.pe:81/recargaZona/';
+    // private aeuUrl: string = 'http://lfarfan.inei.com.pe:81/recargaAeu/';
+    private tablaReporte: string = 'http://lfarfan.inei.com.pe:81/tablaReporte/';
     // private a: string = 'http://172.16.2.185:8000/impresionesaeus/'; #cargardepas
     private cargardepas: string = 'http://172.16.2.185:8000/cargardepas/'; //cargardeprov
     private cargarprov: string = 'http://172.16.2.185:8000/cargardeprov/'; //cargardistrito
@@ -61,12 +61,13 @@ export class ImpresionesService {
     private NumPaginas: string = 'http://172.16.2.185:8000/paginas/';
     private cargarAeuSecc: string = 'http://172.16.2.185:8000/cargaraeusseccion/';
     private cargarSeccZonas: string = 'http://172.16.2.185:8000/cargarseccionzonas/';
-    private cargarZonasDistrito: string = 'http://172.16.2.185:8000/cargarzonasdistritos/';
+    private cargarZonasDistrito: string = 'http://172.16.2.185:8000/cargarzonasdistritos/';  //imprimirseccionuni
+    private imprimir: string = 'http://172.16.2.185:8000/imprimirseccionuni/';
     getCargaDepaInicial(): Observable < Object >{
         return this.http.get(this.cargardepas).map(this.extractData).catch(this.handleError)
     }
 
-        getDepartamentos(): Observable < Object > {
+    getDepartamentos(): Observable < Object > {
         return this.http.get(this.cargardepas).map(this.extractData).catch(this.handleError)
     }
 
@@ -88,16 +89,32 @@ export class ImpresionesService {
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
 
-    getTabla(ubigeo: string="0", zona: string="0"): Observable < Object > {
+
+    getTabla( ubigeo: string="0", zona: string="0"): Observable < Object > {
         let queryparameters:string = `${ubigeo}/${zona}/`;
         let url:string = this.tablaReporte + queryparameters;
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
 
-    getTablaAes(ubigeo: string="0", zona: string="0"): Observable < Object > {
-        let queryparameters:string = `${ubigeo}/${zona}/`;
+    //Cargar la tabla a nivel de jefe de Aeus
+    getTablaAes(nivel: string ="0", ubigeo: string="0", zona: string="0"): Observable < Object > {
+        let queryparameters:string = `${nivel}/${ubigeo}/${zona}/`;
         let url:string = this.tablaAes + queryparameters;
         console.log(url);
+        return this.http.get(url).map(this.extractData).catch(this.handleError)
+    }
+
+    //Cargar la tabla a nivel de jefe de Sección
+    getSeccAeus(nivel: string ="0", ubigeo: string="0", zona: string="0"): Observable < Object > {
+        let queryparameters:string = `${nivel}/${ubigeo}/${zona}/`;
+        let url:string = this.tablaAes + queryparameters;
+        return this.http.get(url).map(this.extractData).catch(this.handleError)
+    }
+
+    //Cargar la tabla a nivel de jefe de Zonas
+    getSeccZona(nivel: string ="0", ubigeo: string="0", zona: string="0"): Observable < Object > {
+        let queryparameters:string = `${nivel}/${ubigeo}/${zona}/`;
+        let url:string = this.tablaAes + queryparameters;
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
 
@@ -112,12 +129,12 @@ export class ImpresionesService {
         let url:string = this.AesUrl + queryparameters;
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
-
-    getSeccAeus(ubigeo: string="0", zona: string="0"): Observable < Object > {
-        let queryparameters:string = `${ubigeo}/${zona}/`;
-        let url:string = this.cargarAeuSecc + queryparameters;
-        return this.http.get(url).map(this.extractData).catch(this.handleError)
-    }
+    //
+    // getSeccAeus(ubigeo: string="0", zona: string="0"): Observable < Object > {
+    //     let queryparameters:string = `${ubigeo}/${zona}/`;
+    //     let url:string = this.tablaAes + queryparameters;
+    //     return this.http.get(url).map(this.extractData).catch(this.handleError)
+    // }
 
     getZonasSecc(ubigeo: string="0", zona: string="0"): Observable < Object > {
         let queryparameters:string = `${ubigeo}/${zona}/`;
@@ -129,6 +146,21 @@ export class ImpresionesService {
         let queryparameters:string = `${ubigeo}/`;
         let url:string = this.cargarZonasDistrito + queryparameters;
         return this.http.get(url).map(this.extractData).catch(this.handleError)
+    }
+
+    getImpresion(ubigeo: string = '0', zona: string= '0', nombre: Object, opc: string='0', opc_niv: string='0'): Observable < Object > {
+
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        let body = JSON.stringify({ubigeo: ubigeo, zona: zona, nombre: nombre, opc: opc, opc_niv: opc_niv});
+
+        let url:string = this.imprimir;
+        console.log("Tipo de nivel: " + opc_niv);
+        console.log("Opcion de impresora: " + opc);
+        console.log("Ubigeo: "+ubigeo);
+        console.log("Zona: " + zona);
+        console.log("Nombre: "+ nombre);
+        return this.http.post(url,body, options).map(this.extractData).catch(this.handleError)
     }
 
     private extractData(res: Response) {

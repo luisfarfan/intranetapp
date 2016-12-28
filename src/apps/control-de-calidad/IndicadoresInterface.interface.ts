@@ -1,13 +1,19 @@
 export class IndicadoresInterface {
     constructor(
-        public CONT_URB_ERROR_01 : string = '',
-        public CONT_URB_ERROR_02 : string = '',
-        public CONT_URB_ERROR_03 : string = '',
-        public CONT_URB_ERROR_04 : string = '',
-        public CONT_URB_ERROR_05 : string = '',
-        public CONT_URB_ERROR_06 : string = '',
-        public CONT_URB_ERROR_07 : string = '',
-        public CONT_URB_ERROR_08 : string = '',
-        public CONT_URB_ERROR_09 : string = ''
+        public aeu : any,
+        public nom_reg : any,
+        public fec_reg : any,
+        public cont_urb_error_01 : any,
+        public cont_urb_error_02 : any,
+        public cont_urb_error_03 : any,
+        public cont_urb_error_04 : any,
+        public cont_urb_error_05 : any,
+        public cont_urb_error_06 : any,
+        public cont_urb_error_07 : any,
+        public cont_urb_error_08 : any,
+        public cont_urb_error_09 : any,
+        public cont_urb_error_10 : any,
+        public cont_urb_error_11 : any,
+        public cont_urb_error_12 : any
     ){}
 }

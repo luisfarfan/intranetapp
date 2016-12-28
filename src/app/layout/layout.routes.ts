@@ -42,9 +42,10 @@ function getRoutes() {
     loadChildren: () => System.import('../dashboard/dashboard.module')
   });
 
+
   results.push({
-    path: 'cursos',
-    loadChildren: () =>System.import(`./../../apps/cursos-y-examenes/cursos-y-examenes.module`)
+    path: 'reportes-calidad',
+    loadChildren: () =>System.import(`./../../apps/reportes-calidad/reportes-calidad.module`)
   });
 
   if (validsession) {

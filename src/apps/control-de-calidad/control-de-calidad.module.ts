@@ -116,7 +116,7 @@ class Controldecalidad {
   private nombreProv: string = "";
 
   private verDistrito: boolean = false;
-
+  private selectedCars2: Object;
   private toastOptions1: ToastOptions = {
     title: 'Guardado',
     msg: `¡Guardado exitoso!`,
@@ -238,7 +238,8 @@ class Controldecalidad {
     this.verZona = true;
     this.zona = zona;
     if (zona != "0") {
-      this.cargarTabla("4", this.ccdd, this.ccpp, this.ccdi, this.zona)
+      //this.cargarTabla("4", this.ccdd, this.ccpp, this.ccdi, this.zona)
+      this.cargarTablaCalidad(this.zona);
     } else {
       this.verZona = false;
       this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
@@ -246,6 +247,7 @@ class Controldecalidad {
   }
 
   cargarTabla(tipo: string, ccdd: string, ccpp: string, ccdi: string, zona: string) {
+
     this.controldecalidadservice.getTabla(this.area, tipo, ccdd, ccpp, ccdi, zona).subscribe(res => {
       if (this.area == "0") {
         this.registros = <RegistroInterface>res;
@@ -255,6 +257,21 @@ class Controldecalidad {
       this.nombreDepa = this.registros[0].DEPARTAMENTO;
       this.nombreProv = this.registros[0].PROVINCIA;
       this.nombreDist = this.registros[0].DISTRITO;
+    })
+  }
+
+  cargarTablaCalidad(zona: string) {
+    this.zona = zona;
+    let ubigeo = this.ccdd + this.ccpp + this.ccdi;
+    this.controldecalidadservice.getCalidad(ubigeo, this.zona).subscribe(res => {
+      if (this.area == "0") {
+        this.registros = <RegistroInterface>res;
+      } else {
+        this.registros = <RegistroInterfaceRural>res;
+      }
+      // this.nombreDepa = this.registros[0].DEPARTAMENTO;
+      // this.nombreProv = this.registros[0].PROVINCIA;
+      // this.nombreDist = this.registros[0].DISTRITO;
     })
   }
 
@@ -409,33 +426,90 @@ class Controldecalidad {
     })
   }
 
+  selectCar(i, field, value){
+    this.indicadores[i][field] = parseInt(value);
+    console.log(this.indicadores[i][field]);
+  }
   guardarInd() {
     let ubigeo = this.ccdd + this.ccpp + this.ccdi;
     let data;
+    console.log("Que buen indicador 1:"+ this.indicadores)
     if (this.area == "0") {
-      data = { ubigeo: ubigeo, zona: this.zona, aeu: this.aeu, indicadores: this.indicadores, area: this.area }
+      data = { ubigeo: ubigeo, zona: this.zona, indicadores: this.indicadores}
+      console.log("Que buen indicador 2:"+ this.indicadores)
     } else {
-      data = { ubigeo: ubigeo, zona: this.zona, aeu: this.aeu.replace("-", "").substring(0, 3), indicadores: this.indicadores, area: this.area }
+      data = { ubigeo: ubigeo, zona: this.zona, indicadores: this.indicadores}
+      console.log("Que buen indicador 3:"+ this.indicadores)
     }
-    this.controldecalidadservice.guardarIndicadores(data).subscribe(res => {
+
+    this.controldecalidadservice.getGuardarErroresCalidad(data).subscribe(res => {
       this.confirmacion = res;
-      if (this.confirmacion[0] == "1") {
-        this.addToast(this.toastOptions1, 'success');
-      } else {
-        this.addToast(this.toastOptions2, 'error');
-      }
-    })
+      // if (this.confirmacion[0] == "1") {
+      //   this.addToast(this.toastOptions1, 'success');
+      // } else {
+      //   this.addToast(this.toastOptions2, 'error');
+      // }
+    }
+    )
+    // this.controldecalidadservice.guardarIndicadores(data).subscribe(res => {
+    //   this.confirmacion = res;
+    //   // if (this.confirmacion[0] == "1") {
+    //   //   this.addToast(this.toastOptions1, 'success');
+    //   // } else {
+    //   //   this.addToast(this.toastOptions2, 'error');
+    //   // }
+    // }
+    // )
   }
+  //
+  //  guardarInd() {
+  //    let ubigeo = this.ccdd + this.ccpp + this.ccdi;
+  //    let data;
+  //    if (this.area == "0") {
+  //
+  //      this.controldecalidadservice.getGuardarErroresCalidad(ubigeo, this.zona, this.selectedCars2).subscribe(res => {
+  //        this.indicadores = <IndicadoresInterface>res;
+  //        console.log("Aca estan todos los datos de tu table: "+ this.selectedCars2);
+  //        // this.confirmacion = res;
+  //        // if (this.confirmacion[0] == "1") {
+  //        //   this.addToast(this.toastOptions1, 'success');
+  //        // } else {
+  //        //   this.addToast(this.toastOptions2, 'error');
+  //        // }
+  //      })
+  //    }
+  //
+  // }
 
   indicadorCalidad() {
     let ubigeo = this.ccdd + this.ccpp + this.ccdi;
     if (this.area == "0") {
       this.controldecalidadservice.obtenerIndicadores(this.area, ubigeo, this.zona, this.aeu).subscribe(res => {
         this.indicadores = <IndicadoresInterface>res;
+
       })
     } else {
       this.controldecalidadservice.obtenerIndicadores(this.area, ubigeo, this.zona, this.aeu.replace("-", "").substring(0, 3)).subscribe(res => {
         this.indicadores = <IndicadoresInterface>res;
+      })
+    }
+  }
+
+
+  getCalidad(event, target){
+
+    console.log("target==>", target);
+    let ubigeo = this.ccdd + this.ccpp + this.ccdi;
+    if (this.ccdi!= 0 || this.ccdi!= "0") {
+      console.log("Aqui estan todos tus objetos"+this.selectedCars2)
+      console.log();
+      this.controldecalidadservice.getCalidadErrores(ubigeo, this.zona,target).subscribe(res => {
+
+        console.log(ubigeo);
+        console.log(this.zona);
+        console.log(this.seccion);
+        this.indicadores = <IndicadoresInterface>res;
+        console.log("Este es->>   " + this.indicadores);
       })
     }
   }

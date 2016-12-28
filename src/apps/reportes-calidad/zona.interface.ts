@@ -1,7 +1,6 @@
 export class ZonaInterface {
     constructor(
-        public aeu_final : string = '',
-        public num_pag : string = '',
+        public data : number = 0,
         public ubigeo : string = '',
         public zona : string = ''
     ){}

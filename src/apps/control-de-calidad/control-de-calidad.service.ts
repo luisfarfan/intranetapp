@@ -48,6 +48,9 @@ export class ControldecalidadService {
     private guardarObservaciones: string = 'http://172.18.1.40:8000/tablaIndicador2/';
     private guardarIndicador: string = 'http://172.18.1.40:8000/tablaIndicador3/';
 
+    private calidadsecc: string = 'http://172.16.2.185:8000/calidad/';
+    private calidaderrores: string = 'http://172.16.2.185:8000/calidaderrores/'; //calidadsaveerrores
+    private calidaguardarerrores: string = 'http://172.16.2.185:8000/calidadsaveerrores/';
     /*private depaUrl: string = 'http://bromero.inei.com.pe:8090/recargaDepa/';
     private provUrl: string = 'http://bromero.inei.com.pe:8090/recargaProv/';
     private distUrl: string = 'http://bromero.inei.com.pe:8090/recargaDis/';
@@ -83,6 +86,26 @@ export class ControldecalidadService {
         //variable que retorna
         return this.http.get(url).map(this.extractData).catch(this.handleError)
     }
+
+    getCalidad(ubigeo: string, tipo: string = "0"): Observable<Object> {
+        //variable local para unir los parametros
+        let queryparameters: string = `${ubigeo}/${tipo}/`;
+        //variable local para la ruta
+        let url: string = this.calidadsecc + queryparameters;
+        //variable que retorna
+        return this.http.get(url).map(this.extractData).catch(this.handleError)
+    }
+
+    getCalidadErrores(ubigeo: string, zona: string = "0", seccion: string = "0"): Observable<Object> {
+        //variable local para unir los parametros
+        let queryparameters: string = `${ubigeo}/${zona}/${seccion}/`;
+        //variable local para la ruta
+        let url: string = this.calidaderrores + queryparameters;
+        //variable que retorna
+        return this.http.get(url).map(this.extractData).catch(this.handleError)
+    }
+
+
 
     getZonas(ubigeo: string): Observable<Object> {
         let queryparameters: string = `${ubigeo}/`;
@@ -134,6 +157,22 @@ export class ControldecalidadService {
         let headers = new Headers({ 'Content-Type': 'application/json' });
         let options = new RequestOptions({ headers: headers });
         return this.http.post(this.guardarObservaciones, body, options).map(Helpers.extractData).catch(Helpers.handleError);
+    }
+
+
+    getGuardarErroresCalidad(data): Observable < Object > {
+
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        let body = JSON.stringify(data);
+
+        let url:string = this.calidaguardarerrores;
+
+        console.log(data);
+        // console.log("Ubigeo: "+ubigeo);
+        // console.log("Zona: " + zona);
+        // console.log("Nombre: "+ nombre);
+        return this.http.post(url,body, options).map(this.extractData).catch(this.handleError)
     }
 
     guardarIndicadores(data): Observable<Object> {

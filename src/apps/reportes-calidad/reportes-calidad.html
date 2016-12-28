@@ -1,0 +1,224 @@
+<h1 class="page-title">SISTEMA INTEGRADO DE SEGMENTACIÓN - <span class="fw-semi-bold">REPORTES CALIDAD</span></h1>
+
+<!-- Content area -->
+<div class="row">
+    <div class="col-lg-12">
+        <section class="widget">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="lDepartamento"><h5> DEPARTAMENTO</h5></label>
+                    <select class="form-control" name="departamentos" (change)="cargarProvincias($event.target.value)">
+                        <option value="0">TODOS</option>
+                        <option *ngFor="let el of departamentos" value="{{ el.ccdd }}">{{ el.departamento }}</option>
+                    </select>
+                </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div *ngIf="reporteDepa01 || reporteDepa" class="form-group">
+                    <label for="lProvincia"><h5> PROVINCIA</h5></label>
+                    <select class="form-control" name="provincias" (change)="cargarDistritos($event.target.value)">
+                        <option value="0">TODOS</option>
+                        <option *ngFor="let e of provincias" value="{{ e.ccpp }}">{{ e.provincia }}</option>
+                    </select>
+                </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <div *ngIf="reporteDepa" class="form-group">
+                    <label for="lDistrito"><h5> DISTRITO</h5></label>
+                    <select class="form-control" name="distritos" (change)="cargarZonas($event.target.value)">
+                        <option value="0">TODOS</option>
+                        <option *ngFor="let e of distritos" value="{{ e.ccdi }}">{{ e.distrito }}</option>
+                    </select>
+                </div>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <!--<div class="form-group">-->
+                    <!--<select class="form-control" name="reportes" (change)="elegirReporte($event.target.value)">-->
+                        <!--<option value="0">FRECUENCIA DE AUEs POR VIVIENDAS</option>-->
+                        <!--<option value="1">PROMEDIO DE VIVIENDAS Y MANZANAS POR AEU</option>-->
+                        <!--<option value="2">MARCO DE ZONAS, SECCIONES, AEUS, MANZANAS Y VIVIENDAS</option>-->
+                        <!--<option value="3">LISTADO A NIVEL DE PROVINCIA</option>-->
+                        <!--<option value="4">LISTADO A NIVEL DE DEPARTAMENTO</option>                                                -->
+                    <!--</select>-->
+                <!--</div>-->
+            </form>
+        </section>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <section class="widget">
+            <h2 align="center"> INFORMACIÓN DEL DISTRITO </h2>
+            <form class="navbar-form pull-xs-left" role="search">
+                <div class="form-group">
+                    <div class="input-group input-group-no-border">
+                        <span class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </span>
+                        <input #gb type="text" pInputText size="50" class="form-control" placeholder="Buscador Global">
+                    </div>
+                </div>
+            </form>
+            <p-dataTable id="reporte01_tabla" [value]="registros" *ngIf="reporte01" [rows]="16" [paginator]="true" [pageLinks]="3"
+                [rowsPerPageOptions]="[10,20,30]" class="table table-bordered table-lg mt-lg mb-0" [globalFilter]="gb">
+                <p-column field="nom" [style]="{'width':'200px'}" header="Departamento" [sortable]="true"></p-column>
+                <p-column field="CONT_URB_ERROR_01" header="I_1" [sortable]="true"></p-column>
+                <p-column field="CONT_URB_ERROR_02" header="I_2" [sortable]="true"></p-column>
+                <p-column field="CONT_URB_ERROR_03" header="I_3" [sortable]="true"></p-column>
+                <p-column field="CONT_URB_ERROR_04" header="I_4" [sortable]="true"></p-column>
+                <p-column field="CONT_URB_ERROR_05" header="I_5" [sortable]="true"></p-column>
+                <p-column field="CONT_URB_ERROR_06" header="I_6" [sortable]="true"></p-column>
+                <p-column field="CONT_URB_ERROR_07" header="I_7" [sortable]="true"></p-column>
+                <p-column field="CONT_URB_ERROR_08" header="I_8" [sortable]="true"></p-column>
+                <p-column field="CONT_URB_ERROR_09" header="I_9" [sortable]="true"></p-column>
+                <p-column field="CONT_URB_ERROR_10" header="I_10" [sortable]="true"></p-column>
+                <p-column field="CONT_URB_ERROR_11" header="I_11" [sortable]="true"></p-column>
+                <p-column field="CONT_URB_ERROR_12" header="I_12" [sortable]="true"></p-column>
+            </p-dataTable>
+
+            <p-dataTable id="reporte02_tabla" [value]="datareporte02" *ngIf="reporte02" [rows]="15" [paginator]="true" [pageLinks]="3"
+                [rowsPerPageOptions]="[10,20,30]" class="table table-bordered table-lg mt-lg mb-0" [globalFilter]="gb">
+                <p-column field="provincia" [style]="{'width':'200px'}" header="Provincia" [sortable]="true"></p-column>
+                <p-column field=" " header="I_1" [sortable]="true"></p-column>
+                <p-column field=" " header="I_2" [sortable]="true"></p-column>
+                <p-column field=" " header="I_3" [sortable]="true"></p-column>
+                <p-column field=" " header="I_4" [sortable]="true"></p-column>
+                <p-column field=" " header="I_5" [sortable]="true"></p-column>
+                <p-column field=" " header="I_6" [sortable]="true"></p-column>
+                <p-column field=" " header="I_7" [sortable]="true"></p-column>
+                <p-column field=" " header="I_8" [sortable]="true"></p-column>
+                <p-column field=" " header="I_9" [sortable]="true"></p-column>
+                <p-column field=" " header="I_10" [sortable]="true"></p-column>
+                <p-column field=" " header="I_11" [sortable]="true"></p-column>
+                <p-column field=" " header="I_12" [sortable]="true"></p-column>
+            </p-dataTable>
+
+            <p-dataTable id="reporte03_tabla" [value]="datareporte03" *ngIf="reporte03" [rows]="15" [paginator]="true" [pageLinks]="3"
+                [rowsPerPageOptions]="[10,20,30]" class="table table-bordered table-lg mt-lg mb-0" [globalFilter]="gb">
+                <p-column field="distrito" [style]="{'width':'200px'}" header="Distrito" [sortable]="true"></p-column>
+                <p-column field=" " header="I_1" [sortable]="true"></p-column>
+                <p-column field=" " header="I_2" [sortable]="true"></p-column>
+                <p-column field=" " header="I_3" [sortable]="true"></p-column>
+                <p-column field=" " header="I_4" [sortable]="true"></p-column>
+                <p-column field=" " header="I_5" [sortable]="true"></p-column>
+                <p-column field=" " header="I_6" [sortable]="true"></p-column>
+                <p-column field=" " header="I_7" [sortable]="true"></p-column>
+                <p-column field=" " header="I_8" [sortable]="true"></p-column>
+                <p-column field=" " header="I_9" [sortable]="true"></p-column>
+                <p-column field=" " header="I_10" [sortable]="true"></p-column>
+                <p-column field=" " header="I_11" [sortable]="true"></p-column>
+                <p-column field=" " header="I_12" [sortable]="true"></p-column>
+            </p-dataTable>
+
+            <p-dataTable id="reporte04_tabla" [value]="datareporte04" *ngIf="reporte04" [rows]="15" [paginator]="true" [pageLinks]="3"
+                [rowsPerPageOptions]="[10,20,30]" class="table table-bordered table-lg mt-lg mb-0" [globalFilter]="gb">
+                <p-column field="zona" [style]="{'width':'200px'}" header="Zona" [sortable]="true"></p-column>
+                <p-column field=" " header="I_1" [sortable]="true"></p-column>
+                <p-column field=" " header="I_2" [sortable]="true"></p-column>
+                <p-column field=" " header="I_3" [sortable]="true"></p-column>
+                <p-column field=" " header="I_4" [sortable]="true"></p-column>
+                <p-column field=" " header="I_5" [sortable]="true"></p-column>
+                <p-column field=" " header="I_6" [sortable]="true"></p-column>
+                <p-column field=" " header="I_7" [sortable]="true"></p-column>
+                <p-column field=" " header="I_8" [sortable]="true"></p-column>
+                <p-column field=" " header="I_9" [sortable]="true"></p-column>
+                <p-column field=" " header="I_10" [sortable]="true"></p-column>
+                <p-column field=" " header="I_11" [sortable]="true"></p-column>
+                <p-column field=" " header="I_12" [sortable]="true"></p-column>
+            </p-dataTable>
+
+            <p-dataTable id="reporte05_tabla" [value]="datareporte05" *ngIf="reporte05" [rows]="15" [paginator]="true" [pageLinks]="3"
+                [rowsPerPageOptions]="[10,20,30]" class="table table-bordered table-lg mt-lg mb-0" [globalFilter]="gb">
+                <p-column field="UBIGEO" header="UBIGEO DE LA PROVINCIA" [sortable]="true"></p-column>
+                <p-column field="PROVINCIA" header="NOMBRE DE LA PROVINCIA" [sortable]="true"></p-column>
+                <p-column field="NUM_DISTRITOS" header="N° DE DISTRITOS" [sortable]="true"></p-column>
+                <p-column field="NUM_ZONA" header="N° DE ZONAS" [sortable]="true"></p-column>
+                <p-column field="NUM_SECCION" header=" N° DE SECCIONES CENSALES" [sortable]="true"></p-column>
+                <p-column field="NUM_AEU_FINAL" header="N° DE AEU" [sortable]="true"></p-column>
+                <p-column field="NUM_MANZANA" header="N° DE MANZANAS" [sortable]="true"></p-column>
+                <p-column field="CANT_VIV_DIST" header="N° DE VIVIENDAS" [sortable]="true"></p-column>
+            </p-dataTable>
+        </section>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <section class="widget">
+            <h2 align="center"> LEYENDA DE INDICADORES </h2>
+            <!--<form class="navbar-form pull-xs-left" role="search">-->
+                <!--<div class="form-group">-->
+                    <!--<div class="input-group input-group-no-border">-->
+                        <!--<span class="input-group-addon">-->
+                        <!--<i class="fa fa-search"></i>-->
+                    <!--</span>-->
+                        <!--<input #gb type="text" pInputText size="50" class="form-control" placeholder="Buscador Global">-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</form>-->
+
+        </section>
+    </div>
+</div>
+
+<div class="container">
+    <!--<h2>Contextual Classes</h2>-->
+    <!--<p>Contextual classes can be used to color table rows or table cells. The classes that can be used are: .active, .success, .info, .warning, and .danger.</p>-->
+    <table class="table table-sm">
+        <thead>
+        <tr>
+            <th><strong>Indicador</strong></th>
+            <th><strong>Descripción</strong></th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr>
+            <td>I_1</td>
+            <td>Correcta información en el listado del punto de inicio del recorrido.</td>
+        </tr>
+        <tr class="info">
+            <td>I_2</td>
+            <td>Sin omisión de viviendas en el listado al inicio del recorrido.</td>
+        </tr>
+        <tr >
+            <td>I_3</td>
+            <td>Error la correlatividad de las vivienda en el Recorrido del AEU’s en base al orden del  registro.</td>
+        </tr>
+        <tr class="info">
+            <td>I_4</td>
+            <td>Dirección de las vías del listado corresponde a lo observado en campo.</td>
+        </tr>
+        <tr>
+            <td>I_5</td>
+            <td>Todas las viviendas se ubican en el frente de la manzana que indica el listado.</td>
+        </tr>
+        <tr class="info">
+            <td>I_6</td>
+            <td>Todas las viviendas se ubican en la manzana censal que indica el listado.</td>
+        </tr>
+        <tr>
+            <td>I_7</td>
+            <td>Sin omisión de puertas falsas y otro tipo de registro.</td>
+        </tr>
+        <tr class="info">
+            <td>I_8</td>
+            <td>La información del punto final del recorrido del AEU que figura en el listado corresponde a lo ubicado en campo.</td>
+        </tr>
+        <tr>
+            <td>I_9</td>
+            <td>El orden de las viviendas del listado corresponde a lo ubicado en campo.</td>
+        </tr>
+        <tr class="info">
+            <td>I_10</td>
+            <td>Croquis ayuda a la ubicación de los AEUs en campo.</td>
+        </tr>
+        <tr >
+            <td>I_11</td>
+            <td>N° de viviendas y viv. Est. omitidos.</td>
+        </tr>
+        <tr class="info">
+            <td>I_12</td>
+            <td>N° de registros omitidos.</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

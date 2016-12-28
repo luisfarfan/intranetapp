@@ -76,28 +76,34 @@
                     </div>
                 </form>
 
-                <p-dataTable id="tablaCont" [value]="registros" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,30]"
+                <p-dataTable id="tablaCont" [value]="registros" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,30]" [(selection)]="selectedCars2"
                     class="table table-bordered table-lg mt-lg mb-0" [globalFilter]="gb">
-                    <p-column field="DEPARTAMENTO" header="DEPARTAMENTO" [sortable]="true"></p-column>
-                    <p-column field="PROVINCIA" header="PROVINCIA" [sortable]="true"></p-column>
-                    <p-column field="DISTRITO" header="DISTRITO" [sortable]="true"></p-column>
-                    <p-column *ngIf="urbanoZona" field="ZONA" header="ZONA" [sortable]="true"></p-column>
-                    <p-column field="NUM_SEC" header="NRO. DE SECCIONES" [sortable]="true"></p-column>
-                    <p-column *ngIf="urbanoZona" field="NUM_AEU" header="NRO. DE AEUs" [sortable]="true"></p-column>
-                    <p-column *ngIf="ruralZona" field="NUM_AERS" header="NRO. DE AERs" [sortable]="true"></p-column>
-                    <p-column *ngIf="urbanoZona" field="EST_CALIDAD_SEL" header="NRO. DE AEUs SELECCIONADAS" [sortable]="true"></p-column>
-                    <p-column *ngIf="ruralZona" field="EST_CALIDAD_SEL" header="NRO. DE AERs SELECCIONADAS" [sortable]="true"></p-column>
-                    <p-column field="EST_CONT" styleClass="col-button" header="ESTADO">
-                        <template let-col let-car="rowData" pTemplate type="body">
-                            <span [ngSwitch]="car[col.field]">                                
-                            <span *ngSwitchCase="4" class="btn btn-success">TERMINADO</span>
-                            <span *ngSwitchCase="9" class="btn btn-danger">PENDIENTE</span>
-                            </span>
-                        </template>
-                    </p-column>
-                    <p-column *ngIf="verZona" header="VER">
-                        <template pTemplate type="body">
-                            <button (click)="getRegistro(0)" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fa fa-pencil"></i></button>
+                    <p-column field="departamento" header="DEPARTAMENTO" [sortable]="true"></p-column>
+                    <p-column field="provincia" header="PROVINCIA" [sortable]="true"></p-column>
+                    <p-column field="distrito" header="DISTRITO" [sortable]="true"></p-column>
+                    <!--<p-column *ngIf="urbanoZona" field="ZONA" header="ZONA" [sortable]="true"></p-column>-->
+                    <p-column field="zona" header="ZONA" [sortable]="true"></p-column>
+                    <p-column field="seccion" header="NRO. DE SECCIÓN" [sortable]="true"></p-column>
+                    <!--<p-column *ngIf="urbanoZona" field="NUM_AEU" header="NRO. DE AEUs" [sortable]="true"></p-column>-->
+                    <!--<p-column *ngIf="ruralZona" field="NUM_AERS" header="NRO. DE AERs" [sortable]="true"></p-column>-->
+                    <!--<p-column *ngIf="urbanoZona" field="EST_CALIDAD_SEL" header="NRO. DE AEUs SELECCIONADAS" [sortable]="true"></p-column>-->
+                    <!--<p-column *ngIf="ruralZona" field="EST_CALIDAD_SEL" header="NRO. DE AERs SELECCIONADAS" [sortable]="true"></p-column>-->
+                    <!--<p-column field="EST_CONT" styleClass="col-button" header="ESTADO">-->
+                        <!--<template let-col let-car="rowData" pTemplate type="body">-->
+                            <!--<span [ngSwitch]="car[col.field]">                                -->
+                            <!--<span *ngSwitchCase="4" class="btn btn-success">TERMINADO</span>-->
+                            <!--<span *ngSwitchCase="9" class="btn btn-danger">PENDIENTE</span>-->
+                            <!--</span>-->
+                        <!--</template>-->
+                    <!--</p-column>-->
+                    <!--<p-column *ngIf="verZona" header="VER">-->
+                        <!--<template pTemplate type="body">-->
+                            <!--<button (click)="getRegistro(0)" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="fa fa-pencil"></i></button>-->
+                        <!--</template>-->
+                    <!--</p-column>-->
+                    <p-column *ngIf="verZona" header="VER" field="seccion">
+                        <template let-col let-car="rowData" pTemplate="body">
+                            <button (click)="getCalidad($event, car[col.field])" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-l2g" data-seccion=""><i class="fa fa-pencil"></i></button>
                         </template>
                     </p-column>
                     <p-column *ngIf="verDistrito" header="VER">
@@ -210,6 +216,110 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+</div>
+
+<div class="modal bd-example-modal-l2g" tabindex="-1" data-backdrop="false" role="dialog" aria-labelledby="myLargeModalLabel2"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!--<div class="modal-header">-->
+                <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+                    <!--<span aria-hidden="true">&times;</span>-->
+                <!--</button>-->
+                <!--<h4 align="center" class="modal-title" id="myModalLabel">CONTROL DE CALIDAD</h4>-->
+            <!--</div>-->
+            <div class="modal-body">
+                <p-dataTable [value]="indicadores" [editable]="true"  [(selection)]="selectedCars2">
+                    <p-column *ngIf="urbanoZona" [style]="{'font-size': '10px'}"   field="aeu" header="AEU N°." [editable]="true"></p-column>
+                    <p-column *ngIf="urbanoZona" [style]="{'font-size': '10px'}" field="nom_reg" header="APELLIDOS Y NOMBRES ANALISTA DE SEG." [editable]="true"></p-column>
+                    <p-column *ngIf="urbanoZona" [style]="{'font-size': '10px'}" field="fec_reg" header="FECHA DD/MM/AA" [editable]="true"></p-column>
+                    <!--<p-column *ngIf="urbanoZona" [style]="{'font-size': '10px'}" field="cont_urb_error_01" header="Correcta información en el listado del punto de inicio del recorrido." [editable]="true">-->
+                        <!--<template let-col let-car="rowData" pTemplate="body">-->
+                            <!--<input type="text">-->
+                        <!--</template>-->
+                    <!--</p-column>-->
+
+                    <p-column *ngIf="urbanoZona"  [style]="{'font-size': '10px'}" field="cont_urb_error_01" header="Correcta información en el listado del punto de inicio del recorrido.">
+                        <template let-col let-car="rowData" let-i="rowIndex" pTemplate type="body">
+
+                            <input [value]="indicadores[i][col.field]" type="number" style="width: 100%" (focusout)="selectCar(i, col.field, $event.target.value)">
+                        </template>
+                    </p-column>
+
+                    <p-column *ngIf="urbanoZona" [style]="{'font-size': '10px'}" field="cont_urb_error_02" header="Sin omisión de viviendas en el listado al inicio del recorrido.">
+                        <template let-col let-car="rowData"  let-i="rowIndex" pTemplate type="body">
+                            <input [value]="indicadores[i][col.field]" type="number" style="width: 100%" (focusout)="selectCar(i, col.field, $event.target.value)">
+                        </template>
+                    </p-column>
+
+                    <p-column *ngIf="urbanoZona" [style]="{'font-size': '10px'}" field="cont_urb_error_03" header="Error la correlatividad de las vivienda en el Recorrido del AEU’s en base al orden del  registro.">
+                        <template let-col let-car="rowData" let-i="rowIndex" pTemplate type="body">
+                            <input [value]="indicadores[i][col.field]" type="number" style="width: 100%" (focusout)="selectCar(i, col.field, $event.target.value)">
+                        </template>
+                    </p-column>
+
+                    <p-column *ngIf="urbanoZona" [style]="{'font-size': '10px'}" field="cont_urb_error_04" header="Dirección de las vías del listado corresponde a lo observado en campo.">
+                        <template let-col let-car="rowData" let-i="rowIndex" pTemplate type="body">
+                            <input [value]="indicadores[i][col.field]" type="number" style="width: 100%" (focusout)="selectCar(i, col.field, $event.target.value)">
+                        </template>
+                    </p-column>
+
+                    <p-column *ngIf="urbanoZona" [style]="{'font-size': '10px'}" field="cont_urb_error_05" header="Todas las viviendas se ubican en el frente de la manzana que indica el listado."
+                              >
+                        <template let-col let-car="rowData" let-i="rowIndex" pTemplate type="body">
+                            <input [value]="indicadores[i][col.field]" type="number" style="width: 100%" (focusout)="selectCar(i, col.field, $event.target.value)">
+                        </template>
+                    </p-column>
+
+                    <p-column *ngIf="urbanoZona" [style]="{'font-size': '10px'}" field="cont_urb_error_06" header="Todas las viviendas se ubican en la manzana censal que indica el listado."
+                              >
+                        <template let-col let-car="rowData" let-i="rowIndex" pTemplate type="body">
+                            <input [value]="indicadores[i][col.field]" type="number" style="width: 100%" (focusout)="selectCar(i, col.field, $event.target.value)">
+                        </template>
+                    </p-column>
+
+                    <p-column *ngIf="urbanoZona" [style]="{'font-size': '10px'}" field="cont_urb_error_07" header="Sin omisión de puertas falsas y otro tipo de registro.">
+                        <template let-col let-car="rowData" let-i="rowIndex" pTemplate type="body">
+                            <input [value]="indicadores[i][col.field]" type="number" style="width: 100%" (focusout)="selectCar(i, col.field, $event.target.value)">
+                        </template>
+                    </p-column>
+
+                    <p-column *ngIf="urbanoZona" [style]="{'font-size': '10px'}" field="cont_urb_error_08" header="La información del punto final del recorrido del AEU que figura en el listado corresponde a lo ubicado en campo.">
+                        <template let-col let-car="rowData" let-i="rowIndex" pTemplate type="body">
+                            <input [value]="indicadores[i][col.field]" type="number" style="width: 100%" (focusout)="selectCar(i, col.field, $event.target.value)">
+                        </template>
+                    </p-column>
+
+                    <p-column *ngIf="urbanoZona" [style]="{'font-size': '10px'}" field="cont_urb_error_09" header="El orden de las viviendas del listado corresponde a lo ubicado en campo.">
+                        <template let-col let-car="rowData" let-i="rowIndex" pTemplate type="body">
+                            <input [value]="indicadores[i][col.field]" type="number" style="width: 100%" (focusout)="selectCar(i, col.field, $event.target.value)">
+                        </template>
+                    </p-column>
+
+                    <p-column *ngIf="urbanoZona" [style]="{'font-size': '10px'}" field="cont_urb_error_10" header="Croquis ayuda a la ubicación de los AEUs en campo.">
+                        <template let-col let-car="rowData" let-i="rowIndex" pTemplate type="body">
+                            <input [value]="indicadores[i][col.field]" type="number" style="width: 100%" (focusout)="selectCar(i, col.field, $event.target.value)">
+                        </template>
+                    </p-column>
+
+                    <p-column *ngIf="urbanoZona" [style]="{'font-size': '10px'}" field="cont_urb_error_11" header="N° de viviendas y viv. Est. omitidos.">
+                        <template let-col let-car="rowData" let-i="rowIndex" pTemplate type="body">
+                            <input [value]="indicadores[i][col.field]" type="number" style="width: 100%" (focusout)="selectCar(i, col.field, $event.target.value)">
+                        </template>
+                    </p-column>
+
+                    <p-column *ngIf="urbanoZona" [style]="{'font-size': '10px'}" field="cont_urb_error_12" header="N° de registros omitidos.">
+                        <template let-col let-car="rowData" let-i="rowIndex" pTemplate type="body">
+                            <input [value]="indicadores[i][col.field]" type="number" style="width: 100%" (focusout)="selectCar(i, col.field, $event.target.value)">
+                        </template>
+                    </p-column>
+
+                </p-dataTable>
+                <br>
+                <button class="btn btn-primary" type="button" (click)="guardarInd()"><i class="fa fa-save"> </i> GUARDAR </button>
+            </div>
         </div>
     </div>
 </div>

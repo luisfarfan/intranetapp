@@ -52,6 +52,9 @@ import {DomSanitizer} from "@angular/platform-browser";
 declare var jQuery;
 
 
+import { DataTableModule, SharedModule, ButtonModule } from 'primeng/primeng';
+import { ToastyModule, ToastyService, ToastyConfig, ToastOptions, ToastData } from 'ng2-toasty';
+
 @Component({
   templateUrl: 'modulo-de-impresiones.html',
   styles:[`.intro { 
@@ -71,6 +74,11 @@ class Reportes {
   private seccion: any = 0;
   private aeu: any = 0;
   private verZona = false;
+    private area: string = "0";
+    private nivel: string = "0";
+    private nivelAeu: boolean = false;  //variable para el area urbana
+    private nivelSeccion: boolean = false;
+    private nivelZona: any;
   private url: string = '';
   private urlCroquis: any;
   private urlProcesar: any;
@@ -89,12 +97,15 @@ class Reportes {
   private distritos: DistritoInterface;
   private zonas: ZonaInterface;
   private thisAux: any;
-  private reporte01: boolean=true;
-  private reporte02: boolean=false;
+  private reporte01: Object;
+  private reporte02: Object;
   private tipo: string='';
-  private num: any;
+  private num: number = 1;
   private num_pag: any;
-
+    private est_imp: any;
+  private selectedCars2: Object;
+    private opc: any;
+    private opc_imp: any;
     
 
   private datareporte01: Reporte01Interface;  
@@ -104,14 +115,18 @@ class Reportes {
   private urlSeccion:any="http://172.16.2.205:8000/descargarPdf/021806/00100/1/";
   private urlEmpadronador:any="http://172.16.2.205:8000/descargarPdf/021806/00100/2/";
 
+  //
+  public estado:any = [];
+
   // cars: Car[];
   //
   // selectedCar1: Car;
 
+
   constructor(private reportes: ImpresionesService, private elementRef: ElementRef, private domSanitizer: DomSanitizer) {
-    this.cargarDepa()
+    this.cargarDepa();
     //this.cargarTabla("0", "0", "0", "0", "0")
-    this.registro = this.model
+    this.registro = this.model;
   }
 
   onRowSelect(event) {
@@ -128,6 +143,7 @@ class Reportes {
   cargarDepa() {
     this.reportes.getDepartamentos().subscribe(res => {
       this.departamentos = <DepartamentoInterface>res;
+
     })
   }
 
@@ -208,46 +224,74 @@ class Reportes {
   cargarTablaAeu(zona: string){
     let ubigeo = this.ccdd+this.ccpp+this.ccdi; //
     this.zona = zona; //
-    this.reportes.getTablaAes(ubigeo,zona).subscribe(res => {
-      this.datareporte01 = <Reporte01Interface>res;
-      console.log(this.datareporte01);
-    })
 
-    if (this.ccdi != 0) {
-      this.reportes.getCantAeus(ubigeo,zona).subscribe(res => {
-        this.num = <ZonaInterface>res;
-      })
-      //this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
-    } else {
-      this.zonas = null;
-      this.distrito = false;
-      //this.cargarTabla("2", this.ccdd, this.ccpp, "0", "0")
-    }
+      //se llama al servicion getTabla()
+      this.reportes.getTablaAes("1", ubigeo, zona).subscribe(res => {
 
-    if (this.ccdi != 0) {
-      this.reportes.getTablaAes(ubigeo,zona).subscribe(res => {
-        this.num_pag = <ZonaInterface>res;
-          console.log(this.datapaginaspdf);
+          this.reporte01 = <Reporte01Interface>res;
+              //console.log(this.reporte01);
       })
-      //this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
-    } else {
-      this.zonas = null;
-      this.distrito = false;
-      //this.cargarTabla("2", this.ccdd, this.ccpp, "0", "0")
-    }
+
+      if (this.ccdi != 0) {
+          this.reportes.getCantAeus(ubigeo,zona).subscribe(res => {
+
+                  //this.num = <ZonaInterface>res;
+              })
+              //this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
+      } else {
+              this.zonas = null;
+              this.distrito = false;
+              //this.cargarTabla("2", this.ccdd, this.ccpp, "0", "0")
+      }
+
+      if (this.ccdi != 0) {
+              this.reportes.getTablaAes("1", ubigeo,zona).subscribe(res => {
+                  //console.log("Este es el "+ res);
+                  //this.num_pag = <ZonaInterface>res;
+
+                  //console.log(this.datapaginaspdf);
+              })
+              //this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
+      } else {
+              this.zonas = null;
+              this.distrito = false;
+              //this.cargarTabla("2", this.ccdd, this.ccpp, "0", "0")
+      }
+
+      if (this.ccdi != 0) {
+              this.reportes.getTablaAes("1", ubigeo,zona).subscribe(res => {
+                  this.registros = <ZonaInterface>res;
+                  //this.est_imp = this.registros[0].est_imp;
+                  //console.log("Estado de impresion " + this.est_imp);
+              })
+              //this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
+      } else {
+          this.zonas = null;
+          this.distrito = false;
+              //this.cargarTabla("2", this.ccdd, this.ccpp, "0", "0")
+      }
   }
 
+  //Consume y manda los objetos para la tabla AEU's y Seccion
   cargarTablaSeccion(zona: string) {
     let ubigeo = this.ccdd+this.ccpp+this.ccdi; //
     this.zona = zona; //
-    this.reportes.getSeccAeus(ubigeo,zona).subscribe(res => {
-      this.datareporte01 = <Reporte01Interface>res;
-      console.log(this.datareporte01);
-    })
+
+      this.reportes.getSeccAeus("2", ubigeo, zona).subscribe(res => {
+
+          this.reporte01 = <Reporte01Interface>res;
+          //console.log(this.reporte01);
+      })
+
+    // this.reportes.getSeccAeus("2",ubigeo,zona).subscribe(res => {
+    //   this.reporte01 = <Reporte02Interface>res;
+    //     console.log("Esta es la zona que se espera" + zona);
+    //     console.log(this.reporte01);
+    // })
 
     if (this.ccdi != 0) {
       this.reportes.getCantAeus(ubigeo,zona).subscribe(res => {
-        this.num = <ZonaInterface>res;
+        this.num = <number>res;
       })
       //this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
     } else {
@@ -255,50 +299,50 @@ class Reportes {
       this.distrito = false;
       //this.cargarTabla("2", this.ccdd, this.ccpp, "0", "0")
     }
-
-    if (this.ccdi != 0) {
-      this.reportes.getTablaAes(ubigeo,zona).subscribe(res => {
-        this.num_pag = <ZonaInterface>res;
-        console.log(this.datapaginaspdf);
-      })
-      //this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
-    } else {
-      this.zonas = null;
-      this.distrito = false;
-      //this.cargarTabla("2", this.ccdd, this.ccpp, "0", "0")
-    }
+    //
+    // if (this.ccdi != 0) {
+    //   this.reportes.getTablaAes(ubigeo,zona).subscribe(res => {
+    //     this.num_pag = <ZonaInterface>res;
+    //     console.log(this.datapaginaspdf);
+    //   })
+    //   //this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
+    // } else {
+    //   this.zonas = null;
+    //   this.distrito = false;
+    //   //this.cargarTabla("2", this.ccdd, this.ccpp, "0", "0")
+    // }
   }
 
   cargarTablaZonas(zona: string) {
     let ubigeo = this.ccdd+this.ccpp+this.ccdi; //
     this.zona = zona; //
-    this.reportes.getZonasSecc(ubigeo,zona).subscribe(res => {
-      this.datareporte01 = <Reporte01Interface>res;
-      console.log(this.datareporte01);
+    this.reportes.getSeccZona("3", ubigeo, zona).subscribe(res => {
+        this.reporte01 = <Reporte01Interface>res;
+      console.log(this.reporte01);
     })
 
-    if (this.ccdi != 0) {
-      this.reportes.getCantAeus(ubigeo,zona).subscribe(res => {
-        this.num = <ZonaInterface>res;
-      })
-      //this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
-    } else {
-      this.zonas = null;
-      this.distrito = false;
-      //this.cargarTabla("2", this.ccdd, this.ccpp, "0", "0")
-    }
-
-    if (this.ccdi != 0) {
-      this.reportes.getTablaAes(ubigeo,zona).subscribe(res => {
-        this.num_pag = <ZonaInterface>res;
-        console.log(this.datapaginaspdf);
-      })
-      //this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
-    } else {
-      this.zonas = null;
-      this.distrito = false;
-      //this.cargarTabla("2", this.ccdd, this.ccpp, "0", "0")
-    }
+    // if (this.ccdi != 0) {
+    //   this.reportes.getSeccZona('3', ubigeo,zona).subscribe(res => {
+    //     this.num = <ZonaInterface>res;
+    //   })
+    //   //this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
+    // } else {
+    //   this.zonas = null;
+    //   this.distrito = false;
+    //   //this.cargarTabla("2", this.ccdd, this.ccpp, "0", "0")
+    // }
+    //
+    // if (this.ccdi != 0) {
+    //   this.reportes.getTablaAes(ubigeo,zona).subscribe(res => {
+    //     this.num_pag = <ZonaInterface>res;
+    //     console.log(this.datapaginaspdf);
+    //   })
+    //   //this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
+    // } else {
+    //   this.zonas = null;
+    //   this.distrito = false;
+    //   //this.cargarTabla("2", this.ccdd, this.ccpp, "0", "0")
+    // }
   }
 
   cargarTablaDistritos(zona: string) {
@@ -311,7 +355,7 @@ class Reportes {
 
     if (this.ccdi != 0) {
       this.reportes.getCantAeus(ubigeo,zona).subscribe(res => {
-        this.num = <ZonaInterface>res;
+        this.num = <number>res;
       })
       //this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
     } else {
@@ -333,24 +377,14 @@ class Reportes {
     }
   }
 
-  cargarbyNivel(opc){
-    if(opc==1){
-      this.cargarTablaAeu(this.zona);
-    }
-    if(opc==2){
-      this.cargarTablaSeccion(this.zona);
-    }
-    if(opc==3){
-      this.cargarTablaZonas(this.zona);
-    }
-  }
+  //Accede al tipo de contenido de la tabla de acuerdo al nivel que se a escogido
+
 
   cargarArea(zona:string) {
     let ubigeo = this.ccdd+this.ccpp+this.ccdi; //
     this.zona = zona;
     this.seccionAux = true;
     this.aeuAux = false;
-
 
     // if (this.tipo_cro == 2) {
     //   this.cargarTablaSeccion(ubigeo,zona);
@@ -363,8 +397,6 @@ class Reportes {
     // }
 
 
-
-    //
     // if (this.ccdi != 0) {
     //   this.reportes.getCantAeus(ubigeo,zona).subscribe(res => {
     //     this.num = <ZonaInterface>res;
@@ -376,8 +408,6 @@ class Reportes {
     //   //this.cargarTabla("2", this.ccdd, this.ccpp, "0", "0")
     // }
     //
-    //
-
     // if (this.ccdi != 0) {
     //   this.reportes.getDistritoZonas(ubigeo).subscribe(res => {
     //     this.num_pag = <ZonaInterface>res;
@@ -438,11 +468,13 @@ class Reportes {
     let urlCroquisAux = this.ccdd + this.ccpp + this.ccdi + this.zona + ('00' + this.seccion).slice(-3) + this.aeu;
     this.urlCroquis = this.domSanitizer.bypassSecurityTrustResourceUrl(`http://192.168.221.123/desarrollo/${urlCroquisAux}.pdf`);
     jQuery('#tablaCroAux tr').click(function () {
+
         jQuery('#tablaCroAux tr').each(function(){
           jQuery(this).removeClass('intro')
         })
         jQuery(this).addClass('intro');
     });
+
   }
 
   descargarExcel(id, nom) {
@@ -475,6 +507,57 @@ class Reportes {
     this.cargarDepa();
   }
 
+  cargarbyNivel(opc){
+
+        this.opc = opc;
+        if(opc==1){
+            this.cargarTablaAeu(this.zona);
+            //this.estado = [0,1,2];
+        }
+        if(opc==2){
+            this.cargarTablaSeccion(this.zona);
+            //this.estado = [0,1,2];
+        }
+        if(opc==3){
+            this.cargarTablaZonas(this.zona);
+            //this.estado = [0,1,2];
+        }
+    }
+
+  opci_impr(opc_imp){
+      this.opc_imp = opc_imp;
+
+      this.imprimir();
+  }
+
+  imprimir(){
+      // Creamos un Elemento Temporal en forma de enlace
+
+      // var ubigeo;
+      // ubigeo =  this.ccdd+this.ccpp+this.ccdi;
+      // console.log(ubigeo);
+      // console.log(this.zona);
+      console.log("Objeto:" + this.selectedCars2);
+      // console.log(this.selectedCars2);
+      //console.log(this.opc);
+      if (this.opc==1){
+          this.reportes.getImpresion(this.ccdd+this.ccpp+this.ccdi, this.zona, this.selectedCars2, this.opc_imp, this.opc).subscribe(res => {
+              this.cargarTablaAeu(this.zona);
+          })
+      }
+      else if (this.opc==2){
+          this.reportes.getImpresion(this.ccdd+this.ccpp+this.ccdi, this.zona, this.selectedCars2, this.opc_imp, this.opc).subscribe(res => {
+              this.cargarTablaSeccion(this.zona);
+          })
+      }
+      else if (this.opc==3){
+          this.reportes.getImpresion(this.ccdd+this.ccpp+this.ccdi, this.zona, this.selectedCars2, this.opc_imp, this.opc).subscribe(res => {
+              this.cargarTablaZonas(this.zona);
+          })
+      }
+
+
+  }
 }
 
 const routes: Routes = [{
@@ -483,7 +566,7 @@ const routes: Routes = [{
 }];
 
 @NgModule({
-  imports: [CommonModule, RouterModule.forChild(routes), FormsModule],
+  imports: [CommonModule, RouterModule.forChild(routes), FormsModule, DataTableModule, SharedModule, ButtonModule, ToastyModule.forRoot()],
   declarations: [Reportes]
 })
 export default class ReportesModule { }

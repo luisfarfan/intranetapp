@@ -1,6 +1,8 @@
 export class Reporte01Interface {
     constructor(
-        public aeu_final : number = 0,
-        public cant_pag : number = 0
+        public nombre  : string = '',
+        public aeu_final : string = '',
+        public cant_pag :  number = 0,
+        public est_imp : number = 0
     ){}
 }

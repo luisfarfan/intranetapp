@@ -67,6 +67,7 @@ export class Sidebar implements OnInit {
                                                <ul id="sidebar-sub-levels" class="collapse">
                                                                <li><a routerlink="croquis-y-listado" href="#/app/croquis-y-listado">ESPACIAL</a></li>
                                                                <li><a routerlink="croquis-y-listados-tabular" href="#/app/croquis-y-listados-tabular">TABULAR</a></li>
+                                                               
                                                </ul>
                                </li>
     <li>
@@ -77,6 +78,7 @@ export class Sidebar implements OnInit {
                                                <ul id="sidebar-sub-levels2" class="collapse">
                                                                <li><a href="#/app/reportes" routerlink="reportes">ESPACIAL</a></li>
                                                                <li><a href="#/app/reportes-tabular" routerlink="reportes-tabular">TABULAR</a></li>
+                                                               <li><a href="#/app/reportes-calidad" routerlink="reportes-calidad">CALIDAD</a></li>
                                                </ul>
                                </li>
                                <li class="active"><a routerlink="control-de-calidad" href="#/app/control-de-calidad">CONTROL DE CALIDAD</a></li>

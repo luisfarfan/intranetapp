@@ -43,14 +43,17 @@ export class LegajoService {
     private tablaUrlAux: string = 'http://127.0.0.1:8000/crorecargaTabla01/';
     private tablaUrlAux2: string = 'http://127.0.0.1:8000/crorecargaTabla02/';*/
 
-    private tablaUrlAux: string = 'http://172.18.1.40:8000/crorecargaTabla01/';
-    private tablaUrlAux2: string = 'http://172.18.1.40:8000/crorecargaTabla02/';
+    private tablaUrlAux: string = 'http://lfarfan.inei.com.pe:81/crorecargaTabla01/';
+    private tablaUrlAux2: string = 'http://lfarfan.inei.com.pe:81/crorecargaTabla02/';
     private DepasUrl: string = 'http://172.16.2.185:8000/cargardepas/';
     private ProvinciasUrl: string = 'http://172.16.2.185:8000/cargardeprov/';
-    private DistritosUrl: string = 'http://172.16.2.185:8000/cargardistrito/';
     private ZonasUrl: string = 'http://172.16.2.185:8000/cargarzonas/';
+    private DistritosUrl: string = 'http://172.16.2.185:8000/cargardistrito/';
     private tablaAes: string = 'http://172.16.2.185:8000/cargaraes/';
     private cantAesUrl: string = 'http://172.16.2.185:8000/cantidadaeus/';
+        private actualizarconfir: string='http://172.16.2.185:8000/actconfirm/';
+    //aeuslegajos
+    private cargarTablaAes: string = 'http://172.16.2.185:8000/aeuslegajos/';
 
     getCargaDepaInicial(): Observable < Object >{
         return this.http.get(this.DepasUrl).map(this.extractData).catch(this.handleError)
@@ -95,6 +98,25 @@ export class LegajoService {
         let queryparameters:string = `${ubigeo}/${zona}/`;
         let url:string = this.cantAesUrl + queryparameters;
         return this.http.get(url).map(this.extractData).catch(this.handleError)
+    }
+
+    //A nivel de AES para legajos
+    getTabAeusLeg(nivel: string="0",ubigeo: string="0", zona: string="0"): Observable < Object > {
+        let queryparameters:string = `${nivel}/${ubigeo}/${zona}/`;
+        let url:string = this.cargarTablaAes + queryparameters;
+        return this.http.get(url).map(this.extractData).catch(this.handleError)
+    }
+
+    getActualizarConf(ubigeo: string= '0', zona: string='0', nombre: Object, opc_niv: string= '0'): Observable < Object > {
+
+        let headers = new Headers({ 'Content-Type': 'application/json' });
+        let options = new RequestOptions({ headers: headers });
+        let body = JSON.stringify({ubigeo: ubigeo, zona: zona, nombre: nombre, opc_niv: opc_niv});
+
+        let url:string = this.actualizarconfir;
+
+        console.log("Este es el objeto nombre: "+nombre);
+        return this.http.post(url,body, options).map(this.extractData).catch(this.handleError)
     }
 
     private extractData(res: Response) {

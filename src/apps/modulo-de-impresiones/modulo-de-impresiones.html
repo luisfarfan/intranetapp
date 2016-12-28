@@ -43,14 +43,14 @@
                 </div>
                 <div class="form-group">
                     <label for="lZona"><h5> ZONA</h5></label>
-                    <select class="form-control" name="zonas"(change)="cargarArea($event.target.value)">
+                    <select class="form-control" name="zonas" (change)="cargarArea($event.target.value)">
                         <option value="0">TODOS</option>
                         <option *ngFor="let er of zonas" value="{{ er.zona }}">{{ er.zona }}</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="lDistrito"><h5> NIVEL</h5></label>
-                    <select class="form-control" name="distritos" (change)=" cargarbyNivel($event.target.value)">
+                    <select class="form-control" name="distritos" (change)="cargarbyNivel($event.target.value)">
                         <option value="0"> SELECCIONAR</option>
                         <option value="1"> AEU</option>
                         <option value="2"> SECCIÓN</option>
@@ -58,17 +58,17 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="lDistrito"><h5> Impresora</h5></label>
-                    <select class="form-control" name="distritos" (change)=" cargarbyNivel($event.target.value)">
+                    <label for="lImpresora"><h5> Impresora</h5></label>
+                    <select class="form-control" name="impresora" (change)="opci_impr($event.target.value)">
                         <option value="0"> SELECCIONAR</option>
                         <option value="1"> HP LaserJet 9050</option>
                         <option value="2"> HP MFP M880</option>
-                        <!--<option value="3"> ZONA</option>-->
+
                     </select>
                 </div>
                 <div class="form-group">
                     <div class="col-md-12" align="left">
-                        <a class="btn btn-default" (click)="descargarExcel('tablaCro', 'CROQUIS_Y_LISTADO')">IMPRIMIR <i class="fa fa-print"></i></a>
+                        <a class="btn btn-default" (click)="imprimir()">IMPRIMIR <i class="fa fa-print"></i></a>
                     </div>
                 </div>
                 <!--<div class="form-group">-->
@@ -96,14 +96,15 @@
                 <div class="form-group">
                     <label><strong>Estado </strong></label>
                     <select class="form-control" name="empresa">
-                        <option value="0"> Estado</option>
-                        <option value="1"> Impreso</option>
-                        <option value="2"> Reimpreso</option>
+                        <option value="0"> Seleccionar</option>
+                        <option value="1"> Por imprimir</option>
+                        <option value="2"> Impreso</option>
+                        <option value="3"> Reimpreso</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label><strong>Total AEU's: </strong></label>
-                    <label>{{num}} </label>
+                    <label><strong>Total Seleccionados: </strong></label>
+                    <label>{{ num }} </label>
                     <!--<input class="form-control" type="date" naeme="fechaInicio" id="fechaInicio" value="">-->
                 </div>
             </fieldset>
@@ -118,26 +119,78 @@
     <div class="col-lg-12">
         <section class="widget">
             <!--<h2 align="center"> INFORMACIÓN DEL DISTRITO </h2>-->
-            <table *ngIf="reporte01" class="table table-bordered table-lg mt-lg mb-0" id="reporte01_tabla">
-                <thead>
-                    <tr>
-                        <th width="7%">N° DE AEU</th>
-                        <th width="12%">Descripción</th>
-                        <th width="12%">Número de Páginas</th>
-                        <th width="11%">Estado</th>
-                        <th width="10%">Seleccionar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let re of datareporte01">
-                        <td>{{re.aeu_final}}</td>
-                        <td>{{'Croquis de Aeu'}}</td>
-                        <td>{{re.cant_pag}}</td>
-                        <td>{{'Por imprimir'}}</td>
-                        <td><input type="checkbox" value="second_checkbox"></td>
-                    </tr>
-                </tbody>
-            </table>
+            <p-dataTable id="tablaCro" [value]="reporte01" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,30]"
+                         class="table table-bordered table-lg mt-lg mb-0" [globalFilter]="gb" [(selection)]="selectedCars2">
+                <p-column field="nombre" header="Documento" [sortable]="true"></p-column>
+
+                <p-column field="tipo" header="Descripción" [sortable]="true">
+                    <template let-col let-car="rowData" pTemplate type="body">
+                            <span [ngSwitch]="car[col.field]">
+                            <span *ngSwitchCase="1">Croquis de AEU</span>
+                            <span *ngSwitchCase="2">Croquis de Sección</span>
+                            <span *ngSwitchCase="3">Croquis de Zona</span>
+                            </span>
+                    </template>
+                </p-column>
+
+                <p-column field="cant_pag" header="Número de Páginas" [sortable]="true"></p-column>
+                <p-column field="est_imp" header="Estado" [sortable]="true">
+                    <template let-col let-car="rowData" pTemplate type="body">
+                            <span [ngSwitch]="car[col.field]">
+                            <span *ngSwitchCase="0"> Por imprimir</span>
+                            <span *ngSwitchCase="1"> Impreso</span>
+                            <span *ngSwitchCase="2"> Reimpreso</span>
+                            </span>
+                    </template>
+                </p-column>
+                <p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>
+
+            </p-dataTable>
+
+            <!--<p-dataTable id="tablaC" [value]="reporte02" [rows]="10" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[10,20,30]"-->
+                         <!--class="table table-bordered table-lg mt-lg mb-0" [globalFilter]="gb" [(selection)]="selectedCars2">-->
+                <!--<p-column field="nombre" header="Documento" [sortable]="true"></p-column>-->
+                <!--<p-column field="" header="Descripción" [sortable]="true" >-->
+                    <!--<template let-col let-car="rowData" pTemplate type="body">-->
+                            <!--<span>-->
+                            <!--<span>Croquis de AEU</span>-->
+                            <!--</span>-->
+                    <!--</template>-->
+                <!--</p-column>-->
+
+                <!--<p-column field="" header="Número de Páginas" [sortable]="true"></p-column>-->
+                <!--<p-column field="" header="Estado" [sortable]="true">-->
+                    <!--<template let-col let-car="rowData" pTemplate type="body">-->
+                            <!--<span [ngSwitch]="car[col.field]">-->
+                            <!--<span *ngSwitchCase="0">Por imprimir</span>-->
+                            <!--<span *ngSwitchCase="1">Impreso</span>-->
+                            <!--<span *ngSwitchCase="2">Reimpreso</span>-->
+                            <!--</span>-->
+                    <!--</template>-->
+                <!--</p-column>-->
+                <!--<p-column [style]="{'width':'38px'}" selectionMode="multiple"></p-column>-->
+
+            <!--</p-dataTable>-->
+            <!--<table *ngIf="reporte01" class="table table-bordered table-lg mt-lg mb-0" id="reporte01_tabla">-->
+                <!--<thead>-->
+                    <!--<tr>-->
+                        <!--<th width="7%">N° DE AEU</th>-->
+                        <!--<th width="12%">Descripción</th>-->
+                        <!--<th width="12%">Número de Páginas</th>-->
+                        <!--<th width="11%">Estado</th>-->
+                        <!--<th width="10%">Seleccionar</th>-->
+                    <!--</tr>-->
+                <!--</thead>-->
+                <!--<tbody>-->
+                    <!--<tr *ngFor="let re of datareporte01">-->
+                        <!--<td>{{re.aeu_final}}</td>-->
+                        <!--<td>{{'Croquis de Aeu'}}</td>-->
+                        <!--<td>{{re.cant_pag}}</td>-->
+                        <!--<td>{{'Por imprimir'}}</td>-->
+                        <!--<td><input type="checkbox" value="second_checkbox"></td>-->
+                    <!--</tr>-->
+                <!--</tbody>-->
+            <!--</table>-->
             <!--<p-dataTable [value]="cars" selectionMode="single" [(selection)]="selectedCar1">-->
                 <!--<header>Single Selection</header>-->
                 <!--<footer><div style="text-align: left">Selected Car: {{selectedCar1 ? selectedCar1.vin + ' - ' + selectedCar1.brand + ' - ' + selectedCar1.year + ' - ' + selectedCar1.color: 'none'}}</div></footer>-->
@@ -146,76 +199,72 @@
                 <!--<p-column field="brand" header="Brand"></p-column>-->
                 <!--<p-column field="color" header="Color"></p-column>-->
             <!--</p-dataTable>-->
-            <table *ngIf="reporte02" class="table table-bordered table-lg mt-lg mb-0" >
-                <thead>
-                    <tr>
-                        <th width="12%">Documento</th>
-                        <th width="12%">Descripcion</th>
-                        <th width="12%">Núnmeros de Páginas</th>
-                        <th width="11%">Estado</th>
-                        <th width="11%">Seleccionar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let re1 of datareporte02">
-                        <td>{{re1.ZONA}}</td>
-                        <td>{{'Croquis de Aeu'}}</td>
-                        <td>{{re1.cant_pag}}</td>
-                        <td>{{'Por impirmir'}}</td>
-                        <td>{{re1.CANT_MZS}}</td>
-                    </tr>
-                </tbody>
-            </table>
-            <table *ngIf="reporte02" class="table table-bordered table-lg mt-lg mb-0" >
-                <thead>
-                <tr>
-                    <th width="12%">Documento</th>
-                    <th width="12%">Descripcion</th>
-                    <th width="12%">Núnmeros de Páginas</th>
-                    <th width="11%">Estado</th>
-                    <th width="11%">Seleccionar</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let re1 of datareporte02">
-                    <td>{{re1.ZONA}}</td>
-                    <td>{{'Croquis de Seccion'}}</td>
-                    <td>{{re1.cant_pag}}</td>
-                    <td>{{'Por impirmir'}}</td>
-                    <td>{{re1.CANT_MZS}}</td>
-                </tr>
-                </tbody>
-            </table>
 
-            <table *ngIf="reporte02" class="table table-bordered table-lg mt-lg mb-0" >
-                <thead>
-                <tr>
-                    <th width="12%">Documento</th>
-                    <th width="12%">Descripcion</th>
-                    <th width="12%">Núnmeros de Páginas</th>
-                    <th width="11%">Estado</th>
-                    <th width="11%">Seleccionar</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr *ngFor="let re1 of datareporte02">
-                    <td>{{re1.ZONA}}</td>
-                    <td>{{'Croquis de Zonas'}}</td>
-                    <td>{{re1.cant_pag}}</td>
-                    <td>{{'Por impirmir'}}</td>
-                    <td>{{re1.CANT_MZS}}</td>
-                </tr>
-                </tbody>
-            </table>
+
+
+            <!--<table *ngIf="reporte02" class="table table-bordered table-lg mt-lg mb-0" >-->
+                <!--<thead>-->
+                    <!--<tr>-->
+                        <!--<th width="12%">Documento</th>-->
+                        <!--<th width="12%">Descripcion</th>-->
+                        <!--<th width="12%">Núnmeros de Páginas</th>-->
+                        <!--<th width="11%">Estado</th>-->
+                        <!--<th width="11%">Seleccionar</th>-->
+                    <!--</tr>-->
+                <!--</thead>-->
+                <!--<tbody>-->
+                    <!--<tr *ngFor="let re1 of datareporte02">-->
+                        <!--<td>{{re1.ZONA}}</td>-->
+                        <!--<td>{{'Croquis de Aeu'}}</td>-->
+                        <!--<td>{{re1.cant_pag}}</td>-->
+                        <!--<td>{{'Por impirmir'}}</td>-->
+                        <!--<td>{{re1.CANT_MZS}}</td>-->
+                    <!--</tr>-->
+                <!--</tbody>-->
+            <!--</table>-->
+            <!--<table *ngIf="reporte02" class="table table-bordered table-lg mt-lg mb-0" >-->
+                <!--<thead>-->
+                <!--<tr>-->
+                    <!--<th width="12%">Documento</th>-->
+                    <!--<th width="12%">Descripcion</th>-->
+                    <!--<th width="12%">Núnmeros de Páginas</th>-->
+                    <!--<th width="11%">Estado</th>-->
+                    <!--<th width="11%">Seleccionar</th>-->
+                <!--</tr>-->
+                <!--</thead>-->
+                <!--<tbody>-->
+                <!--<tr *ngFor="let re1 of datareporte02">-->
+                    <!--<td>{{re1.ZONA}}</td>-->
+                    <!--<td>{{'Croquis de Seccion'}}</td>-->
+                    <!--<td>{{re1.cant_pag}}</td>-->
+                    <!--<td>{{'Por impirmir'}}</td>-->
+                    <!--<td>{{re1.CANT_MZS}}</td>-->
+                <!--</tr>-->
+                <!--</tbody>-->
+            <!--</table>-->
+
+            <!--<table *ngIf="reporte02" class="table table-bordered table-lg mt-lg mb-0" >-->
+                <!--<thead>-->
+                <!--<tr>-->
+                    <!--<th width="12%">Documento</th>-->
+                    <!--<th width="12%">Descripcion</th>-->
+                    <!--<th width="12%">Núnmeros de Páginas</th>-->
+                    <!--<th width="11%">Estado</th>-->
+                    <!--<th width="11%">Seleccionar</th>-->
+                <!--</tr>-->
+                <!--</thead>-->
+                <!--<tbody>-->
+                <!--<tr *ngFor="let re1 of datareporte02">-->
+                    <!--<td>{{re1.ZONA}}</td>-->
+                    <!--<td>{{'Croquis de Zonas'}}</td>-->
+                    <!--<td>{{re1.cant_pag}}</td>-->
+                    <!--<td>{{'Por impirmir'}}</td>-->
+                    <!--<td>{{re1.CANT_MZS}}</td>-->
+                <!--</tr>-->
+                <!--</tbody>-->
+            <!--</table>-->
         </section>
     </div>
 </div>
 
-<div class="col-lg-12">
-    <form class="form-inline" action="#" method="post" enctype="multipart/form-data" role="form" name="buscarEmpresa" >
-            <div class="form-group">
-                <label><strong>Total de impresiones (pág):</strong></label>
-                <input style="width: 50px" type="text" placeholder="Pag">
-            </div>
-    </form>
-</div>
+<!---->
