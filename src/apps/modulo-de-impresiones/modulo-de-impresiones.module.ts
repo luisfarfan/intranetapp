@@ -291,7 +291,7 @@ class Reportes {
 
     if (this.ccdi != 0) {
       this.reportes.getCantAeus(ubigeo,zona).subscribe(res => {
-        this.num = <number>res;
+        this.num = <ZonaInterface>res;
       })
       //this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
     } else {
@@ -355,7 +355,7 @@ class Reportes {
 
     if (this.ccdi != 0) {
       this.reportes.getCantAeus(ubigeo,zona).subscribe(res => {
-        this.num = <number>res;
+        this.num = <ZonaInterface>res;
       })
       //this.cargarTabla("3", this.ccdd, this.ccpp, this.ccdi, "0")
     } else {
